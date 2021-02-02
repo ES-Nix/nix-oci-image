@@ -27,6 +27,8 @@
 docker run \
 --interactive \
 --rm \
+--workdir /code \
+--volume="$(pwd)":/code \
 lnl7/nix:2.3.7 bash -c 'nix-build --attr image'
 
 #docker run \
