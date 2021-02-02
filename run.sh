@@ -27,7 +27,7 @@
 docker run \
 --interactive \
 --rm \
-lnl7/nix:2.3.7 bash nix-build --attr image
+lnl7/nix:2.3.7 bash -c 'nix-build --attr image'
 
 #docker run \
 #--interactive \
