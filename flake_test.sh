@@ -10,5 +10,9 @@ gnutar \
 lzma.bin \
 git
 
+echo 'system-features = kvm nixos-test' >> ~/.config/nix/nix.conf
+
+echo 'experimental-features = nix-command flakes ca-references' >> ~/.config/nix/nix.conf
+
 nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix flake show github:GNU-ES/hello'
 
