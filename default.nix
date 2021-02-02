@@ -2,7 +2,7 @@
 
 let
     inherit (pkgs) dockerTools stdenv buildEnv writeText;
-    inherit (pkgs) bashInteractive cacert commonsCompress coreutils findutils git gnutar gzip nix man man-db qemu su which;
+    inherit (pkgs) bashInteractive cacert commonsCompress coreutils findutils git gnutar gzip nix neovim man man-db qemu su which;
 
     inherit (native.lib) concatStringsSep genList;
 
@@ -17,7 +17,7 @@ let
 
     path = buildEnv {
         name = "system-path";
-        paths = [ bashInteractive cacert commonsCompress coreutils findutils git gnutar gzip pkgs.lzma.bin nix man man-db shadow su sudo which ];
+        paths = [ bashInteractive cacert commonsCompress coreutils findutils git gnutar gzip pkgs.lzma.bin neovim nix man man-db shadow su sudo which ];
     };
 
     nixconf = ''
@@ -57,6 +57,41 @@ let
              ${toString "{ allowUnfree = true; }"}
         '';
 
+    bashrc = ''
+       ${toString "alias flake='nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes'"}
+	   ${toString "alias nd='nix-collect-garbage --delete-old'"}
+	'';
+
+	correctPermissions = ''
+        sudo --preserve-env --set-home chown ${user_name}:${user_group} ${MY_HOME}
+        sudo --preserve-env --set-home chmod 755 ${MY_HOME}
+        sudo --preserve-env --set-home chown --recursive ${user_name}:${user_group} \
+          /tmp \
+          /nix/var/nix \
+          /nix/var/nix/profiles \
+          /nix/var/nix/temproots \
+          ${MY_HOME}/ \
+            --verbose
+
+        sudo chmod 755 /nix/store
+        sudo chmod 755 /nix/var/nix
+        sudo chmod 755 /nix/var
+        sudo chmod 755 /nix/var/nix/temproots
+        sudo chmod 755 /tmp
+        sudo chmod 755 ${MY_HOME}
+
+        cd /nix/store \
+        && sudo find /nix/store ! -path '*sudo*' -exec chown ${user_name}:${user_group} {} --verbose \; \
+        && cd -
+
+        cd ${MY_HOME} \
+        && sudo find ${MY_HOME} ! -path '*sudo*' -exec chown ${user_name}:${user_group} {} --verbose \; \
+        && cd -
+
+        nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix flake show github:GNU-ES/hello'
+	'';
+    #echo '${correctPermissions}' > $out/home/${user_name}/correct_permissions.sh
+
     contents = stdenv.mkDerivation {
         name = "user-environment";
         phases = [ "installPhase" "fixupPhase" "checkPhase"];
@@ -85,11 +120,14 @@ let
             echo '${sudoconf}' > $out/etc/sudo.conf
             echo '${etcsudoers}' > $out/etc/sudoers
 
+            mkdir --parent $out/home/${user_name}
+	        echo '${bashrc}' >> $out/home/${user_name}/.bashrc
+
             mkdir --parent $out/root/.config/nixpkgs
             echo '${nixconfig}' > $out/root/.config/nixpkgs/config.nix
 
-            mkdir --parent $out/${user_name}/.config/nixpkgs
-            echo '${nixconfig}' > $out/${user_name}/.config/nixpkgs/config.nix
+            mkdir --parent $out/home/${user_name}/.config/nixpkgs
+            echo '${nixconfig}' > $out/home/${user_name}/.config/nixpkgs/config.nix
 
             printRegistration=1 ${pkgs.perl}/bin/perl ${pkgs.pathsFromGraph} closure-* > $out/.reginfo
 
@@ -98,19 +136,24 @@ let
             mkdir --mode=0755 --parent $out/nix/store/.links
             mkdir --mode=0755 --parent $out/nix/var/nix/temproots
             mkdir --mode=0755 --parent $out/home/${user_name}/.nix-defexpr
+
+            mkdir --mode=0755 --parent $out/home/${user_name}/test
+            cp ${./flake_requirements.sh} $out/home/${user_name}/flake_requirements.sh
         '';
     };
 
     user_name = "pedroregispoar";
     user_id = "999";
 
-    user_group = "pedroregispoar";
+    user_group = "pedroregispoargroup";
     user_group_id = "88";
 
     volume_and_workdir = "/code";
 
     # TODO: check what exactly is this.
     run_time_bash = "/run/current-system/sw/bin/bash";
+
+    MY_HOME = "/home/pedroregispoar";
 
 
     entrypoint = pkgs.writeScript "entrypoin-file.sh" ''
@@ -141,7 +184,8 @@ let
         fi
         exec "$@"
     '';
-
+    
+    # dockerTools.buildLayeredImage is broken because runAsRoot!!? Needs investigation
     image = dockerTools.buildImage rec {
         name = "nix-oci-dockertools";
         tag = "0.0.1";
@@ -180,4 +224,72 @@ in
 {
   inherit image;
 }
+/*
 
+echo 'Start' \
+&& NIX_BASE_IMAGE='nix-oci-dockertools:0.0.1' \
+&& NIX_CACHE_VOLUME='nix-cache-volume' \
+&& NIX_CACHE_VOLUME_TMP='nix-cache-volume-tmp' \
+&& docker run \
+--cap-add ALL \
+--cpus='0.99' \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive \
+--mount source="$NIX_CACHE_VOLUME",target=/nix \
+--mount source="$NIX_CACHE_VOLUME",target=/home/pedroregispoar/.cache/ \
+--mount source="$NIX_CACHE_VOLUME",target=/home/pedroregispoar/.config/nix/ \
+--mount source="$NIX_CACHE_VOLUME",target=/home/pedroregispoar/.nix-defexpr/ \
+--mount source="$NIX_CACHE_VOLUME_TMP",target=/tmp/ \
+--net=host \
+--privileged=true \
+--tty \
+--rm \
+--workdir /code \
+--volume="$(pwd)":/code \
+--volume="$XAUTHORITY":/root/.Xauthority \
+--volume=/sys/fs/cgroup/:/sys/fs/cgroup:ro \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix \
+--volume=/var/run/docker.sock:/var/run/docker.sock \
+"$NIX_BASE_IMAGE" bash -c 'chmod +x home/pedroregispoar/flake_requirements.sh && ./home/pedroregispoar/flake_requirements.sh' \
+&& echo 'End'
+
+
+
+echo 'Start' \
+&& NIX_BASE_IMAGE='nix-oci-dockertools:0.0.1' \
+&& NIX_CACHE_VOLUME='nix-cache-volume' \
+&& NIX_CACHE_VOLUME_TMP='nix-cache-volume-tmp' \
+&& docker run \
+--cap-add ALL \
+--cpus='0.99' \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive \
+--mount source="$NIX_CACHE_VOLUME",target=/nix \
+--mount source="$NIX_CACHE_VOLUME",target=/home/pedroregispoar/.cache/ \
+--mount source="$NIX_CACHE_VOLUME",target=/home/pedroregispoar/.config/nix/ \
+--mount source="$NIX_CACHE_VOLUME",target=/home/pedroregispoar/.nix-defexpr/ \
+--mount source="$NIX_CACHE_VOLUME_TMP",target=/tmp/ \
+--net=host \
+--privileged=true \
+--tty \
+--rm \
+--workdir /code \
+--volume="$(pwd)":/code \
+--volume="$XAUTHORITY":/root/.Xauthority \
+--volume=/sys/fs/cgroup/:/sys/fs/cgroup:ro \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix \
+--volume=/var/run/docker.sock:/var/run/docker.sock \
+"$NIX_BASE_IMAGE" bash -c 'chmod +x home/pedroregispoar/flake_requirements.sh && ./home/pedroregispoar/flake_requirements.sh' \
+&& echo 'End'
+
+nix-build --attr image
+docker load < result
+echo 'Start' \
+&& NIX_BASE_IMAGE='nix-oci-dockertools:0.0.1' \
+&& NIX_CACHE_VOLUME='nix-cache-volume' \
+&& NIX_CACHE_VOLUME_TMP='nix-cache-volume-tmp' \
+&& docker run -it "$NIX_BASE_IMAGE" bash -c 'chmod +x home/pedroregispoar/flake_requirements.sh && ./home/pedroregispoar/flake_requirements.sh'
+
+*/

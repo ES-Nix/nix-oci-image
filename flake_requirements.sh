@@ -7,8 +7,8 @@
 #lzma.bin \
 #git
 
-#sudo --preserve-env --set-home chown pedroregispoar:pedroregispoargroup "$HOME"
-#sudo --preserve-env --set-home chmod 755 "$HOME"
+sudo --preserve-env --set-home chown pedroregispoar:pedroregispoargroup "$HOME"
+sudo --preserve-env --set-home chmod 755 "$HOME"
 
 #stat --format "uid=%u uname=%U gid=%g gname=%G %a %A" /tmp \
 #&& stat --format "uid=%u uname=%U gid=%g gname=%G %a %A" /nix/var/nix \
@@ -18,8 +18,8 @@
 #&& stat --format "uid=%u uname=%U gid=%g gname=%G %a %A" /home/pedroregispoar/.cache/nix/
 
 
-sudo --preserve-env --set-home mkdir --mode=755 "$HOME"/.local
-sudo mkdir --mode=755 --parent /nix/var/nix/profiles
+#sudo --preserve-env --set-home mkdir --mode=755 "$HOME"/.local
+#sudo mkdir --mode=755 --parent /nix/var/nix/profiles
 
 sudo --preserve-env --set-home chown --recursive pedroregispoar:pedroregispoargroup \
   /tmp \
@@ -35,7 +35,7 @@ sudo chmod 755 /nix/var
 sudo chmod 755 /nix/var/nix/temproots
 sudo chmod 755 /tmp
 sudo chmod 755 "$HOME"
-sudo chmod 755 "$HOME"/.local
+#sudo chmod 755 "$HOME"/.local
 
 
 cd /nix/store \
@@ -54,6 +54,6 @@ nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix flake s
 
 #nix-store --init && nix-store --load-db < /.reginfo
 
-nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix flake show github:GNU-ES/hello'
+#nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix flake show github:GNU-ES/hello'
 
 
