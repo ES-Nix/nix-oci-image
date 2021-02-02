@@ -4,7 +4,7 @@
 #set -euxo pipefail
 
 
-nix-build --attr image
+#nix-build --attr image
 
 
 #docker load < result
@@ -23,3 +23,14 @@ nix-build --attr image
 #&& docker run -it "$NIX_BASE_IMAGE" bash -c '
 
 #nix develop github:ES-Nix/podman-rootless/324855d116d15a0b54f33c9489cf7c5e6d9cd714 --command ./test_flake.sh
+
+docker run \
+--interactive \
+--rm \
+lnl7/nix:2.3.7 bash nix-build --attr image
+
+#docker run \
+#--interactive \
+#--rm \
+#lnl7/nix:2.3.7 bash -c 'nix-env --install --attr nixpkgs.curl && curl -fsSL https://raw.githubusercontent.com/ES-Nix/get-nix/e47ab707cfd099a6669e7a2e47aeebd36e1c101d/install-lnl7-oci.sh | sh && . ~/.bashrc && flake'
+
