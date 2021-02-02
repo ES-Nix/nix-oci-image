@@ -18,7 +18,7 @@ jobs:
           experimental-features = nix-command flakes
     # Run the general flake checks
     - run: nix flake --help
-    - run: nix develop github:ES-Nix/poetry2nix-examples/d0f6d7951214451fd9fe4df370576d223e1a43cc
+    #- run: nix develop github:ES-Nix/poetry2nix-examples/d0f6d7951214451fd9fe4df370576d223e1a43cc
     # Verify that the main program builds
 #    - run: nix shell -c echo OK
 
