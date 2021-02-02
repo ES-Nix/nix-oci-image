@@ -29,10 +29,13 @@ docker run \
 --rm \
 --workdir /code \
 --volume="$(pwd)":/code \
-lnl7/nix:2.3.7 bash -c 'nix-build --attr image'
+lnl7/nix:2.3.7 bash -c './flake_test.sh'
 
 #docker run \
 #--interactive \
 #--rm \
 #lnl7/nix:2.3.7 bash -c 'nix-env --install --attr nixpkgs.curl && curl -fsSL https://raw.githubusercontent.com/ES-Nix/get-nix/e47ab707cfd099a6669e7a2e47aeebd36e1c101d/install-lnl7-oci.sh | sh && . ~/.bashrc && flake'
+
+
+
 
