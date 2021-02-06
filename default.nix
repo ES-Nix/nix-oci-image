@@ -17,7 +17,24 @@ let
 
     path = buildEnv {
         name = "system-path";
-        paths = [ bashInteractive cacert commonsCompress coreutils findutils git gnutar gzip pkgs.lzma.bin neovim nix man man-db shadow su sudo which ];
+        paths = [ bashInteractive
+                  cacert
+                  commonsCompress
+                  coreutils
+                  findutils
+                  git
+                  gnutar
+                  gzip
+                  pkgs.lzma.bin
+                  neovim
+                  nix
+                  man
+                  man-db
+                  shadow
+                  su
+                  sudo
+                  which
+                ];
     };
 
     nixconf = ''
