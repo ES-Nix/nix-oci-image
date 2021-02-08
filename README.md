@@ -14,3 +14,10 @@ docker run \
 --workdir /code \
 --volume="$(pwd)":/code \
 nix-oci-dockertools:0.0.1 bash
+
+
+
+About the docker commit: https://docs.docker.com/engine/reference/commandline/commit/
+
+TODO: create another repo?
+About the action https://github.com/cachix/install-nix-action/pull/62
