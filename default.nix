@@ -79,59 +79,10 @@ let
 	   ${toString "alias nd=\'nix-collect-garbage --delete-old\'"}
 	'';
 
-	correctPermissions = ''
-        #!${pkgs.stdenv.shell}
-        ${pkgs.dockerTools.shadowSetup}
-	    sudo --preserve-env --set-home nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'id'
-
-        sudo --preserve-env --set-home chown ${user_name}:${user_group} ${MY_HOME}
-        sudo --preserve-env --set-home chmod 755 ${MY_HOME}
-        sudo --preserve-env --set-home chown --recursive ${user_name}:${user_group} \
-          /tmp \
-          /nix/var/nix \
-          /nix/var/nix/profiles \
-          /nix/var/nix/temproots \
-          ${MY_HOME}/ \
-            --verbose
-
-        sudo chmod 755 /nix/store
-        sudo chmod 755 /nix/var/nix
-        sudo chmod 755 /nix/var
-        sudo chmod 755 /nix/var/nix/temproots
-        sudo chmod 755 /tmp
-        sudo chmod 755 ${MY_HOME}
-
-        cd /nix/store \
-        && sudo find /nix/store ! -path '*sudo*' -exec chown ${user_name}:${user_group} {} --verbose \; \
-        && cd -
-
-        cd ${MY_HOME} \
-        && sudo find ${MY_HOME} ! -path '*sudo*' -exec chown ${user_name}:${user_group} {} --verbose \; \
-        && cd -
-
-        sudo --preserve-env --set-home mkdir --mode=755 --parent /nix/var/nix/profiles/per-user
-        sudo chown ${user_name}:${user_group} /nix/var/nix/profiles/per-user
-        sudo chown ${user_name}:${user_group} /nix/var/nix/gcroots/per-user
-        sudo chown ${user_name}:${user_group} /nix/var/nix/gcroots
-        sudo chown ${user_name}:${user_group} /nix/var/nix/db/big-lock
-        sudo chown ${user_name}:${user_group} /nix/var/nix/db
-        sudo chown ${user_name}:${user_group} /nix/var/nix/gc.lock
-        sudo chown ${user_name}:${user_group} /nix/store
-        sudo chown ${user_name}:${user_group} /nix/var/nix/db/db.sqlite
-        sudo chown ${user_name}:${user_group} /tmp/env-vars
-
-        sudo --preserve-env --set-home chown ${user_name}:${user_group} ${MY_HOME}
-        sudo --preserve-env --set-home chmod 755 ${MY_HOME}
-
-        sudo chmod 755 /nix/var/nix/db/db.sqlite
-
-        sudo --preserve-env --set-home mkdir --mode=755 ${MY_HOME}/.cache
-        sudo --preserve-env --set-home chown --recursive pedroregispoar:pedroregispoargroup ${MY_HOME}/.cache
-
-        export PATH=${MY_HOME}/.nix-profile/bin:$PATH
-
-        nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'id'
-	'';
+	#correctPermissions = ''
+    #    #!${pkgs.stdenv.shell}
+    #    ${pkgs.dockerTools.shadowSetup}
+	#'';
     #echo '${correctPermissions}' > $out/home/${user_name}/correct_permissions.sh
 
     contents = stdenv.mkDerivation {
@@ -184,6 +135,24 @@ let
 
             cat '${./flake_requirements.sh}' > $out/home/${user_name}/flake_requirements.sh
             chmod +x $out/home/${user_name}/flake_requirements.sh
+
+            mkdir \
+            --mode=755 \
+            --parent \
+            --verbose \
+            $out/home/${user_name}/.cache \
+            $out/nix/var/nix/db \
+            $out/nix/var/nix/profiles/per-user \
+            $out/nix/var/nix/gcroots/per-user \
+            $out/home/${user_name}/.cache/nix
+
+            mkdir \
+            --mode=777 \
+            --parent \
+            --verbose \
+            $out/home/${user_name}/.cache \
+            $out/nix/var/nix/gcroots
+
         '';
     };
 

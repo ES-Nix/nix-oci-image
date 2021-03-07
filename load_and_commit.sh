@@ -29,6 +29,10 @@ bash \
 sudo chmod +x /home/pedroregispoar/flake_requirements.sh
 /home/pedroregispoar/flake_requirements.sh
 COMMANDS
+#<< COMMANDS
+#./flake_requirements.sh
+#COMMANDS
+
 
 ID=$("$DOCKER_OR_PODMAN" \
 commit \

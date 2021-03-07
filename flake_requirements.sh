@@ -4,21 +4,8 @@ set -euxo pipefail
 
 echo 'Start ------------'
 
-
 export HOME=/home/pedroregispoar
 export PATH="$HOME"/.nix-profile/bin:$PATH
-
-export HOME=/home/pedroregispoar
-sudo --preserve-env --set-home \
-mkdir \
---mode=755 \
---parent \
---verbose \
-"$HOME"/.cache \
-/nix/var/nix/db \
-/nix/var/nix/profiles/per-user \
-/nix/var/nix/gcroots/per-user
-
 
 sudo --preserve-env --set-home \
 touch \
@@ -49,10 +36,14 @@ chown pedroregispoar:pedroregispoargroup \
 sudo chmod 755 --verbose /nix/store
 sudo chmod 755 --verbose /nix/var/nix
 sudo chmod 755 --verbose /nix/var
+sudo chmod 755 --verbose /nix/var/nix/db
 sudo chmod 755 --verbose /nix/var/nix/temproots
 sudo chmod 755 --verbose /tmp
 sudo chmod 755 --verbose "$HOME"
 sudo chmod 755 --verbose /nix/var/nix/db/db.sqlite
+sudo chmod --recursive --verbose 0777 \
+/home/pedroregispoar/.cache \
+/nix/var/nix/gcroots
 
 echo 'End of flake_requirements.sh'
 
