@@ -1,11 +1,7 @@
 #!/usr/bin/env sh
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -euxo pipefail
 
-#sudo --preserve-env nix-channel --list \
-# && sudo --preserve-env nix-channel --add https://nixos.org/channels/nixos-20.09 nixos \
-# && sudo --preserve-env nix-channel --list \
-# && sudo --preserve-env nix-channel --update \
-# && sudo --preserve-env nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs \
-# && sudo --preserve-env nix-channel --update
 
 IMAGE_VERSION='localhost/nix-oci-dockertools-user-with-sudo:0.0.1'
 

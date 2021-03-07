@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
-
+# See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -euxo pipefail
 
 echo 'Start ------------'
 
@@ -7,19 +8,12 @@ echo 'Start ------------'
 export HOME=/home/pedroregispoar
 export PATH="$HOME"/.nix-profile/bin:$PATH
 
-
-#sudo --preserve-env --set-home \
-#nix-shell \
-#-I nixpkgs=channel:nixos-20.09 \
-#--packages nixFlakes \
-#--run 'nix shell nixpkgs#hello --command hello'
-
-
 export HOME=/home/pedroregispoar
 sudo --preserve-env --set-home \
 mkdir \
 --mode=755 \
 --parent \
+--verbose \
 "$HOME"/.cache \
 /nix/var/nix/db \
 /nix/var/nix/profiles/per-user \
@@ -52,13 +46,16 @@ chown pedroregispoar:pedroregispoargroup \
   /tmp/env-vars \
   --verbose
 
-sudo chmod 755 /nix/store
-sudo chmod 755 /nix/var/nix
-sudo chmod 755 /nix/var
-sudo chmod 755 /nix/var/nix/temproots
-sudo chmod 755 /tmp
-sudo chmod 755 "$HOME"
-sudo chmod 755 /nix/var/nix/db/db.sqlite
+sudo chmod 755 --verbose /nix/store
+sudo chmod 755 --verbose /nix/var/nix
+sudo chmod 755 --verbose /nix/var
+sudo chmod 755 --verbose /nix/var/nix/temproots
+sudo chmod 755 --verbose /tmp
+sudo chmod 755 --verbose "$HOME"
+sudo chmod 755 --verbose /nix/var/nix/db/db.sqlite
+
+echo 'End of flake_requirements.sh'
+
 
 #cd /nix/store \
 #&& sudo find /nix/store ! -path '*sudo*' -exec chown pedroregispoar:pedroregispoargroup {} --verbose \; \
@@ -76,13 +73,8 @@ sudo chmod 755 /nix/var/nix/db/db.sqlite
 #chown --recursive pedroregispoar:pedroregispoargroup \
 #/nix
 
-echo 'End of flake_requirements.sh'
-
-
 #sudo --preserve-env --set-home nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix flake show github:GNU-ES/hello'
 # It relies on uid and gid to be correct (equal your host user and group) at this point
 #sudo chown --recursive pedroregispoar:pedroregispoargroup /tmp/.X11-unix
 #nix-store --init && nix-store --load-db < /.reginfo
 #nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix flake show github:GNU-ES/hello'
-
-

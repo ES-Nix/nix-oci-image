@@ -1,11 +1,5 @@
 #!/usr/bin/env sh
 
-#sudo --preserve-env nix-channel --list \
-# && sudo --preserve-env nix-channel --add https://nixos.org/channels/nixos-20.09 nixos \
-# && sudo --preserve-env nix-channel --list \
-# && sudo --preserve-env nix-channel --update \
-# && sudo --preserve-env nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs \
-# && sudo --preserve-env nix-channel --update
 
 IMAGE_VERSION='localhost/nix-oci-dockertools-user-with-sudo:0.0.1'
 
@@ -130,19 +124,53 @@ nix-shell \
 COMMANDS
 
 
-podman run \
---interactive=true \
---tty=false \
---rm=true \
---user=pedroregispoar \
---workdir=/code \
---volume="$(pwd)":/code \
-"$IMAGE_VERSION" \
-bash \
-<< COMMANDS
-sudo --preserve-env
-echo 'Start build image'
-nix-build --attr image
-echo 'End build image'
-cp --no-dereference --recursive --verbose $(nix-store --query --requisites result) result2
-COMMANDS
+# TODO: it is all broken
+#podman run \
+#--interactive=true \
+#--tty=false \
+#--rm=true \
+#--user=pedroregispoar \
+#--workdir=/code \
+#--volume="$(pwd)":/code \
+#"$IMAGE_VERSION" \
+#bash \
+#<< COMMANDS
+#sudo --preserve-env
+#echo 'Start build image'
+#nix-build --attr image
+#echo 'End build image'
+#COMMANDS
+#
+#
+#podman run \
+#--interactive=true \
+#--tty=false \
+#--rm=true \
+#--user=pedroregispoar \
+#--workdir=/code \
+#--volume="$(pwd)":/code \
+#"$IMAGE_VERSION" \
+#bash \
+#<< COMMANDS
+#sudo --preserve-env
+#echo 'Start build image'
+#sudo --preserve-env --set-home nix-build --attr image
+#echo 'End build image'
+#COMMANDS
+#
+#
+#podman run \
+#--interactive=true \
+#--tty=false \
+#--rm=true \
+#--user=0 \
+#--workdir=/code \
+#--volume="$(pwd)":/code \
+#"$IMAGE_VERSION" \
+#bash \
+#<< COMMANDS
+#sudo --preserve-env
+#echo 'Start build image'
+#nix-build --attr image
+#echo 'End build image'
+#COMMANDS
