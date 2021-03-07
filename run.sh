@@ -7,58 +7,46 @@
 nix-build --attr image
 
 
-docker load < result
-#
-#echo 'Start' \
-#&& NIX_BASE_IMAGE='nix-oci-dockertools:0.0.1' \
-#&& NIX_CACHE_VOLUME='nix-cache-volume' \
-#&& NIX_CACHE_VOLUME_TMP='nix-cache-volume-tmp' \
-#&& docker run -it "$NIX_BASE_IMAGE" bash -c 'chmod +x home/pedroregispoar/flake_requirements.sh && ./home/pedroregispoar/flake_requirements.sh'
-#
-#
-#echo 'Start' \
-#&& NIX_BASE_IMAGE='nix-oci-dockertools:0.0.1' \
-#&& NIX_CACHE_VOLUME='nix-cache-volume' \
-#&& NIX_CACHE_VOLUME_TMP='nix-cache-volume-tmp' \
-#&& docker run -it "$NIX_BASE_IMAGE" bash -c '
 
-#nix develop github:ES-Nix/podman-rootless/324855d116d15a0b54f33c9489cf7c5e6d9cd714 --command ./test_flake.sh
+CONTAINER='nix-oci-dockertools-user-with-sudo-base-container-to-commit'
+DOCKER_OR_PODMAN=podman
+NIX_BASE_IMAGE='nix-oci-dockertools-user-with-sudo-base:0.0.1'
 
-#docker run \
-#--interactive \
-#--rm \
-#--workdir /code \
-#--volume="$(pwd)":/code \
-#lnl7/nix:2.3.7 bash -c './flake_test.sh'
+"$DOCKER_OR_PODMAN" load < result
 
-#docker run \
-#--interactive \
-#--rm \
-#lnl7/nix:2.3.7 bash -c 'nix-env --install --attr nixpkgs.curl && curl -fsSL https://raw.githubusercontent.com/ES-Nix/get-nix/e47ab707cfd099a6669e7a2e47aeebd36e1c101d/install-lnl7-oci.sh | sh && . ~/.bashrc && flake'
+"$DOCKER_OR_PODMAN" rm --force --ignore "$CONTAINER"
 
 
-echo 'Start' \
-&& NIX_BASE_IMAGE='nix-oci-dockertools:0.0.1' \
-&& NIX_CACHE_VOLUME='nix-cache-volume' \
-&& NIX_CACHE_VOLUME_TMP='nix-cache-volume-tmp' \
-&& docker run \
---cap-add ALL \
---cpus='0.99' \
+"$DOCKER_OR_PODMAN" \
+run \
+--cap-add=ALL \
 --device=/dev/kvm \
 --env="DISPLAY=${DISPLAY:-:0.0}" \
---interactive \
---name=contianer_to_commit \
---tty \
+--env=USER=pedroregispoar \
+--env=HOME=/home/pedroregispoar \
+--interactive=true \
+--name="$CONTAINER" \
+--tty=false \
 --rm=false \
---workdir /code \
+--user=pedroregispoar \
+--workdir=/code \
 --volume="$(pwd)":/code \
-"$NIX_BASE_IMAGE" bash -c './flake_requirements.sh'\
-&& echo 'End'
+"$NIX_BASE_IMAGE" \
+bash \
+<< COMMANDS
+sudo chmod +x /home/pedroregispoar/flake_requirements.sh
+/home/pedroregispoar/flake_requirements.sh
+COMMANDS
 
-ID=$(docker container ls --filter "status=exited" | grep contianer_to_commit | cut --delimiter=' ' --fields=1)
+ID=$("$DOCKER_OR_PODMAN" \
+commit \
+"$CONTAINER" \
+nix-oci-dockertools-user-with-sudo:0.0.1)
 
-docker commit "$ID" nix-oci-dockertools-commit:0.0.1
+"$DOCKER_OR_PODMAN" rm --force --ignore "$CONTAINER"
 
+#./test_flake.sh
+./test_hello_sudoless.sh
 
 
 #echo 'Start' \

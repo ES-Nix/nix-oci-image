@@ -75,11 +75,15 @@ let
         '';
 
     bashrc = ''
-       ${toString "alias flake='nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes'"}
-	   ${toString "alias nd='nix-collect-garbage --delete-old'"}
+       ${toString "alias flake=\'nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes\'"}
+	   ${toString "alias nd=\'nix-collect-garbage --delete-old\'"}
 	'';
 
 	correctPermissions = ''
+        #!${pkgs.stdenv.shell}
+        ${pkgs.dockerTools.shadowSetup}
+	    sudo --preserve-env --set-home nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'id'
+
         sudo --preserve-env --set-home chown ${user_name}:${user_group} ${MY_HOME}
         sudo --preserve-env --set-home chmod 755 ${MY_HOME}
         sudo --preserve-env --set-home chown --recursive ${user_name}:${user_group} \
@@ -105,7 +109,28 @@ let
         && sudo find ${MY_HOME} ! -path '*sudo*' -exec chown ${user_name}:${user_group} {} --verbose \; \
         && cd -
 
-        nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix flake show github:GNU-ES/hello'
+        sudo --preserve-env --set-home mkdir --mode=755 --parent /nix/var/nix/profiles/per-user
+        sudo chown ${user_name}:${user_group} /nix/var/nix/profiles/per-user
+        sudo chown ${user_name}:${user_group} /nix/var/nix/gcroots/per-user
+        sudo chown ${user_name}:${user_group} /nix/var/nix/gcroots
+        sudo chown ${user_name}:${user_group} /nix/var/nix/db/big-lock
+        sudo chown ${user_name}:${user_group} /nix/var/nix/db
+        sudo chown ${user_name}:${user_group} /nix/var/nix/gc.lock
+        sudo chown ${user_name}:${user_group} /nix/store
+        sudo chown ${user_name}:${user_group} /nix/var/nix/db/db.sqlite
+        sudo chown ${user_name}:${user_group} /tmp/env-vars
+
+        sudo --preserve-env --set-home chown ${user_name}:${user_group} ${MY_HOME}
+        sudo --preserve-env --set-home chmod 755 ${MY_HOME}
+
+        sudo chmod 755 /nix/var/nix/db/db.sqlite
+
+        sudo --preserve-env --set-home mkdir --mode=755 ${MY_HOME}/.cache
+        sudo --preserve-env --set-home chown --recursive pedroregispoar:pedroregispoargroup ${MY_HOME}/.cache
+
+        export PATH=${MY_HOME}/.nix-profile/bin:$PATH
+
+        nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'id'
 	'';
     #echo '${correctPermissions}' > $out/home/${user_name}/correct_permissions.sh
 
@@ -155,7 +180,10 @@ let
             mkdir --mode=0755 --parent $out/home/${user_name}/.nix-defexpr
 
             mkdir --mode=0755 --parent $out/home/${user_name}/test
-            cp ${./flake_requirements.sh} $out/home/${user_name}/flake_requirements.sh
+
+
+            cat '${./flake_requirements.sh}' > $out/home/${user_name}/flake_requirements.sh
+            chmod +x $out/home/${user_name}/flake_requirements.sh
         '';
     };
 
@@ -170,7 +198,7 @@ let
     # TODO: check what exactly is this.
     run_time_bash = "/run/current-system/sw/bin/bash";
 
-    MY_HOME = "/home/pedroregispoar";
+    MY_HOME = "/home/${user_name}";
 
 
     entrypoint = pkgs.writeScript "entrypoin-file.sh" ''
@@ -204,7 +232,7 @@ let
     
     # dockerTools.buildLayeredImage is broken because runAsRoot!!? Needs investigation
     image = dockerTools.buildImage rec {
-        name = "nix-oci-dockertools";
+        name = "nix-oci-dockertools-user-with-sudo-base";
         tag = "0.0.1";
         inherit contents;
         runAsRoot = ''
@@ -221,19 +249,19 @@ let
             ln --symbolic $out/nix/var/nix/profiles/per-user/root/profile $out/root/.nix-profile
             ln --symbolic ${unstable} $out/root/.nix-defexpr/nixos
             ln --symbolic ${unstable} $out/root/.nix-defexpr/nixpkgs
-
         '';
 
         config.Entrypoint = [ entrypoint ];
 
         config.Cmd = [ "${bashInteractive}/bin/bash" ];
 
-        config.Env = [ "PATH=/root/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/bin:/sbin:/usr/bin:/usr/sbin"
+        config.Env = [ "PATH=/root/.nix-profile/bin:${MY_HOME}/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/bin:/sbin:/usr/bin:/usr/sbin"
             "MANPATH=/root/.nix-profile/share/man:/home/pedroregispoar/.nix-profile/share/man:/run/current-system/sw/share/man"
             "NIX_PAGER=cat"
             "NIX_PATH=nixpkgs=${unstable}"
             "NIX_SSL_CERT_FILE=${cacert}/etc/ssl/certs/ca-bundle.crt"
             "ENV=/etc/profile"
+            "USER=${user_name}"
         ];
     };
 in
