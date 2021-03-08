@@ -194,8 +194,6 @@ let
         name = "nix-oci-dockertools-user-with-sudo-base";
         tag = "0.0.1";
         inherit contents;
-        runAsRoot = ''
-        '';
 
         config.Entrypoint = [ entrypoint ];
 
