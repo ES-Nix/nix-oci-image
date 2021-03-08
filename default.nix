@@ -2,14 +2,11 @@
 
 let
     inherit (pkgs) dockerTools stdenv buildEnv writeText;
-    inherit (pkgs) bashInteractive cacert commonsCompress coreutils findutils git gnutar gzip nix neovim man man-db su which;
-
     inherit (native.lib) concatStringsSep genList;
-
-    pkgs = import unstable { system = "x86_64-linux"; };
 
     native = import nixpkgs { inherit system; };
     unstable = native.callPackage src { stdenv = native.stdenvNoCC; };
+    pkgs = import unstable { system = "x86_64-linux"; };
 
     path = buildEnv {
         name = "system-path";
@@ -17,18 +14,9 @@ let
                   bashInteractive
                   coreutils
                   nix
-
                   commonsCompress
-                  git
                   gnutar
                   lzma.bin
-
-                  cacert
-                  #findutils
-                  #man
-                  #man-db
-                  #neovim
-                  #which
                 ];
     };
 
@@ -73,18 +61,9 @@ let
 	   ${toString "alias nd=\'nix-collect-garbage --delete-old\'"}
 	'';
 
-	#correctPermissions = ''
-    #    #!${pkgs.stdenv.shell}
-    #    ${pkgs.dockerTools.shadowSetup}
-	#'';
-    #echo '${correctPermissions}' > $out/home/${user_name}/correct_permissions.sh
-
     contents = stdenv.mkDerivation {
         name = "user-environment";
         phases = [ "installPhase" "fixupPhase" "checkPhase"];
-
-        exportReferencesGraph =
-            map (drv: [("closure-" + baseNameOf drv) drv]) [ path unstable ];
 
         installPhase = ''
             mkdir --parent $out/run/current-system
@@ -97,8 +76,8 @@ let
             mkdir --parent $out/usr/bin
             mkdir --parent $out/sbin
 
-            ln --symbolic ${stdenv.shell}      $out/bin/sh
-            ln --symbolic ${coreutils}/bin/env $out/usr/bin/env
+            ln --symbolic ${pkgs.stdenv.shell}      $out/bin/sh
+            ln --symbolic ${pkgs.coreutils}/bin/env $out/usr/bin/env
 
             mkdir --parent $out/etc/nix
             echo '${nixconf}' > $out/etc/nix/nix.conf
@@ -115,8 +94,6 @@ let
 
             mkdir --parent $out/home/${user_name}/.config/nixpkgs
             echo '${nixconfig}' > $out/home/${user_name}/.config/nixpkgs/config.nix
-
-            printRegistration=1 ${pkgs.perl}/bin/perl ${pkgs.pathsFromGraph} closure-* > $out/.reginfo
 
             mkdir --mode=1777 --parent $out/tmp
             mkdir --mode=0755 --parent $out/nix/store/.links
@@ -151,35 +128,25 @@ let
     user_group = "pedroregispoargroup";
     user_group_id = "88";
 
-    volume_and_workdir = "/code";
-
     # TODO: check what exactly is this.
     run_time_bash = "/run/current-system/sw/bin/bash";
 
     MY_HOME = "/home/${user_name}";
 
-
-    entrypoint = pkgs.writeScript "entrypoin-file.sh" ''
-        #!${pkgs.stdenv.shell}
-        exec "$@"
-    '';
-    
     # dockerTools.buildLayeredImage is broken. Needs investigation
     image = dockerTools.buildImage rec {
         name = "nix-oci-dockertools-user-with-sudo-base";
         tag = "0.0.1";
         inherit contents;
 
-        config.Entrypoint = [ entrypoint ];
-
-        config.Cmd = [ "${bashInteractive}/bin/bash" ];
+        config.Cmd = [ "${pkgs.bashInteractive}/bin/bash" ];
 
         config.Env = [
             "PATH=/root/.nix-profile/bin:${MY_HOME}/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/bin:/sbin:/usr/bin:/usr/sbin"
             "MANPATH=/root/.nix-profile/share/man:${MY_HOME}/.nix-profile/share/man:/run/current-system/sw/share/man"
             "NIX_PAGER=cat"
             "NIX_PATH=nixpkgs=${unstable}"
-            "NIX_SSL_CERT_FILE=${cacert}/etc/ssl/certs/ca-bundle.crt"
+            "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
             "ENV=/etc/profile"
             "USER=${user_name}"
         ];
