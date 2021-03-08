@@ -201,19 +201,6 @@ let
         runAsRoot = ''
         '';
 
-
-        extraCommands = ''
-            mkdir --parent $out/nix/var/nix/gcroots
-            mkdir --mode=0755 --parent $out/nix/var/nix/profiles/per-user/root
-            mkdir --parent $out/root/.nix-defexpr
-            mkdir --parent $out/var/empty
-
-            ln --symbolic ${path} $out/nix/var/nix/gcroots/booted-system
-            ln --symbolic $out/nix/var/nix/profiles/per-user/root/profile $out/root/.nix-profile
-            ln --symbolic ${unstable} $out/root/.nix-defexpr/nixos
-            ln --symbolic ${unstable} $out/root/.nix-defexpr/nixpkgs
-        '';
-
         config.Entrypoint = [ entrypoint ];
 
         config.Cmd = [ "${bashInteractive}/bin/bash" ];
