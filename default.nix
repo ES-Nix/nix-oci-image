@@ -141,18 +141,17 @@ let
             --parent \
             --verbose \
             $out/home/${user_name}/.cache \
+            $out/home/${user_name}/.cache/nix \
             $out/nix/var/nix/db \
-            $out/nix/var/nix/profiles/per-user \
+            $out/nix/var/nix/gcroots \
             $out/nix/var/nix/gcroots/per-user \
-            $out/home/${user_name}/.cache/nix
+            $out/nix/var/nix/profiles/per-user
 
-            mkdir \
-            --mode=777 \
-            --parent \
-            --verbose \
-            $out/home/${user_name}/.cache \
-            $out/nix/var/nix/gcroots
-
+            touch \
+            $out/nix/var/nix/db/db.sqlite \
+            $out/nix/var/nix/db/big-lock \
+            $out/nix/var/nix/gc.lock \
+            $out/tmp/env-vars
         '';
     };
 

@@ -7,42 +7,54 @@ echo 'Start ------------'
 export HOME=/home/pedroregispoar
 export PATH="$HOME"/.nix-profile/bin:$PATH
 
-sudo --preserve-env --set-home \
-touch \
-/nix/var/nix/db/db.sqlite \
-/nix/var/nix/db/big-lock \
-/nix/var/nix/gc.lock \
-/tmp/env-vars
+#sudo --preserve-env --set-home \
+#touch \
+#/nix/var/nix/db/db.sqlite \
+#/nix/var/nix/db/big-lock \
+#/nix/var/nix/gc.lock \
+#/tmp/env-vars
 
 sudo --preserve-env --set-home \
 chown pedroregispoar:pedroregispoargroup \
-  /tmp \
-  /nix/var/nix \
-  /nix/var/nix/profiles \
-  /nix/var/nix/temproots \
   "$HOME"/ \
   "$HOME"/.cache \
   /nix/store \
+  /nix/var/nix \
   /nix/var/nix/db \
   /nix/var/nix/db/big-lock \
   /nix/var/nix/db/db.sqlite \
   /nix/var/nix/gc.lock \
   /nix/var/nix/gcroots \
   /nix/var/nix/gcroots/per-user \
+  /nix/var/nix/profiles \
   /nix/var/nix/profiles/per-user \
+  /nix/var/nix/temproots \
+  /tmp \
   /tmp/env-vars \
   --verbose
 
-sudo chmod 755 --verbose /nix/store
-sudo chmod 755 --verbose /nix/var/nix
-sudo chmod 755 --verbose /nix/var
-sudo chmod 755 --verbose /nix/var/nix/db
-sudo chmod 755 --verbose /nix/var/nix/temproots
-sudo chmod 755 --verbose /tmp
-sudo chmod 755 --verbose "$HOME"
-sudo chmod 755 --verbose /nix/var/nix/db/db.sqlite
-sudo chmod --recursive --verbose 0777 \
+sudo \
+chmod \
+0755 \
+--verbose \
+"$HOME" \
 /home/pedroregispoar/.cache \
+/nix/store \
+/nix/var \
+/nix/var/nix \
+/nix/var/nix/db \
+/nix/var/nix/db/big-lock \
+/nix/var/nix/db/db.sqlite \
+/nix/var/nix/db/db.sqlite \
+/nix/var/nix/gc.lock \
+/nix/var/nix/gcroots \
+/nix/var/nix/profiles/per-user \
+/nix/var/nix/temproots \
+/tmp \
+/tmp/env-vars
+
+sudo chmod --recursive --verbose 0777 \
+"$HOME"/.cache \
 /nix/var/nix/gcroots
 
 echo 'End of flake_requirements.sh'
