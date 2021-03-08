@@ -18,13 +18,13 @@ run \
 --name="$CONTAINER" \
 --tty=false \
 --rm=false \
---user=pedroregispoar \
+--user=0 \
 --workdir=/code \
 --volume="$(pwd)":/code \
 "$NIX_BASE_IMAGE" \
 bash \
 << COMMANDS
-sudo chmod +x /home/pedroregispoar/flake_requirements.sh
+chmod +x /home/pedroregispoar/flake_requirements.sh
 /home/pedroregispoar/flake_requirements.sh
 COMMANDS
 #<< COMMANDS

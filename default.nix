@@ -11,18 +11,12 @@ let
     native = import nixpkgs { inherit system; };
     unstable = native.callPackage src { stdenv = native.stdenvNoCC; };
 
-    shadow = pkgs.shadow.override { pam = null; };
-    sudo = pkgs.sudo.override { pam = null; };
-
     path = buildEnv {
         name = "system-path";
         paths = with pkgs; [
                   bashInteractive
                   coreutils
                   nix
-                  shadow
-                  su
-                  sudo
 
                   commonsCompress
                   git
@@ -34,7 +28,7 @@ let
                   #man
                   #man-db
                   #neovim
-                  which
+                  #which
                 ];
     };
 
@@ -53,7 +47,7 @@ let
 
     group = ''
         root:x:0:
-        wheel:x:1:${user_name},kvm
+        wheel:x:1:kvm
         kvm:x:2:kvm
 	${user_group}:x:${user_group_id}:${user_name}
         nixbld:x:30000:${concatStringsSep "," (genList (i: "nixbld${toString (i+1)}") 32)}
@@ -167,25 +161,6 @@ let
 
     entrypoint = pkgs.writeScript "entrypoin-file.sh" ''
         #!${pkgs.stdenv.shell}
-        ${pkgs.dockerTools.shadowSetup}
-        #chmod 4755 $(readlink $(which su)) 2> /dev/null
-        chmod 4755 $(readlink $(which sudo)) 2> /dev/null
-
-        chmod 755 --recursive /tmp 2> /dev/null
-        chown --recursive pedroregispoar:wheel /tmp 2> /dev/null
-
-
-        set -e
-
-        # allow the container to be started with `--user`
-        if [ "$(${pkgs.coreutils}/bin/id --user)" = "0" ]; then
-
-            NEW_USER_NAME=${user_name}
-            NEW_GROUP_NAME=${user_group}
-            VOLUME_AND_WORKDIR=${volume_and_workdir}
-            exec "$@"
-            #exec ${pkgs.gosu}/bin/gosu "$NEW_USER_NAME":${user_group} "$BASH_SOURCE" "$@"
-        fi
         exec "$@"
     '';
     

@@ -4,7 +4,7 @@ set -euxo pipefail
 
 echo 'Start ------------'
 
-sudo --preserve-env --set-home \
+export HOME='/home/pedroregispoar'
 chown pedroregispoar:pedroregispoargroup \
   "$HOME"/ \
   "$HOME"/.cache \
@@ -23,7 +23,6 @@ chown pedroregispoar:pedroregispoargroup \
   /tmp/env-vars \
   --verbose
 
-sudo \
 chmod \
 0755 \
 --verbose \
@@ -42,7 +41,7 @@ chmod \
 /tmp \
 /tmp/env-vars
 
-sudo chmod --recursive --verbose 0777 \
+chmod --recursive --verbose 0777 \
 "$HOME"/.cache \
 /nix/var/nix/gcroots
 
