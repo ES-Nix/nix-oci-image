@@ -47,7 +47,6 @@ chmod \
 /nix/var/nix/db/db.sqlite \
 /nix/var/nix/db/db.sqlite \
 /nix/var/nix/gc.lock \
-/nix/var/nix/gcroots \
 /nix/var/nix/profiles/per-user \
 /nix/var/nix/temproots \
 /tmp \

@@ -172,11 +172,6 @@ let
     entrypoint = pkgs.writeScript "entrypoin-file.sh" ''
         #!${pkgs.stdenv.shell}
         ${pkgs.dockerTools.shadowSetup}
-
-        #echo 'Runnung the config.Entrypoint script!'
-        #chmod 4755 $out/run/current-system/sw/bin/sudo
-        #chmod 4755  ${pkgs.sudo}/bin/
-        #chmod 4755 /nix/store/pan38n758f87hxj2ngmmsd3x4ld6s4m5-user-environment/run/current-system/sw/bin/sudo
         #chmod 4755 $(readlink $(which su)) 2> /dev/null
         chmod 4755 $(readlink $(which sudo)) 2> /dev/null
 
