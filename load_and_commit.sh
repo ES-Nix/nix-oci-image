@@ -14,8 +14,6 @@ run \
 --cap-add=ALL \
 --device=/dev/kvm \
 --env="DISPLAY=${DISPLAY:-:0.0}" \
---env=USER=pedroregispoar \
---env=HOME=/home/pedroregispoar \
 --interactive=true \
 --name="$CONTAINER" \
 --tty=false \

@@ -46,10 +46,9 @@ let
 
     passwd = ''
         root:x:0:0::/root:${run_time_bash}
-	${user_name}:x:${user_id}:${user_id}::/home/${user_name}/${run_time_bash}
+	${user_name}:x:${user_id}:${user_id}::/home/${user_name}:${run_time_bash}
         ${concatStringsSep "\n" (genList (i: "nixbld${toString (i+1)}:x:${toString (i+30001)}:30000::/var/empty:/run/current-system/sw/bin/nologin") 32)}
     '';
-#        ${user_name}:x:${user_id}:${user_group_id}::/home/${user_name}:${run_time_bash}
 
     group = ''
         root:x:0:
