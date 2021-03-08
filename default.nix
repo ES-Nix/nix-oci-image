@@ -189,7 +189,7 @@ let
         exec "$@"
     '';
     
-    # dockerTools.buildLayeredImage is broken because runAsRoot!!? Needs investigation
+    # dockerTools.buildLayeredImage is broken. Needs investigation
     image = dockerTools.buildImage rec {
         name = "nix-oci-dockertools-user-with-sudo-base";
         tag = "0.0.1";
