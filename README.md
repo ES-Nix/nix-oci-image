@@ -98,3 +98,5 @@ su pedroregispoar \
 nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes --run 'nix shell nixpkgs#hello --command hello'
 nix-collect-garbage --delete-old
 COMMAND
+
+nix-env --install --attr nixpkgs.commonsCompress nixpkgs.gnutar nixpkgs.lzma.bin nixpkgs.git

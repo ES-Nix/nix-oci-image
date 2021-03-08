@@ -4,16 +4,6 @@ set -euxo pipefail
 
 echo 'Start ------------'
 
-export HOME=/home/pedroregispoar
-export PATH="$HOME"/.nix-profile/bin:$PATH
-
-#sudo --preserve-env --set-home \
-#touch \
-#/nix/var/nix/db/db.sqlite \
-#/nix/var/nix/db/big-lock \
-#/nix/var/nix/gc.lock \
-#/tmp/env-vars
-
 sudo --preserve-env --set-home \
 chown pedroregispoar:pedroregispoargroup \
   "$HOME"/ \

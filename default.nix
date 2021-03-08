@@ -2,7 +2,7 @@
 
 let
     inherit (pkgs) dockerTools stdenv buildEnv writeText;
-    inherit (pkgs) bashInteractive cacert commonsCompress coreutils findutils git gnutar gzip nix neovim man man-db qemu su which;
+    inherit (pkgs) bashInteractive cacert commonsCompress coreutils findutils git gnutar gzip nix neovim man man-db su which;
 
     inherit (native.lib) concatStringsSep genList;
 
@@ -12,27 +12,28 @@ let
     unstable = native.callPackage src { stdenv = native.stdenvNoCC; };
 
     shadow = pkgs.shadow.override { pam = null; };
-
     sudo = pkgs.sudo.override { pam = null; };
 
     path = buildEnv {
         name = "system-path";
-        paths = [ bashInteractive
-                  cacert
-                  commonsCompress
+        paths = with pkgs; [
+                  bashInteractive
                   coreutils
-                  findutils
-                  git
-                  gnutar
-                  gzip
-                  pkgs.lzma.bin
-                  neovim
                   nix
-                  man
-                  man-db
                   shadow
                   su
                   sudo
+
+                  commonsCompress
+                  git
+                  gnutar
+                  lzma.bin
+
+                  cacert
+                  #findutils
+                  #man
+                  #man-db
+                  #neovim
                   which
                 ];
     };
@@ -57,7 +58,7 @@ let
 	${user_group}:x:${user_group_id}:${user_name}
         nixbld:x:30000:${concatStringsSep "," (genList (i: "nixbld${toString (i+1)}") 32)}
     '';
-#${user_group}:x:${user_group_id}:${user_name}
+
     sudoconf = ''
         Set disable_coredump false
     '';
@@ -124,13 +125,9 @@ let
             printRegistration=1 ${pkgs.perl}/bin/perl ${pkgs.pathsFromGraph} closure-* > $out/.reginfo
 
             mkdir --mode=1777 --parent $out/tmp
-
             mkdir --mode=0755 --parent $out/nix/store/.links
             mkdir --mode=0755 --parent $out/nix/var/nix/temproots
             mkdir --mode=0755 --parent $out/home/${user_name}/.nix-defexpr
-
-            mkdir --mode=0755 --parent $out/home/${user_name}/test
-
 
             cat '${./flake_requirements.sh}' > $out/home/${user_name}/flake_requirements.sh
             chmod +x $out/home/${user_name}/flake_requirements.sh
@@ -204,8 +201,9 @@ let
 
         config.Cmd = [ "${bashInteractive}/bin/bash" ];
 
-        config.Env = [ "PATH=/root/.nix-profile/bin:${MY_HOME}/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/bin:/sbin:/usr/bin:/usr/sbin"
-            "MANPATH=/root/.nix-profile/share/man:/home/pedroregispoar/.nix-profile/share/man:/run/current-system/sw/share/man"
+        config.Env = [
+            "PATH=/root/.nix-profile/bin:${MY_HOME}/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/bin:/sbin:/usr/bin:/usr/sbin"
+            "MANPATH=/root/.nix-profile/share/man:${MY_HOME}/.nix-profile/share/man:/run/current-system/sw/share/man"
             "NIX_PAGER=cat"
             "NIX_PATH=nixpkgs=${unstable}"
             "NIX_SSL_CERT_FILE=${cacert}/etc/ssl/certs/ca-bundle.crt"
