@@ -96,6 +96,8 @@ let
             echo '${nixconfig}' > $out/home/${user_name}/.config/nixpkgs/config.nix
 
             mkdir --mode=1777 --parent $out/tmp
+            mkdir --mode=1777 --parent $out/home/${user_name}/tmp
+            mkdir --mode=1777 --parent $out/home/${user_name}/.cache
             mkdir --mode=0755 --parent $out/nix/store/.links
             mkdir --mode=0755 --parent $out/nix/var/nix/temproots
             mkdir --mode=0755 --parent $out/home/${user_name}/.nix-defexpr
@@ -135,7 +137,7 @@ let
 
     # dockerTools.buildLayeredImage is broken. Needs investigation
     image = dockerTools.buildImage rec {
-        name = "nix-oci-dockertools-user-with-sudo-base";
+        name = "nix-oci-dockertools-user-sudoless";
         tag = "0.0.1";
         inherit contents;
 
