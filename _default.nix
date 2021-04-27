@@ -41,25 +41,10 @@ let
         nixbld:x:30000:${concatStringsSep "," (genList (i: "nixbld${toString (i+1)}") 32)}
     '';
 
-    sudoconf = ''
-        Set disable_coredump false
-    '';
-
-    etcsudoers = ''
-            ${toString "root ALL=(ALL) ALL"}
-            ${toString " %wheel ALL=(ALL) ALL"}
-            ${toString " %wheel ALL=(ALL) NOPASSWD: ALL"}
-       '';
-
     # Sorry free software
     nixconfig = ''
              ${toString "{ allowUnfree = true; }"}
         '';
-
-    bashrc = ''
-       ${toString "alias flake=\'nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes\'"}
-	   ${toString "alias nd=\'nix-collect-garbage --delete-old\'"}
-	'';
 
     contents = stdenv.mkDerivation {
         name = "user-environment";
