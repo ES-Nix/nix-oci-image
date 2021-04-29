@@ -2,7 +2,7 @@
 # See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -euxo pipefail
 
-./test_hello_sudoless.sh
+#./test_hello_sudoless.sh
 #./test_channel.sh
 #./test_flake.sh
 #test_long_builds.sh
@@ -35,3 +35,29 @@ set -euxo pipefail
 #--volume=/var/run/docker.sock:/var/run/docker.sock \
 #"$NIX_BASE_IMAGE" bash -c 'nix-shell -I nixpkgs=channel:nixos-20.09 --packages nixFlakes'\
 #&& echo 'End'
+
+#xhost +
+#podman \
+#run \
+#--env="DISPLAY=${DISPLAY:-:0}" \
+#--interactive=true \
+#--tty=true \
+#--rm=true \
+#--workdir=/code \
+#--volume="$(pwd)":/code \
+#--volume=/tmp/.X11-unix:/tmp/.X11-unix \
+#python:3.9 \
+#bash \
+#-c \
+#"id && echo \$DISPLAY && python -c 'from tkinter import Tk; Tk()'"
+#xhost -
+#
+#unset DISPLAY
+#echo $DISPLAY
+#export DISPLAY=':0'
+#echo $DISPLAY
+
+
+./src/tests/load_and_commit.sh
+
+./src/tests/test_flake.sh

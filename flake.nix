@@ -18,15 +18,15 @@
       in
       {
 
-        packages.nixOCIImage = import ./nixOCIImage.nix {
+        packages.nixOCIImage = import ./src/nixOCIImage.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
-        packages.empty = import ./empty-image-zero-size.nix {
+        packages.empty = import ./src/empty-image-zero-size.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
-        packages.slim = import ./slim.nix {
+        packages.slim = import ./src/slim.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 

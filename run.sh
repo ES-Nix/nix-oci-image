@@ -24,6 +24,4 @@ nix build .#nixOCIImage
 podman load < result
 
 
-./load_and_commit.sh
-
-./test_flake.sh
+./src/tests/tests.sh

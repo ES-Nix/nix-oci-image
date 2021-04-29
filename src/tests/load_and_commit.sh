@@ -6,7 +6,7 @@ NIX_BASE_IMAGE='localhost/nix:0.0.1'
 NIX_STAGE_1='localhost/stage-1'
 NIX_IMAGE='localhost/nix-post-processed:0.0.1'
 
-
+echo WWW
 #nix build .#nixOCIImage
 # podman load < result
 #
@@ -38,7 +38,7 @@ NIX_IMAGE='localhost/nix-post-processed:0.0.1'
 #store \
 #gc
 
-nix build .#emptyImageZeroSize
+nix build .#empty
 "$DOCKER_OR_PODMAN" load < result
 
 "$DOCKER_OR_PODMAN" rm --force --ignore "$CONTAINER"
