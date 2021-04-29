@@ -64,12 +64,12 @@ pkgs.dockerTools.buildImage {
   tag = "0.0.1";
 
   contents = [
-    nixOCIImage
+    #nixOCIImage
   ]
   ++
   (with pkgs; [
-    bashInteractive
-    coreutils
+    #bashInteractive
+    #coreutils
   ]);
   #  ++ (nonRootShadowSetup { user = "nixuser"; uid = 12345;  group = "nixgroup"; gid = 6789; })
   runAsRoot = ''

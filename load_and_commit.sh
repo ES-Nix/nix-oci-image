@@ -8,7 +8,38 @@ NIX_IMAGE='localhost/nix-post-processed:0.0.1'
 
 
 #nix build .#nixOCIImage
-#"$DOCKER_OR_PODMAN" load < result
+# podman load < result
+#
+#podman \
+#run \
+#--interactive=true \
+#--tty=true \
+#--rm=true \
+#--user='nixuser' \
+#localhost/nix:0.0.1 \
+#bash \
+#-c \
+#'id'
+
+
+#/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store /home/adauser \
+#build \
+#nixpkgs#cowsay \
+#--out-link \
+#result
+#
+#/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store /home/nixuser \
+#store \
+#gc
+
+nix build .#emptyImageZeroSize
+"$DOCKER_OR_PODMAN" load < result
 
 "$DOCKER_OR_PODMAN" rm --force --ignore "$CONTAINER"
 
@@ -112,8 +143,8 @@ COMMAND
 #cp /etc/group /code/etc/
 #COMMAND
 
-rm -f oci_diff.txt
-podman diff "$CONTAINER" > oci_diff.txt
+#rm -f oci_diff.txt
+#podman diff "$CONTAINER" > oci_diff.txt
 
 #ID=$(
 #  "$DOCKER_OR_PODMAN" \
@@ -301,29 +332,148 @@ COMMAND
 #
 #COMMAND
 
+#podman \
+#run \
+#--interactive=true \
+#--tty=false \
+#--rm=true \
+#--volume=volume_nix_static:/home/adauser/bin:ro \
+#--volume=volume_etc:/etc/:ro \
+#--user='0' \
+#docker.io/tianon/toybox:0.8.4 \
+#bash \
+#<< COMMAND
+#echo 'Starting test:'
+#
+#echo 'pwd:' \$(pwd)
+#
+#export USER=root
+#/home/adauser/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store /home/adauser \
+#build \
+#nixpkgs#cowsay \
+#--out-link \
+#result
+#ls -ahl
+#COMMAND
+
+#podman \
+#run \
+#--interactive=true \
+#--tty=true \
+#--rm=true \
+#--volume=volume_nix_static:/home/adauser/bin:ro \
+#--volume=volume_etc:/etc/:ro \
+#--user='0' \
+#localhost/empty-image-zero-size:0.0.1 \
+#/home/adauser/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store /home/adauser \
+#build \
+#nixpkgs#cowsay \
+#--out-link \
+#result
+
+#podman volume rm --force volume_tmp
+#podman volume create volume_tmp
+#podman \
+#run \
+#--interactive=true \
+#--tty=false \
+#--rm=true \
+#--volume=volume_nix_static:/home/adauser/bin:ro \
+#--volume=volume_etc:/etc/:ro \
+#--volume=volume_tmp:/tmp/:rw \
+#--user='0' \
+#localhost/empty-image-zero-size:0.0.1 \
+#/home/adauser/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store /home/adauser \
+#shell \
+#nixpkgs#bashInteractive \
+#nixpkgs#coreutils \
+#--command \
+#bash \
+#<< COMMAND
+#echo 'Inside container!'
+#ls -ahl
+#
+#rm -rf /root/.cache
+#
+#/home/adauser/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store /home/adauser \
+#store \
+#gc
+#
+#/home/adauser/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store /home/adauser \
+#store \
+#optimise
+#
+#cp /home/adauser/bin/nix /nix2
+#
+#mkdir /_etc
+#cp -r /etc/ /_etc/
+#
+#ls -ahl
+#echo 'End.'
+#COMMAND
+
+
+podman volume rm --force volume_tmp
+podman volume create volume_tmp
 podman \
 run \
 --interactive=true \
+--name="$CONTAINER" \
 --tty=false \
---rm=true \
+--rm=false \
 --volume=volume_nix_static:/home/adauser/bin:ro \
 --volume=volume_etc:/etc/:ro \
+--volume=volume_tmp:/tmp/:rw \
 --user='0' \
-docker.io/tianon/toybox:0.8.4 \
-bash \
-<< COMMAND
-echo 'Starting test:'
-
-echo 'pwd:' \$(pwd)
-
-export USER=root
+localhost/empty-image-zero-size:0.0.1 \
 /home/adauser/bin/nix \
 --experimental-features \
 'nix-command ca-references flakes' \
 --store /home/adauser \
-build \
-nixpkgs#cowsay \
---out-link \
-result
-ls -ahl
-COMMAND
+store \
+gc
+
+rm -f oci_diff.txt
+podman diff "$CONTAINER" > oci_diff.txt
+
+ID=$(
+  "$DOCKER_OR_PODMAN" \
+  commit \
+  "$CONTAINER" \
+  "$NIX_IMAGE"
+)
+
+#podman \
+#run \
+#--interactive=true \
+#--tty=true \
+#--rm=false \
+#--volume=volume_nix_static:/home/adauser/bin:ro \
+#--volume=volume_etc:/etc/:ro \
+#--volume=volume_nix_static:/home/adauser/nix \
+#--user='0' \
+#localhost/empty-image-zero-size:0.0.1 \
+#/home/adauser/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store /home/adauser \
+#shell \
+#nixpkgs#bashInteractive \
+#nixpkgs#coreutils \
+#--command \
+#bash

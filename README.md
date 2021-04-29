@@ -327,10 +327,125 @@ mv nix /usr/bin/nix
 sha256sum /usr/bin/nix
 
 nix --experimental-features 'nix-command ca-references flakes' build github:NixOS/nix#nix-static
+mv /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca2-certificates.crt
 
 sha256sum result/bin/nix
 COMMANDS
 
+
+### 
+
+
+https://www.youtube.com/watch?v=VE7iDdGdDtM
+
+
+podman \
+ run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+docker.io/library/alpine:3.13.0 \
+sh 
+
+mkdir --mode=0700 /home/nixuser
+apk add --no-cache curl
+curl -L https://hydra.nixos.org/job/nix/master/buildStatic.x86_64-linux/latest/download-by-type/file/binary-dist > nix
+sha256sum nix
+chmod +x ./nix
+cp nix /home/nixuser/nix
+mv nix /usr/bin/nix
+
+
+nix \
+--experimental-features 'nix-command ca-references flakes' \
+shell \
+nixpkgs#bashInteractive \
+nixpkgs#coreutils \
+nixpkgs#which \
+nixpkgs#file \
+nixpkgs#findutils
+
+rm -r /lib /media /mnt /opt /sbin /srv /usr /var /bin
+
+mkdir -p /usr/bin
+mv /home/nixuser/nix /usr/bin/nix
+
+nix --experimental-features 'nix-command ca-references flakes' build nixpkgs#cowsay && result/bin/cowsay 'Hi!'
+nix --experimental-features 'nix-command ca-references flakes' store gc
+
+rm -rf /etc/{ca-certificates.conf,ca-certificates,mtab,alpine-release,apk,conf.d,crontabs,fstab,group,hostname,hosts,init.d,inittab,issue,logrotate.d,modprobe.d,modules,modules-load.d,motd,network,opt,os-release,passwd,periodic,profile,profile.d,protocols,resolv.conf,securetty,services,shadow,shells,sysctl.conf,sysctl.d,udhcpd.conf}
+
+#cp /etc/ssl/certs/ca-certificates.crt /ca-certificates.crt
+#mkdir -p /etc/ssl/certs
+#cp /ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
+cp /etc/ssl/certs/ca-certificates.crt /ca-certificates.crt
+rm -r /etc/ssl
+mkdir -p /etc/ssl/certs
+cp /ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
+export USER=root
+
+nix --experimental-features 'nix-command ca-references flakes' build nixpkgs#cowsay && result/bin/cowsay 'Hi!'
+rm result
+nix --experimental-features 'nix-command ca-references flakes' store gc
+
+ls -al /etc
+stat /tmp
+du -h /etc/ssl/certs/ca-certificates.crt
+
+
+```
+podman volume create volume_ca_certificate
+
+podman \
+run \
+--interactive=true \
+--tty=false \
+--rm=false \
+--volume=volume_ca_certificate:/code \
+--user='0' \
+docker.io/library/alpine:3.13.0 \
+sh \
+-c \
+'cp /etc/ssl/certs/ca-certificates.crt /code/ca-certificates.crt'
+```
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+--volume=volume_ca_certificate:/etc/ssl/certs:ro \
+localhost/nix:0.0.1 \
+nix \
+--experimental-features 'nix-command ca-references flakes' \
+shell \
+nixpkgs#bashInteractive \
+nixpkgs#coreutils \
+nixpkgs#which \
+nixpkgs#file \
+nixpkgs#findutils
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+--volume=volume_ca_certificate:/etc/ssl/certs/ca-certificates.crt:ro \
+localhost/nix:0.0.1 \
+bash
+
+mkdir -p /etc/ssl/certs
+cp ca-certificates.crt /etc/ssl/certs/
+
+mkdir \
+--mode=1777 \
+/tmp
+nix --experimental-features 'nix-command ca-references flakes' build nixpkgs#cowsay && result/bin/cowsay 'Hi!'
 
 
 ## 
@@ -552,3 +667,141 @@ nixpkgs#qgis
 
 nix path-info --derivation nixpkgs#hello
 
+
+
+
+###
+
+
+nix build .#nixOCIImage \
+&& podman load < result \
+&& podman \
+run \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user=0 \
+localhost/nix:0.0.1 \
+bash \
+<< COMMANDS
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+store \
+gc
+
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+store \
+optimise
+COMMANDS
+
+
+
+nix build .#nixOCIImage \
+&& podman load < result
+podman \
+run \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user=0 \
+localhost/nix:0.0.1 \
+bash \
+<< COMMANDS
+mkdir /tmp
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+shell \
+nixpkgs#{bashInteractive,coreutils} --command bash
+COMMANDS
+
+
+### :rocket:
+
+"$DOCKER_OR_PODMAN" \
+run \
+--interactive=true \
+--name="$CONTAINER" \
+--tty=true \
+--rm=true \
+--user=nix_user \
+--volume=volume_ca_certificate:/etc/ssl/certs:ro \
+"$NIX_BASE_IMAGE" \
+bash
+
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--volume=volume_nix_static:/home/adauser/bin:ro \
+--volume=volume_etc:/etc \
+--user='0' \
+docker.io/library/alpine:3.13.0 \
+sh -c 'ls -al /etc/ && sh'
+
+
+
+###
+
+nix build .#nixOCIImage
+podman load < result
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='nixuser' \
+localhost/nix:0.0.1 \
+bash \
+-c \
+'id'
+
+
+
+CONTAINER=jujo
+podman \
+run \
+--interactive=true \
+--name="$CONTAINER" \
+--tty=true \
+--rm=false \
+--user='nixuser' \
+localhost/nix:0.0.1 \
+/bin/nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+--store \
+/home/nixuser \
+shell \
+nixpkgs#bashInteractive \
+nixpkgs#coreutils \
+--command \
+bash \
+<< COMMAND
+id
+exit 0
+COMMAND
+
+podman \
+start \
+--attach=true \
+--interactive=true \
+"$CONTAINER" \
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+--store /home/nixuser \
+store \
+gc
+
+rm -f nix_container_diff.txt
+podman diff "$CONTAINER" > nix_container_diff.txt
+
+
+nix build nixpkgs#debianutils --no-link

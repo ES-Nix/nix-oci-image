@@ -3,9 +3,10 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
+    podman-rootless.url = "github:ES-Nix/podman-rootless";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, podman-rootless }:
     flake-utils.lib.eachDefaultSystem (system:
       let
 
@@ -16,13 +17,28 @@
 
       in
       {
+
         packages.nixOCIImage = import ./nixOCIImage.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.empty = import ./empty-image-zero-size.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.slim = import ./slim.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
             podman-rootless.defaultPackage.${system}
+            bashInteractive
+            coreutils
+            file
+            which
+            git
+            python3Minimal
           ];
 
           shellHook = ''

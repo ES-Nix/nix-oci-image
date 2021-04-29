@@ -4,9 +4,26 @@
 #set -euxo pipefail
 
 
-nix-build --attr image
+
+nix build .#empty
+
+podman load < result
+
+podman images
+
+
+# docker shows wrong size 0B
+#docker load < result
+#docker images
+
+
+nix build .#slim
+podman load < result
+
+nix build .#nixOCIImage
+podman load < result
 
 
 ./load_and_commit.sh
 
-./tests.sh
+./test_flake.sh

@@ -1,0 +1,90 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1619345332,
+        "narHash": "sha256-qHnQkEp1uklKTpx3MvKtY6xzgcqXDsz5nLilbbuL+3A=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "2ebf2558e5bf978c7fb8ea927dfaed8fefab2e28",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1618217525,
+        "narHash": "sha256-WGrhVczjXTiswQaoxQ+0PTfbLNeOQM6M36zvLn78AYg=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c6169a2772643c4a93a0b5ac1c61e296cba68544",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1619658883,
+        "narHash": "sha256-HUl/GsJg3lihJKpAumEIyUm8rXSQdOc3jpmFC3qUe84=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "cfa0a5776588ffef986da24161a231281f03376b",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1618265586,
+        "narHash": "sha256-PMNxh4cqzFI5T8hEpIzfFhlIfWDcKShRRJOvpyNeGzU=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "d9d60d273d6859d9f09b97f556dd5857a23dd13b",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "podman-rootless": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1618536010,
+        "narHash": "sha256-lOaSb64ZqwSnOney2NnqXS13N1Pd7dr+Fwh+jKniWDQ=",
+        "owner": "ES-Nix",
+        "repo": "podman-rootless",
+        "rev": "74fc79fc29d1b4ef5c9e13033bf48a188d1f024a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ES-Nix",
+        "repo": "podman-rootless",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs",
+        "podman-rootless": "podman-rootless"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
