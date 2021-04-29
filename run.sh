@@ -20,7 +20,7 @@ podman images
 nix build .#slim
 podman load < result
 
-nix build .#nixOCIImage
+nix build .#nix_runAsRoot
 podman load < result
 
 

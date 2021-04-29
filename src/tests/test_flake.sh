@@ -2,7 +2,7 @@
 
 #set -x
 
-nix build .#nixOCIImage
+nix build .#nix_runAsRoot
 
 podman load < result
 
@@ -31,4 +31,51 @@ du --human-readable --max-depth=1 --exclude /proc /
 echo
 env
 exit 0
+COMMAND
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='nixuser' \
+--volume="$(pwd)":/code \
+--workdir=/code \
+localhost/nix-run-as-root:0.0.1 \
+bash \
+<< COMMAND
+
+/bin/nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+--store \
+/home/nixuser \
+shell \
+nixpkgs#python3Minimal \
+--command \
+python --version
+COMMAND
+
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+--volume="$(pwd)":/code \
+--workdir=/code \
+localhost/nix-run-as-root:0.0.1 \
+bash \
+<< COMMAND
+
+/bin/nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+--store \
+/home/nixuser \
+shell \
+nixpkgs#python3Minimal \
+--command \
+python --version
 COMMAND

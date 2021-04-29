@@ -18,10 +18,13 @@
       in
       {
 
-        packages.nixOCIImage = import ./src/nixOCIImage.nix {
+        packages.nix_runAsRoot = import ./src/nix_runAsRoot.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
+        packages.nix_runAsRoot_minimal = import ./src/nix_runAsRoot_minimal.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
         packages.empty = import ./src/empty-image-zero-size.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };

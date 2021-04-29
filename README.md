@@ -673,7 +673,7 @@ nix path-info --derivation nixpkgs#hello
 ###
 
 
-nix build .#nixOCIImage \
+nix build .#nix_runAsRoot \
 && podman load < result \
 && podman \
 run \
@@ -699,7 +699,7 @@ COMMANDS
 
 
 
-nix build .#nixOCIImage \
+nix build .#nix_runAsRoot \
 && podman load < result
 podman \
 run \
@@ -748,7 +748,7 @@ sh -c 'ls -al /etc/ && sh'
 
 ###
 
-nix build .#nixOCIImage
+nix build .#nix_runAsRoot
 podman load < result
 
 podman \
@@ -805,3 +805,7 @@ podman diff "$CONTAINER" > nix_container_diff.txt
 
 
 nix build nixpkgs#debianutils --no-link
+
+
+python -m unittest
+

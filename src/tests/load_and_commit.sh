@@ -7,7 +7,7 @@ NIX_STAGE_1='localhost/stage-1'
 NIX_IMAGE='localhost/nix-post-processed:0.0.1'
 
 echo WWW
-#nix build .#nixOCIImage
+#nix build .#nix_runAsRoot
 # podman load < result
 #
 #podman \

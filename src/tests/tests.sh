@@ -61,3 +61,4 @@ set -euxo pipefail
 ./src/tests/load_and_commit.sh
 
 ./src/tests/test_flake.sh
+./src/tests/test_flake_1.sh

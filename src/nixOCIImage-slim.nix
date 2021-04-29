@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { } }:
 let
-  nixOCIImage = import ./nix.nix { inherit pkgs; };
+  nix_runAsRoot = import ./nix.nix { inherit pkgs; };
 
   nonRootShadowSetup = { user, uid, group, gid }: with pkgs; [
     (
@@ -64,7 +64,7 @@ pkgs.dockerTools.buildImage {
   tag = "0.0.1";
 
   contents = [
-    #nixOCIImage
+    #nix_runAsRoot
   ]
   ++
   (with pkgs; [
