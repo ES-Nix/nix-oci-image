@@ -824,3 +824,188 @@ python --version
 
 nix --experimental-features 'nix-command ca-references flakes' shell nixpkgs#toybox --command toybox ls
 
+podman \                    
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+--volume=volume_tmp:/tmp/:rw \
+localhost/nix-unpriviliged:0.0.1 \
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+shell \
+nixpkgs#toybox ls
+
+
+###
+
+
+CONTAINER=foo
+NIX_IMAGE=nix-unpriviliged-commited:0.0.1
+
+nix build .#nix-unpriviliged
+podman load < result
+
+podman rm --force --ignore "$CONTAINER"
+podman \
+run \
+--interactive=true \
+--name="$CONTAINER" \
+--tty=false \
+--rm=false \
+--user='0' \
+localhost/nix-unpriviliged:0.0.1 \
+busybox \
+sh \
+<< COMMAND
+
+mkdir -p $out/home/nixuser/tmp
+
+chown \
+nixuser:nixgroup \
+-R \
+/home/nixuser
+
+chmod 0755 -R /home/nixuser/
+chmod 0700 /home/nixuser
+COMMAND
+
+rm -f oci_diff.txt
+podman diff "$CONTAINER" > oci_diff.txt
+
+ID=$(
+  podman \
+  commit \
+  "$CONTAINER" \
+  "$NIX_IMAGE"
+)
+
+podman rm --force --ignore "$CONTAINER"
+
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='nixuser' \
+"$NIX_IMAGE" \
+busybox \
+sh \
+<< COMMAND
+export TMPDIR=/home/nixuser/tmp
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+--store \
+/home/nixuser \
+shell \
+nixpkgs#python3Minimal \
+--command \
+python \
+--version
+COMMAND
+
+
+
+
+podman volume rm --force volume_nix_static
+podman volume create volume_nix_static
+
+podman volume rm --force volume_etc
+podman volume create volume_etc
+
+
+podman \
+run \
+--interactive=true \
+--name="$CONTAINER" \
+--tty=false \
+--rm=false \
+--user='0' \
+--volume=volume_nix_static:/code/home/nixuser/bin \
+--volume=volume_etc:/code/etc \
+"$NIX_IMAGE" \
+busybox \
+sh \
+<< COMMAND
+cp /bin/nix /code/home/nixuser/bin/nix
+
+chmod +x /code/home/nixuser/bin/nix
+
+chown \
+nixuser:nixgroup \
+-R \
+/code/home/nixuser/bin/nix
+
+
+cp -r /etc/ssl /code/ssl
+cp -r /etc/shadow /code/shadow
+cp -r /etc/passwd /code/passwd
+cp -r /etc/group /code/group
+cp -r /etc/gshadow /code/gshadow
+
+COMMAND
+
+rm -f oci_diff.txt
+podman diff "$CONTAINER" > oci_diff.txt
+
+ID=$(
+  podman \
+  commit \
+  "$CONTAINER" \
+  "$NIX_IMAGE"
+)
+
+podman rm --force --ignore "$CONTAINER"
+
+
+nix build .#empty
+podman load < result
+
+podman \
+run \
+--env=TMPDIR=/home/nixuser/tmp \
+--env=USER=nixuser \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+--volume=volume_nix_static:/home/nixuser/bin:ro \
+--volume=volume_etc:/etc:ro \
+localhost/empty-image-zero-size:0.0.1 \
+/home/nixuser/bin/nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+--store \
+/home/nixuser \
+shell \
+nixpkgs#python3Minimal \
+--command \
+python \
+--version
+
+
+podman \
+run \
+--env=TMPDIR=/home/nixuser/tmp \
+--env=USER=nixuser \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+--volume=volume_nix_static:/home/nixuser/bin:ro \
+--volume=volume_etc:/etc:ro \
+docker.io/tianon/toybox:0.8.4 \
+/home/nixuser/bin/nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+--store \
+/home/nixuser \
+shell \
+nixpkgs#python3Minimal \
+--command \
+python \
+--version

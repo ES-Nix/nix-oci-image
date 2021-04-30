@@ -33,7 +33,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
-        packages.tests = import ./src/tests.nix {
+        packages.nix-unpriviliged = import ./src/nix-unpriviliged.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
