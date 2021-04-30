@@ -14,7 +14,7 @@ run \
 --tty=false \
 --rm=true \
 --user='nixuser' \
-localhost/nix:0.0.1 \
+localhost/nix-run-as-root:0.0.1 \
 /bin/nix \
 --experimental-features \
 'nix-command ca-references flakes' \
@@ -36,7 +36,7 @@ COMMAND
 podman \
 run \
 --interactive=true \
---tty=true \
+--tty=false \
 --rm=true \
 --user='nixuser' \
 --volume="$(pwd)":/code \
@@ -57,25 +57,25 @@ python --version
 COMMAND
 
 
-podman \
-run \
---interactive=true \
---tty=true \
---rm=true \
---user='0' \
---volume="$(pwd)":/code \
---workdir=/code \
-localhost/nix-run-as-root:0.0.1 \
-bash \
-<< COMMAND
-
-/bin/nix \
---experimental-features \
-'nix-command ca-references flakes' \
---store \
-/home/nixuser \
-shell \
-nixpkgs#python3Minimal \
---command \
-python --version
-COMMAND
+#podman \
+#run \
+#--interactive=true \
+#--tty=false \
+#--rm=true \
+#--user='0' \
+#--volume="$(pwd)":/code \
+#--workdir=/code \
+#localhost/nix-run-as-root:0.0.1 \
+#bash \
+#<< COMMAND
+#
+#/bin/nix \
+#--experimental-features \
+#'nix-command ca-references flakes' \
+#--store \
+#/home/nixuser \
+#shell \
+#nixpkgs#python3Minimal \
+#--command \
+#python --version
+#COMMAND

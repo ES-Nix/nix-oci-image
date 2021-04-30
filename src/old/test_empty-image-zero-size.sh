@@ -218,7 +218,7 @@ run \
 --volume=volume_tmp:/tmp/:rw \
 --workdir=/home/nixuser \
 --user='nixuser' \
-localhost/nix:0.0.1 \
+localhost/nix-run-as-root:0.0.1 \
 /home/nixuser/bin/nix \
 --experimental-features \
 'nix-command ca-references flakes' \

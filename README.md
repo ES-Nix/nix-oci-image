@@ -668,7 +668,11 @@ nixpkgs#qgis
 nix path-info --derivation nixpkgs#hello
 
 
-
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+build \
+nixpkgs#hello
 
 ###
 
@@ -808,4 +812,15 @@ nix build nixpkgs#debianutils --no-link
 
 
 python -m unittest
+
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+shell \
+nixpkgs#python3Minimal \
+--command \
+python --version
+
+
+nix --experimental-features 'nix-command ca-references flakes' shell nixpkgs#toybox --command toybox ls
 

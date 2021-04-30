@@ -2,7 +2,7 @@
 
 CONTAINER='nix-oci-dockertools-user-with-sudo-base-container-to-commit'
 DOCKER_OR_PODMAN=podman
-NIX_BASE_IMAGE='localhost/nix:0.0.1'
+NIX_BASE_IMAGE='localhost/nix-run-as-root:0.0.1'
 NIX_STAGE_1='localhost/stage-1'
 NIX_IMAGE='localhost/nix-post-processed:0.0.1'
 

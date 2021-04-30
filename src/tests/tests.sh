@@ -45,7 +45,7 @@ set -euxo pipefail
 #--rm=true \
 #--workdir=/code \
 #--volume="$(pwd)":/code \
-#--volume=/tmp/.X11-unix:/tmp/.X11-unix \
+#--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
 #python:3.9 \
 #bash \
 #-c \
