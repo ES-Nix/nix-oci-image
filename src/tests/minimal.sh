@@ -1,21 +1,29 @@
 #!/usr/bin/env sh
 
 
+
+TOYBOX_PATH='/home/nixuser/bin/toybox'
+TOYBOX_VOLUME='volume_toybox'
+ALPINE='docker.io/library/alpine:3.13.5'
+MINIMAL_OCI='localhost/empty-image-zero-size:0.0.1'
+
+
+
 nix build ../../#empty
 
 podman load < result
 
 
-podman volume rm --force volume_toybox
-podman volume create volume_toybox
+podman volume rm --force "$TOYBOX_VOLUME"
+podman volume create "$TOYBOX_VOLUME"
 podman \
 run \
 --interactive=true \
 --tty=false \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/code \
-docker.io/library/alpine:3.13.5 \
+--volume="$TOYBOX_VOLUME":/code \
+"$ALPINE" \
 sh \
 << COMMANDS
 
@@ -50,10 +58,10 @@ run \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home:ro \
-docker.io/library/alpine:3.13.5 \
+--volume="$TOYBOX_VOLUME":/home:ro \
+"$ALPINE" \
 sh \
--c './home/nixuser/bin/toybox id'
+-c '."$TOYBOX_PATH" id'
 
 
 podman \
@@ -62,20 +70,20 @@ run \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home:ro \
-localhost/empty-image-zero-size:0.0.1  \
-./home/nixuser/bin/toybox id
+--volume="$TOYBOX_VOLUME":/home:ro \
+"$MINIMAL_OCI"  \
+."$TOYBOX_PATH" id
 
 
 podman \
 run \
---entrypoint=/home/nixuser/bin/toybox \
+--entrypoint="$TOYBOX_PATH" \
 --interactive=true \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home:ro \
-localhost/empty-image-zero-size:0.0.1  \
+--volume="$TOYBOX_VOLUME":/home:ro \
+"$MINIMAL_OCI"  \
 id
 
 
@@ -89,7 +97,7 @@ run \
 --rm=true \
 --volume=volume_nix_static:/code \
 --user='0' \
-docker.io/library/alpine:3.13.5 \
+"$ALPINE" \
 sh \
 << COMMAND
 apk update
@@ -107,10 +115,10 @@ run \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home/nixuser/bin/toybox:ro \
+--volume="$TOYBOX_VOLUME":"$TOYBOX_PATH":ro \
 --volume=volume_nix_static:/code:ro \
 --volume=volume_tmp:/tmp/:rw \
-docker.io/library/alpine:3.13.5 \
+"$ALPINE" \
 sh \
 -c \
 '/code/nix --version'
@@ -122,25 +130,25 @@ run \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home/nixuser/bin/toybox:ro \
+--volume="$TOYBOX_VOLUME":"$TOYBOX_PATH":ro \
 --volume=volume_nix_static:/code:ro \
 --volume=volume_tmp:/tmp/:rw \
-localhost/empty-image-zero-size:0.0.1  \
+"$MINIMAL_OCI"  \
 /code/nix --version
 
 
 podman \
 run \
---entrypoint=/home/nixuser/bin/toybox \
+--entrypoint="$TOYBOX_PATH" \
 --env=USER=nixuser \
 --interactive=true \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home:ro \
+--volume="$TOYBOX_VOLUME":/home:ro \
 --volume=volume_nix_static:/code:ro \
 --volume=volume_tmp:/tmp/:rw \
-localhost/empty-image-zero-size:0.0.1  \
+"$MINIMAL_OCI"  \
 sh \
 -c \
 '/code/nix --version'
@@ -154,7 +162,7 @@ run \
 --rm=true \
 --volume=volume_etc:/code \
 --user='0' \
-docker.io/library/alpine:3.13.5 \
+"$ALPINE" \
 sh \
 << COMMAND
 mkdir -p /code/ssl/certs/
@@ -164,17 +172,17 @@ COMMAND
 
 podman \
 run \
---entrypoint=/home/nixuser/bin/toybox \
---env=USER=nixuser \
+--entrypoint="$TOYBOX_PATH" \
+--env='USER=nixuser' \
 --interactive=true \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home:ro \
+--volume="$TOYBOX_VOLUME":/home:ro \
 --volume=volume_etc:/etc/:ro \
 --volume=volume_nix_static:/code:ro \
 --volume=volume_tmp:/tmp/:rw \
-localhost/empty-image-zero-size:0.0.1  \
+"$MINIMAL_OCI"  \
 sh \
 -c \
 "/code/nix --experimental-features 'nix-command ca-references flakes' build nixpkgs#cowsay && ./result/bin/cowsay 'Hi!'"
@@ -190,15 +198,15 @@ sh \
 #--tty=true \
 #--rm=false \
 #--user='0' \
-#--volume=volume_toybox:/home:ro \
+#--volume="$TOYBOX_VOLUME":/home:ro \
 #--volume=volume_nix_static:/code:ro \
 #--volume=volume_tmp:/tmp/:rw \
 #localhost/nix_wip:0.0.1  \
-#/home/nixuser/bin/toybox sh -c id
+#"$TOYBOX_PATH" sh -c id
 #
 #podman start --interactive=true "$CONTAINER"
 #
-#/home/nixuser/bin/toybox mkdir -p /home/nixuser
+#"$TOYBOX_PATH" mkdir -p /home/nixuser
 #echo 'nixuser:x:12345:6789::/home/nixuser:/home/bin/toybox' > /etc/passwd
 #echo 'nixgroup:x:6789:' > /etc/group
 #
