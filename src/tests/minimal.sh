@@ -46,10 +46,9 @@ tar -xf toybox.tgz --strip-components=1
 rm toybox.tgz
 make root BUILTIN=1
 
-mkdir -p /code/nixuser/bin
-cp /toybox/root/host/fs/bin/toybox /code/nixuser/bin
-chmod 0755 /code/nixuser/bin/toybox
-
+mkdir -p /code/home/nixuser/bin
+cp /toybox/root/host/fs/bin/toybox /code/home/nixuser/bin
+chmod 0755 /code/home/nixuser/bin/toybox
 COMMANDS
 
 podman \
@@ -189,21 +188,21 @@ sh \
 
 
 
-#CONTAINER='foo'
-#podman \
-#run \
-#--env=USER=nixuser \
-#--interactive=true \
-#--name="$CONTAINER" \
-#--tty=true \
-#--rm=false \
-#--user='0' \
-#--volume="$TOYBOX_VOLUME":/home:ro \
-#--volume=volume_nix_static:/code:ro \
-#--volume=volume_tmp:/tmp/:rw \
-#localhost/nix_wip:0.0.1  \
-#"$TOYBOX_PATH" sh -c id
-#
+CONTAINER='foo'
+podman \
+run \
+--env=USER=nixuser \
+--interactive=true \
+--name="$CONTAINER" \
+--tty=true \
+--rm=false \
+--user='0' \
+--volume="$TOYBOX_VOLUME":/home:ro \
+--volume=volume_nix_static:/home/nixuser:ro \
+--volume=volume_tmp:/tmp/:rw \
+localhost/nix_wip:0.0.1  \
+"$TOYBOX_PATH" sh -c id
+
 #podman start --interactive=true "$CONTAINER"
 #
 #"$TOYBOX_PATH" mkdir -p /home/nixuser

@@ -25,6 +25,7 @@
         packages.nix_runAsRoot_minimal = import ./src/nix_runAsRoot_minimal.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
+
         packages.empty = import ./src/empty-image-zero-size.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
@@ -54,6 +55,10 @@
         };
 
         packages.wip = import ./src/wip.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.oci-ca-bundle = import ./src/oci-ca-bundle.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 

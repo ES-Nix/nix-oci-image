@@ -1,30 +1,6 @@
 { pkgs ? import <nixpkgs> { } }:
 let
   nix_wip = import ./nix.nix { inherit pkgs; };
-
-  nonRootShadowSetup = { user, uid, group, gid }: with pkgs; [
-    (
-      writeTextDir "etc/shadow" ''
-        ${user}:!:::::::
-      ''
-    )
-    (
-      writeTextDir "etc/passwd" ''
-        ${user}:x:${toString uid}:${toString gid}::/home/${user}:${runtimeShell}
-      ''
-    )
-    (
-      writeTextDir "etc/group" ''
-        ${group}:x:${toString gid}:
-      ''
-    )
-    (
-      writeTextDir "etc/gshadow" ''
-        ${user}:x::
-      ''
-    )
-  ];
-
   caBundle = import ./ca-bundle.nix { inherit pkgs; };
   tmp = import ./create-tmp.nix { inherit pkgs; };
 in
@@ -33,9 +9,9 @@ pkgs.dockerTools.buildImage {
   tag = "0.0.1";
 
   contents = [
-    #caBundle
+    caBundle
     nix_wip
-    #tmp
+    tmp
   ]
   ++
   (with pkgs; [
