@@ -37,6 +37,22 @@
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
+        packages.toybox-oci = import ./src/toybox-oci.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.toybox = import ./src/toybox.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.toybox-oci-nixpkgs = import ./src/toybox-oci-nixpkgs.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.build-environment-to-build-toybox-staticaly = import ./src/build-environment-to-build-toybox-staticaly.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
             podman-rootless.defaultPackage.${system}

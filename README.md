@@ -1009,3 +1009,76 @@ nixpkgs#python3Minimal \
 --command \
 python \
 --version
+
+###
+
+
+
+nix build .#build-environment-to-build-toybox-staticaly
+
+podman load < result
+
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+localhost/build-environment-to-build-toybox-staticaly:0.0.1
+
+mkdir /toybox
+cd /toybox
+
+TOYBOX_VERSION=0.8.4
+wget --no-check-certificate -O toybox.tgz "https://landley.net/toybox/downloads/toybox-$TOYBOX_VERSION.tar.gz"
+tar -xf toybox.tgz --strip-components=1
+rm toybox.tgz
+make root BUILTIN=1
+
+    cp -r $out/toybox/root/host/fs/bin $out/bin
+    cp ${toybox-static} $out/bin/toybox
+    chmod +x $out/bin/toybox
+
+nix \
+shell \
+nixpkgs#{\
+bashInteractive,\
+binutils,\
+coreutils,\
+gcc,\
+glibc,\
+glibc.dev,\
+gzip,\
+linuxHeaders,\
+gnumake,\
+musl,\
+musl.dev,\
+gnutar,\
+stdenv,\
+wget\
+}
+
+
+###
+
+
+
+
+
+
+podman \
+run \
+--entrypoint=/home/bin/toybox \
+--env=PATH/nix \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+--volume=volume_toybox:/home:ro \
+--volume=volume_nix_static:/code/nix:ro \
+--volume=volume_tmp:/tmp/:rw \
+docker.io/library/alpine:3.13.5 \
+sh
+/code/nix --experimental-features 'nix-command ca-references flakes' --store /home/nixuser store gc
+/code/nix --experimental-features 'nix-command ca-references flakes' --store /home/nixuser build nixpkgs#cowsay 
