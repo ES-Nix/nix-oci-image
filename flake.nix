@@ -53,6 +53,10 @@
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
+        packages.wip = import ./src/wip.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
             podman-rootless.defaultPackage.${system}

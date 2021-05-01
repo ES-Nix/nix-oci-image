@@ -38,9 +38,9 @@ tar -xf toybox.tgz --strip-components=1
 rm toybox.tgz
 make root BUILTIN=1
 
-mkdir /code/bin
-cp /toybox/root/host/fs/bin/toybox /code/bin
-chmod +x /code/bin/toybox
+mkdir -p /code/nixuser/bin
+cp /toybox/root/host/fs/bin/toybox /code/nixuser/bin
+chmod 0755 /code/nixuser/bin/toybox
 
 COMMANDS
 
@@ -53,7 +53,7 @@ run \
 --volume=volume_toybox:/home:ro \
 docker.io/library/alpine:3.13.5 \
 sh \
--c './home/bin/toybox id'
+-c './home/nixuser/bin/toybox id'
 
 
 podman \
@@ -64,12 +64,12 @@ run \
 --user='0' \
 --volume=volume_toybox:/home:ro \
 localhost/empty-image-zero-size:0.0.1  \
-./home/bin/toybox id
+./home/nixuser/bin/toybox id
 
 
 podman \
 run \
---entrypoint=/home/bin/toybox \
+--entrypoint=/home/nixuser/bin/toybox \
 --interactive=true \
 --tty=true \
 --rm=true \
@@ -107,7 +107,7 @@ run \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home:ro \
+--volume=volume_toybox:/home/nixuser/bin/toybox:ro \
 --volume=volume_nix_static:/code:ro \
 --volume=volume_tmp:/tmp/:rw \
 docker.io/library/alpine:3.13.5 \
@@ -122,7 +122,7 @@ run \
 --tty=true \
 --rm=true \
 --user='0' \
---volume=volume_toybox:/home:ro \
+--volume=volume_toybox:/home/nixuser/bin/toybox:ro \
 --volume=volume_nix_static:/code:ro \
 --volume=volume_tmp:/tmp/:rw \
 localhost/empty-image-zero-size:0.0.1  \
@@ -131,7 +131,7 @@ localhost/empty-image-zero-size:0.0.1  \
 
 podman \
 run \
---entrypoint=/home/bin/toybox \
+--entrypoint=/home/nixuser/bin/toybox \
 --env=USER=nixuser \
 --interactive=true \
 --tty=true \
@@ -164,7 +164,7 @@ COMMAND
 
 podman \
 run \
---entrypoint=/home/bin/toybox \
+--entrypoint=/home/nixuser/bin/toybox \
 --env=USER=nixuser \
 --interactive=true \
 --tty=true \
@@ -178,3 +178,42 @@ localhost/empty-image-zero-size:0.0.1  \
 sh \
 -c \
 "/code/nix --experimental-features 'nix-command ca-references flakes' build nixpkgs#cowsay && ./result/bin/cowsay 'Hi!'"
+
+
+
+#CONTAINER='foo'
+#podman \
+#run \
+#--env=USER=nixuser \
+#--interactive=true \
+#--name="$CONTAINER" \
+#--tty=true \
+#--rm=false \
+#--user='0' \
+#--volume=volume_toybox:/home:ro \
+#--volume=volume_nix_static:/code:ro \
+#--volume=volume_tmp:/tmp/:rw \
+#localhost/nix_wip:0.0.1  \
+#/home/nixuser/bin/toybox sh -c id
+#
+#podman start --interactive=true "$CONTAINER"
+#
+#/home/nixuser/bin/toybox mkdir -p /home/nixuser
+#echo 'nixuser:x:12345:6789::/home/nixuser:/home/bin/toybox' > /etc/passwd
+#echo 'nixgroup:x:6789:' > /etc/group
+#
+#/home/bin/toybox chown nixuser:nixgroup /home/nixuser
+#
+#/home/bin/toybox chown nixuser:nixgroup -R /home/nixuser
+#/home/bin/toybox chmod 0755 -R /home/nixuser/
+#/home/bin/toybox chmod 0700 /home/nixuser
+#
+#/home/bin/toybox chown nixuser:nixgroup /home/bin/toybox
+#
+#
+#podman rm --force --ignore "$CONTAINER"
+#
+##\
+##-c \
+##"/code/nix --experimental-features 'nix-command ca-references flakes' build nixpkgs#cowsay && ./result/bin/cowsay 'Hi!'"
+#0755

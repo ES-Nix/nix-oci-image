@@ -1082,3 +1082,50 @@ docker.io/library/alpine:3.13.5 \
 sh
 /code/nix --experimental-features 'nix-command ca-references flakes' --store /home/nixuser store gc
 /code/nix --experimental-features 'nix-command ca-references flakes' --store /home/nixuser build nixpkgs#cowsay 
+
+
+
+CONTAINER='nix-oci-dockertools-user-with-sudo-base-container-to-commit'
+DOCKER_OR_PODMAN=podman
+NIX_BASE_IMAGE='localhost/nix-run-as-root:0.0.1'
+NIX_STAGE_1='localhost/stage-1'
+NIX_IMAGE='localhost/nix-post-processed:0.0.1'
+
+
+podman \                           
+run \
+--entrypoint=/home/bin/toybox \
+--env=USER=nixuser \
+--interactive=true \
+--tty=true \
+--rm=false \
+--user='0' \
+--volume=volume_toybox:/home:ro \
+--volume=volume_nix_static:/code:ro \
+--volume=volume_tmp:/tmp/:rw \
+localhost/nix_wip:0.0.1  \
+echo "bar" > /etc/foo
+
+rm -f oci_diff.txt
+podman diff "$CONTAINER" > oci_diff.txt
+
+ID=$(
+  "$DOCKER_OR_PODMAN" \
+  commit \
+  "$CONTAINER" \
+  "$NIX_IMAGE"
+)
+
+
+podman \
+run \
+--env=USER=nixuser \
+--interactive=true \
+--tty=true \
+--rm=false \
+--user='0' \
+--volume=volume_toybox:/home:ro \
+--volume=volume_nix_static:/code:ro \
+--volume=volume_tmp:/tmp/:rw \
+localhost/nix_wip:0.0.1 \
+/home/bin/toybox ls
