@@ -1,0 +1,11 @@
+C /tmp
+A /root
+C /home
+C /home/nixuser
+C /home/nixuser/bin
+A /home/nixuser/bin/toybox
+C /home/nixuser/tmp
+A /nix
+C /etc
+C /etc/group
+C /etc/passwd
