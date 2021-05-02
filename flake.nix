@@ -27,7 +27,7 @@
         '';
 
         builds = pkgsAllowUnfree.writeShellScriptBin "builds" ''
-            nix build .#wip && podman load < result
+            nix build .#nix-static-ca-bundle-etc-passwd-etc-group-tmp && podman load < result
             nix build .#oci-ca-bundle && podman load < result
             nix build .#empty && podman load < result
             # nix build .#toybox-static-oci && podman load < result
@@ -37,6 +37,9 @@
             nix build .#nix-unpriviliged && podman load < result
             nix build .#nix-static-bare && podman load < result
             nix build .#nix-static-bash-interactive-coreutils && podman load < result
+
+            nix build .#tests
+            nix build .#test_nix-static-bash-interactive-coreutils
         '';
 
         build_wip = pkgsAllowUnfree.writeShellScriptBin "build_wip" ''
@@ -44,7 +47,7 @@
             TOYBOX_PATH='./root/toybox'
             TOYBOX_VOLUME='volume_toybox'
             ALPINE='docker.io/library/alpine:3.13.5'
-            WIP_OCI='localhost/nix_wip:0.0.1'
+            WIP_OCI='localhost/nix-static-ca-bundle-etc-passwd-etc-group-tmp:0.0.1'
             CONTAINER='foo'
             NIX_IMAGE='nix:0.0.1'
 
@@ -187,7 +190,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
-        packages.wip = import ./src/wip.nix {
+        packages.nix-static-ca-bundle-etc-passwd-etc-group-tmp = import ./src/nix-static-ca-bundle-etc-passwd-etc-group-tmp.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
@@ -200,6 +203,14 @@
         };
 
         packages.nix-static-bash-interactive-coreutils = import ./src/nix-static-bash-interactive-coreutils.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.tests = import ./src/tests.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.tests_nix-static-bash-interactive-coreutils = import ./src/tests_nix-static-bash-interactive-coreutils.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 

@@ -9,7 +9,7 @@ let
 
 in
 pkgs.dockerTools.buildImage {
-  name = "nix_wip";
+  name = "nix-static-ca-bundle-etc-passwd-etc-group-tmp";
   tag = "0.0.1";
 
   contents = [

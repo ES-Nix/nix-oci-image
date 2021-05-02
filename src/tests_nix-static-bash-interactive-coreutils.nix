@@ -1,12 +1,9 @@
 { pkgs ? import <nixpkgs> { } }:
-pkgs.runCommand "build-with-dependency"
+pkgs.runCommand "tests_nix-static-bash-interactive-coreutils"
 { buildInputs = [ pkgs.python3Minimal ]; }
  ''
   mkdir $out
-
-  python --version > $out/python
   cp -r ${./tests} $out/tests
   cd $out/tests
-  python -m unittest
-
+  python -m unittest tests_nix-static-bash-interactive-coreutils.py
 ''
