@@ -1,31 +1,27 @@
 { pkgs ? import <nixpkgs> { } }:
 let
   nix = import ./nix.nix { inherit pkgs; };
-  ca-bundle-etc-passwd-etc-group = import ./ca-bundle-etc-passwd-etc-group.nix { inherit pkgs; };
+  caBundle = import ./ca-bundle.nix { inherit pkgs; };
   tmp = import ./create-tmp.nix { inherit pkgs; };
-
-  # TODO: it is broken
-  #toybox-static = import ./toybox-static.nix { inherit pkgs; };
-
 in
 pkgs.dockerTools.buildImage {
-  name = "nix_wip";
+  name = "nix-static-bash-interactive-coreutils";
   tag = "0.0.1";
 
   contents = [
-    ca-bundle-etc-passwd-etc-group
+    caBundle
     nix
     tmp
   ]
   ++
   (with pkgs; [
-    #bashInteractive
-    #coreutils
+    bashInteractive
+    coreutils
   ]);
 
   config = {
-    Cmd = [ "/bin" ];
-    # Entrypoint = [ entrypoint ];
+    #Cmd = [ "/bin" ];
+    Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
     Env = [
       "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
       #"GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"

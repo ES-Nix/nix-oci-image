@@ -1,13 +1,13 @@
 { pkgs ? import <nixpkgs> { } }:
 let
-  toybox = import ./toybox.nix { inherit pkgs; };
+  toybox-static = import ./toybox-static.nix { inherit pkgs; };
 in
 pkgs.dockerTools.buildImage {
-  name = "toybox-oci";
+  name = "toybox-static-oci";
   tag = "0.0.1";
 
   contents = [
-    toybox
+    toybox-static
   ];
 
   config = {

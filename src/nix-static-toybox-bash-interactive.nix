@@ -1,25 +1,21 @@
 { pkgs ? import <nixpkgs> { } }:
 let
-  nix = import ./nix.nix { inherit pkgs; };
-  ca-bundle-etc-passwd-etc-group = import ./ca-bundle-etc-passwd-etc-group.nix { inherit pkgs; };
+  nix_wip = import ./nix.nix { inherit pkgs; };
+  caBundle = import ./ca-bundle.nix { inherit pkgs; };
   tmp = import ./create-tmp.nix { inherit pkgs; };
-
-  # TODO: it is broken
-  #toybox-static = import ./toybox-static.nix { inherit pkgs; };
-
 in
 pkgs.dockerTools.buildImage {
   name = "nix_wip";
   tag = "0.0.1";
 
   contents = [
-    ca-bundle-etc-passwd-etc-group
-    nix
+    caBundle
+    nix_wip
     tmp
   ]
   ++
   (with pkgs; [
-    #bashInteractive
+    bashInteractive
     #coreutils
   ]);
 

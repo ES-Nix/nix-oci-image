@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> { } }:
 pkgs.dockerTools.buildImage {
-    name = "empty-image-zero-size";
+    name = "empty";
     tag = "0.0.1";
 }
