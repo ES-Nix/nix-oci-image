@@ -1129,3 +1129,217 @@ run \
 --volume=volume_tmp:/tmp/:rw \
 localhost/nix_wip:0.0.1 \
 /home/bin/toybox ls
+
+
+test -d ~/.config/nix || mkdir --parent --mode=755 ~/.config/nix && touch ~/.config/nix/nix.conf
+echo 'experimental-features = nix-command flakes ca-references' >> ~/.config/nix/nix.conf
+nix flake show github:GNU-ES/hello
+
+nix shell nixpkgs/7138a338b58713e0dea22ddab6a6785abec7376a#{gcc10,gcc6,gfortran10,gfortran6,julia,nodejs,poetry,python39,rustc,yarn}
+
+nix shell nixpkgs#xorg.xclock --command xclock
+nix shell nixpkgs#bottom --command btm
+
+nix shell nixpkgs#xorg.xclock --command timeout 10 xclock 
+
+cp -r /home/nixuser/code/src/play-latex/ /home/nixuser/play
+cd /home/nixuser/play
+nix shell nixpkgs#{texlive.combined.scheme-basic,pandoc}
+
+pdflatex hello.tex
+pandoc hello.tex -o hello.pdf
+
+
+###
+
+docker \
+run \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='0' \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+docker.io/nixpkgs/nix-flakes
+<< COMMANDS
+nix build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
+timeout 50 result/runVM
+COMMANDS
+
+
+
+
+podman \
+run \
+--cap-add ALL \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='nixuser' \
+--workdir=/home/nixuser \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+localhost/nix-static-toybox-bash-interactive-coreutils:0.0.1 \
+<< COMMANDS
+nix build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
+COMMANDS
+
+
+podman \
+run \
+--cap-add ALL \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='nixuser' \
+--workdir=/home/nixuser \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+--volume=/proc:/proc:ro \
+localhost/nix-static-toybox-bash-interactive-coreutils:0.0.1 \
+<< COMMANDS
+nix build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
+COMMANDS
+
+
+
+podman \
+run \
+--cap-add ALL \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--privileged=true \
+--tty=true \
+--rm=true \
+--user='nixuser' \
+--workdir=/home/nixuser \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+localhost/nix-static-toybox-bash-interactive-coreutils:0.0.1
+
+
+podman \
+run \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user='0' \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+docker.io/nixpkgs/nix-flakes
+
+--cap-add ALL \
+--privileged=true \
+nix build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
+
+
+podman \
+run \
+--cap-add ALL \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='0' \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+docker.io/nixpkgs/nix-flakes
+ \
+<< COMMANDS
+echo 'Building VM'
+nix --experimental-features 'nix-command ca-references flakes' build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
+echo 'Build finished!'
+echo 'Trying to run the VM!'
+
+timeout 50 result/runVM
+
+echo 'It seens to have worked!'
+COMMANDS
+
+
+
+
+
+podman \
+run \
+--cap-add ALL \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='0' \
+--workdir=/home/nixuser \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+nix-static-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
+bash \
+<< COMMANDS
+echo 'Building VM'
+nix build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
+echo 'Build finished!'
+echo 'Trying to run the VM!'
+
+timeout 50 result/runVM
+
+echo 'It seens to have worked!'
+COMMANDS
+
+
+
+podman \
+run \
+--cap-add ALL \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='nixuser' \
+--workdir=/home/nixuser \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+localhost/nix-static-toybox-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
+<< COMMANDS
+echo 'Building VM'
+
+timeout 1 sleep 1000
+
+nix build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
+
+echo 'Build finished!'
+echo 'Trying to run the VM!'
+nix shell nixpkgs#coreutils --command timeout 50 result/runVM
+
+echo 'It seens to have worked!'
+COMMANDS
+
+
+
+podman \
+run \
+--cap-add ALL \
+--device=/dev/kvm \
+--env="DISPLAY=${DISPLAY:-:0}" \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='nixuser' \
+--workdir=/home/nixuser \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+localhost/nix-static-toybox-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
+<< COMMANDS
+echo 'Building VM'
+
+timeout 1 sleep 1000
+
+COMMANDS
+
+
+### 
+
+TODO: 
+- use this http://docs.podman.io/en/latest/markdown/podman-volume-create.1.html#examples
+  to reproduce the error about the no exec in tmp.

@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { } }:
 pkgs.runCommand "tests_nix-static-bash-interactive-coreutils"
-{ buildInputs = [ pkgs.python3Minimal ]; }
+{ buildInputs = with pkgs; [ python3Minimal ]; }
  ''
   mkdir $out
   cp -r ${./tests} $out/tests

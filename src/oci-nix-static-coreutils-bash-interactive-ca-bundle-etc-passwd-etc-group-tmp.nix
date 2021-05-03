@@ -3,9 +3,13 @@ let
   nix = import ./nix.nix { inherit pkgs; };
   ca-bundle-etc-passwd-etc-group = import ./ca-bundle-etc-passwd-etc-group.nix { inherit pkgs; };
   tmp = import ./create-tmp.nix { inherit pkgs; };
+
+  # TODO: it is broken
+  #toybox-static = import ./toybox-static.nix { inherit pkgs; };
+
 in
 pkgs.dockerTools.buildImage {
-  name = "nix-static-bash-interactive-coreutils";
+  name = "nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp";
   tag = "0.0.1";
 
   contents = [

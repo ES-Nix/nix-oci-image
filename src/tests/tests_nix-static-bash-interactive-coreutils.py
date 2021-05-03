@@ -48,17 +48,17 @@ class UtilsTestCase(TestCase):
         #     print(proc.stdout.read())
 
         commands = b'''
-        echo 'Some string!'
-        file --version
-        podman images
-        expresion=$(ls -la | rg 'root')
-        echo $expresion
+        echo 'Some string!'         
+        python --version
+        stat /nix/store 
         '''
 
         result = subprocess_cmds(commands)
         print(result)
 
         self.assertIn('Some string!', result)
+        self.assertIn('1775', result)
+        self.assertIn('Python 3.8.9', result)
         # commands = """nix --experimental-features 'nix-command ca-references flakes' shell nixpkgs#python3Minimal --command python --version"""
         # with Popen([commands], stdout=PIPE) as proc:
         #     print(proc.stdout.read())
