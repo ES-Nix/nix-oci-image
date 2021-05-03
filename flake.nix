@@ -22,13 +22,13 @@
         '';
 
         wrapp = pkgsAllowUnfree.writeShellScriptBin "wrapp" ''
-            #${builds}/bin/builds
-            #${build_wip}/bin/build_wip
-            #${nix-static-toybox-bash-interactive-coreutil}/bin/nix-static-toybox-bash-interactive-coreutil
+            ${builds}/bin/builds
+            ${build_wip}/bin/build_wip
+            ${nix-static-toybox-bash-interactive-coreutil}/bin/nix-static-toybox-bash-interactive-coreutil
 
-            #nix build .#future
-            #podman load < result
-            #${nix-static-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp-toybox}/bin/nix-static-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp-toybox
+            nix build .#future
+            podman load < result
+            ${nix-static-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp-toybox}/bin/nix-static-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp-toybox
 
             nix build .#nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp
             podman load < result
