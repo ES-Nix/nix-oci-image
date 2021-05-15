@@ -20,8 +20,9 @@ nix-oci-dockertools:0.0.1 bash
 
 ##
 
+nix develop github:ES-Nix/nix-oci-image/nix-static-unpriviliged
 ```bash
-nix build github:ES-Nix/oci-nix-image/nix-static-unpriviliged#oci.nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp
+nix build github:ES-Nix/nix-oci-image/nix-static-unpriviliged#oci.nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp
 
 podman load < result
 
