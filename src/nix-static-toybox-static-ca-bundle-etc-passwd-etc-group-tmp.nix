@@ -33,7 +33,7 @@ pkgs.dockerTools.buildImage {
       # A user is required by nix
       # https://github.com/NixOS/nix/blob/9348f9291e5d9e4ba3c4347ea1b235640f54fd79/src/libutil/util.cc#L478
       "USER=nixuser"
-      "PATH=/home/nixuser/bin:/bin/nix"
+      "PATH=/home/nixuser/bin:/bin"
       #"NIX_PATH=/nix/var/nix/profiles/per-user/root/channels"
       "TMPDIR=/home/nixuser/tmp"
     ];

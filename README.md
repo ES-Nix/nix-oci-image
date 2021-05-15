@@ -17,6 +17,35 @@ nix-oci-dockertools:0.0.1 bash
 
 
 
+
+##
+
+```bash
+nix build github:ES-Nix/oci-nix-image/nix-static-unpriviliged#oci.nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp
+
+podman load < result
+
+podman \
+run \
+--env=HOME=/root \
+--env=USER=root \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='0' \
+--workdir=/root \
+localhost/nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
+sh \
+<< COMMANDS
+nix build nixpkgs#hello
+./result/bin/hello
+COMMANDS
+```
+
+nix build nixpkgs#hello
+nix build nixpkgs#qemu
+
+
 About the docker commit: https://docs.docker.com/engine/reference/commandline/commit/
 
 TODO: create another repo?
@@ -1517,4 +1546,4 @@ https://discourse.nixos.org/t/tweag-nix-dev-update-6/11195
 
 https://discourse.nixos.org/t/tweag-nix-dev-update-5/10560/3
 
-
+[NYLUG Presents: Sneaking in Nix - Building Production Containers with Nix](https://youtu.be/pfIDYQ36X0k?t=1492)

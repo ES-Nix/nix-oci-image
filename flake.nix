@@ -587,81 +587,9 @@
       in
       {
 
-        packages.nix_runAsRoot = import ./src/nix_runAsRoot.nix {
+        packages.oci = import ./src/oci.nix {
           pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.nix_runAsRoot_minimal = import ./src/nix_runAsRoot_minimal.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.empty = import ./src/empty-oci.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.nix-unpriviliged = import ./src/nix-unpriviliged.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.toybox-static-oci = import ./src/toybox-static-oci.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.toybox = import ./src/toybox.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.toybox-oci-nixpkgs = import ./src/toybox-oci-nixpkgs.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.build-environment-to-build-toybox-staticaly = import ./src/build-environment-to-build-toybox-staticaly.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.nix-static-ca-bundle-etc-passwd-etc-group-tmp = import ./src/nix-static-ca-bundle-etc-passwd-etc-group-tmp.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp = import ./src/nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.oci-ca-bundle = import ./src/oci-ca-bundle.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.nix-static-bare = import ./src/nix-static-bare.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.nix-static-bash-interactive-coreutils = import ./src/nix-static-bash-interactive-coreutils.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.tests = import ./src/tests.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.tests_nix-static-bash-interactive-coreutils = import ./src/tests_nix-static-bash-interactive-coreutils.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.nix-static-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp = import ./src/oci-nix-static-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp = import ./src/oci-nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-        };
-
-        packages.tests_podman = import ./src/tests_podman.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
-          podman = podman-rootless;
-        };
-
-        packages.future = import ./src/oci-nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp.nix {
-          pkgs = nixpkgs.legacyPackages.${system};
+          podman-rootless = podman-rootless.defaultPackage.${system};
         };
 
         devShell = pkgsAllowUnfree.mkShell {
