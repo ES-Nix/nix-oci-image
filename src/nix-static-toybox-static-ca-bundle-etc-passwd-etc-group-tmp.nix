@@ -1,27 +1,30 @@
 { pkgs ? import <nixpkgs> { } }:
 let
-  nix_wip = import ./nix.nix { inherit pkgs; };
-  ca-bundle = import ./ca-bundle.nix { inherit pkgs; };
+  ca-bundle-etc-passwd-etc-group = import ./ca-bundle-etc-passwd-etc-group.nix { inherit pkgs; };
+  nix = import ./nix.nix { inherit pkgs; };
   tmp = import ./create-tmp.nix { inherit pkgs; };
+  toybox-static = import ./toybox-static.nix { inherit pkgs; };
+
 in
 pkgs.dockerTools.buildImage {
-  name = "nix_wip";
+  name = "nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp";
   tag = "0.0.1";
 
   contents = [
-    ca-bundle
-    nix_wip
+    ca-bundle-etc-passwd-etc-group
+    nix
     tmp
+    toybox-static
   ]
   ++
   (with pkgs; [
-    bashInteractive
+    #bashInteractive
     #coreutils
   ]);
 
   config = {
-    Cmd = [ "/bin" ];
-    # Entrypoint = [ entrypoint ];
+    Cmd = [ "sh" ];
+    Entrypoint = [ "/home/nixuser/bin/toybox" ];
     Env = [
       "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
       #"GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"
@@ -30,7 +33,7 @@ pkgs.dockerTools.buildImage {
       # A user is required by nix
       # https://github.com/NixOS/nix/blob/9348f9291e5d9e4ba3c4347ea1b235640f54fd79/src/libutil/util.cc#L478
       "USER=nixuser"
-      "PATH=/bin:/home/nixuser/bin"
+      "PATH=/home/nixuser/bin:/bin/nix"
       #"NIX_PATH=/nix/var/nix/profiles/per-user/root/channels"
       "TMPDIR=/home/nixuser/tmp"
     ];

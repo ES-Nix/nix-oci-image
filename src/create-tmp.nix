@@ -1,10 +1,10 @@
 { pkgs ? import <nixpkgs> { } }:
 pkgs.stdenv.mkDerivation {
-      name = "tmp";
-      phases = [ "installPhase" "fixupPhase" ];
+  name = "tmp";
+  phases = [ "installPhase" "fixupPhase" ];
 
-      installPhase = ''
-        mkdir -p $out/tmp
-        mkdir -p $out/home/nixuser/tmp
-      '';
-    }
+  installPhase = ''
+    mkdir -p $out/tmp
+    mkdir -p $out/home/nixuser/tmp
+  '';
+}

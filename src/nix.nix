@@ -2,7 +2,7 @@
 let
   nix = pkgs.fetchurl {
     url = "https://hydra.nixos.org/job/nix/master/buildStatic.x86_64-linux/latest/download-by-type/file/binary-dist";
-    hash = "sha256-8OnU2GUMzvmzQFa0RahI8jU9Jd3+PU+nBGxjdoQfVPs=";
+    hash = "sha256-LH1wAS+bzaIap4NqeavAWX7Yj/zzqj5feYv2rhAXhT4=";
   };
 in
 pkgs.stdenv.mkDerivation {

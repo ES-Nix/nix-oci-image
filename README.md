@@ -1338,8 +1338,183 @@ timeout 1 sleep 1000
 COMMANDS
 
 
+nix shell nixpkgs#bashInteractive
+
+nix shell nixpkgs#{\
+gcc10,\
+gcc6,\
+gfortran10,\
+gfortran6,\
+nodejs,\
+poetry,\
+python39,\
+rustc,\
+yarn\
+}
+
+nix shell nixpkgs#julia
+nix shell nixpkgs#geogebra
+
+
+podman \
+run \
+--cap-add ALL \
+--device=/dev/kvm \
+--env="DISPLAY=:0" \
+--interactive=true \
+--tty=false \
+--rm=true \
+--user='0' \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+docker.io/lnl7/nix:2.3.6 \
+<< COMMAND
+timeout 1 sleep 200 || ( [[ $? -eq 124 ]] && echo "Timeout reached, but that's OK" )
+COMMAND
+
 ### 
 
 TODO: 
 - use this http://docs.podman.io/en/latest/markdown/podman-volume-create.1.html#examples
   to reproduce the error about the no exec in tmp.
+  
+
+
+### Good ideas
+
+TODO: reproduce
+https://github.com/NixOS/nix/issues/4458
+
+https://nixos.org/manual/nix/unstable/command-ref/new-cli/nix3-profile-install.html
+
+`nix develop --help`
+
+
+       · Start a shell with the build environment of GNU Hello:
+
+       # nix develop nixpkgs#hello
+
+       · Record a build environment in a profile:
+
+       # nix develop --profile /tmp/my-build-env nixpkgs#hello
+
+       · Use a build environment previously recorded in a profile:
+
+       # nix develop /tmp/my-build-env
+
+       · Replace all occurences of the store path corresponding to glibc.dev with a writable directory:
+
+       # nix develop --redirect nixpkgs#glibc.dev ~/my-glibc/outputs/dev
+
+              Note that this is useful if you're running a nix develop shell for nixpkgs#glibc in ~/my-glibc and want to compile another package against it.
+
+
+          /home/nixuser/bin/toybox stat /proc
+          /bin/nix --experimental-features 'nix-command ca-references flakes' shell nixpkgs#xorg.xclock --command /home/nixuser/bin/toybox timeout 2 xclock
+
+
+
+
+> It's good enough to build Linux from scratch. 
+[Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=15&end=17&version=3) 
+
+
+we need good support for Linux containers although this is mostly transparent from within so it's possible
+that if we don't have time you know the upstream LXC project if they get that working on android the correct response 
+maybe just okay use that and then run toybox in the containers it doesn't have to be integrated it should be a drop-in 
+replacement for android 
+
+
+I do know what the constraints are that will prevent it from being upstream so we need a BSD license command line
+implementation that has to be simple readable security audible and minimize the attack surface but provide more than
+Android toolbox does now by a couple orders of magnitude (one order and a half). The simpler and more readable it is
+the easier it is to security audit. 
+[Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=1372&end=1399&version=3)
+
+
+> Minimizing your build dependencies minimizing your environmental dependencies is actually a good thing
+and these are lessons from raw busybox, I maintained the busybox project for a couple years, I
+>  put out the 1.0.1 through 1.0.2 releases you probably already knew that. 
+[Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=1464&end=1482&version=3)
+
+
+> If people start doing online banking through through this thing you don't want anybody installing 
+key loggers and packet sniffers and stuff like that it is an enormous issue and the way to deal with security is is
+make it so everybody can understand exactly what the code is doing at first glance spot single point of truth means
+you only need to change it once. 
+[Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=1406&end=1423&version=3)
+
+
+It should be sufficient for self hosting a development environment remember a significant part of the point of the
+exercise is so that the smartphone can be independent of the PC so that it can replace the PC so that we can actually
+use smartphones as workstations if it can't rebuild the OS that's on the phone itself your development environment is
+not real it should be standards compliant it should have no external dependencies I mentioned not even incur 
+tsa's in Z Lib to avoid the code reuse that isn't actually reuse because there's no readers just use it should
+probably be a multi call binary that can be statically linked and dropped on a system.
+[Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=1536&end=1564&version=3)
+
+
+It should be sufficient for self hosting a development environment, remember a significant part of the point of the
+exercise is so that the smartphone can be independent of the PC so that it can replace the PC so that we can actually
+use smartphones as workstations. If it can't rebuild the OS that's on the phone itself your development environment is
+not real it should be standards compliant it should have no external dependencies I mentioned not even incur 
+tsa's in Z Lib to avoid the code reuse that isn't actually reuse because there's no readers just use it should
+probably be a multi call binary that can be statically linked and dropped on a system.
+[Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=1536&end=1564&version=3)
+
+
+It should be sufficient for self hosting a development environment, remember a significant part of the point of the
+exercise is so that the smartphone can be independent of the PC so that it can replace the PC so that we can actually
+use smartphones as workstations. If it can't rebuild the OS that's on the phone itself your development environment
+is not real. [Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=1541&end=1564&version=3)
+
+
+It should be standards compliant it should have no external dependencies I mentioned not even ncurses and zlib 
+to avoid the code reuse that isn't actually reuse because there's no "re" just "use". 
+[Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=1566&end=1581&version=3)
+
+
+It should probably be a multi call binary that can be statically linked and be dropped on a system in
+part this basically just allows you to add it more easily to a system that doesn't have it it's 
+generally a nice thing to have you can multi call binary versus non multi.
+[Embedded Linux Conference 2013 - Toybox: Writing a New Command Line From Scratch](https://www.youtube.com/embed/SGmtP5Lg_t0?start=1566&end=1581&version=3)
+
+
+
+
+[The reboot of the Harwell Dekatron / WITCH computer, the world's oldest working computer](https://www.youtube.com/watch?v=SYpPPIsxq64)
+
+TODO: it should be provided both versions, i mean, another one without no subtitles in portguese? 
+Add a usefull transcript of this [Revolution OS - Documentário sobre Linux - Português](https://youtu.be/plMxWpXhqig?t=3211)
+
+[The Future of Data Storage](https://www.youtube.com/watch?v=nyUcCnqXMKE)
+
+[Why Build Colossus? (Bill Tutte) - Computerphile](https://www.youtube.com/embed/1f82-aTYNb8?start=118&end=241&version=3)
+
+
+The heart of all these electronic systems has been the vacuum tube. But the Bell Telephone Laboratories have added
+an entirely new and different heart to modern communication systems. The transistor. Operating on a new and different 
+principle arising from basic research on solid substances and how the electrons inside them behave. How did
+it all come about? Well, Doctors Shockley, Bardeen and Brattain, and their associates at the Bell Telephone Laboratories, 
+were working on a problem in pure research, investigating the surface properties of germanium, a substance known 
+to be a semiconductor of electricity. Their studies suggested a way to amplify an electric current within a solid 
+without a vacuum or a heating element. And after months of calculations, experiments, tests, the transistor was born. 
+The transistor - a new name, a new device that can do many of the jobs done by the vacuum tube, and many the tube can't do.
+[The Transistor: a 1953 documentary, anticipating its coming impact on technology](https://www.youtube.com/embed/V9xUQWo4vN0?start=228&end=283&version=3)
+
+
+[Packaging with Nix](https://www.youtube.com/watch?v=Ndn5xM1FgrY)
+https://nixos.org/manual/nixpkgs/stable/#sec-stdenv-phases
+
+https://github.com/landley/toybox
+https://en.wikipedia.org/wiki/Toybox
+
+https://github.com/NixOS/nixpkgs/blob/master/pkgs/tools/misc/toybox/default.nix
+
+https://github.com/tianon/dockerfiles/blob/master/toybox/Dockerfile
+
+
+https://discourse.nixos.org/t/tweag-nix-dev-update-6/11195
+
+https://discourse.nixos.org/t/tweag-nix-dev-update-5/10560/3
+
+

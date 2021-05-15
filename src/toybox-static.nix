@@ -1,54 +1,17 @@
 { pkgs ? import <nixpkgs> { } }:
 let
   toybox = pkgs.fetchurl {
-    url = "https://landley.net/toybox/downloads/toybox-0.8.4.tar.gz";
-    hash = "sha256-yypWWo0wAV0I1zYoeV3KUahbmbFJrqu77Nno29vY/dw=";
+    url = "http://landley.net/toybox/downloads/binaries/0.8.4/toybox-x86_64";
+    hash = "sha256-l5f9aXpxPCbelv61bY9zsPd3okzfqCZ+khlbl+isAOA=";
   };
 in
 pkgs.stdenv.mkDerivation {
   name = "toybox-static";
-  phases = [ "unpackPhase" "configurePhase" "buildPhase" "installPhase" "fixupPhase" ];
-
-  unpackPhase = ''
-    mkdir -p $out
-
-    tar -xf ${toybox} -C $out --strip-components=1
-    ls -ahl $out
-    sha256sum ${toybox}
-    exit 1
-  '';
-
-  #makeFlags = [ "PREFIX=$(out)" ];
-  buildInputs = with pkgs; [
-    bashInteractive
-    binutils
-    coreutils
-    gcc
-    glibc # ldd ? glibc.dev?
-    glibc.dev
-    gzip
-    linuxHeaders
-    gnumake
-    musl
-    musl.dev
-    gnutar
-    stdenv
-  ];
-
-  configurePhase = ''
-    make allnoconfig
-  '';
-
-  buildPhase = ''
-    ls -al $out
-    cat $out/configure
-    make BUILTIN=1
-  '';
+  phases = [ "installPhase" "fixupPhase" ];
 
   installPhase = ''
-    mkdir --parent $out/bin
-
-    ls -ahl $out
-
+    mkdir --parent $out/home/nixuser/bin
+    cp ${toybox} $out/home/nixuser/bin/toybox
+    chmod +x $out/home/nixuser/bin/toybox
   '';
 }

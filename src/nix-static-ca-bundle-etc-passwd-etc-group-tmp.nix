@@ -4,9 +4,6 @@ let
   ca-bundle-etc-passwd-etc-group = import ./ca-bundle-etc-passwd-etc-group.nix { inherit pkgs; };
   tmp = import ./create-tmp.nix { inherit pkgs; };
 
-  # TODO: it is broken
-  #toybox-static = import ./toybox-static.nix { inherit pkgs; };
-
 in
 pkgs.dockerTools.buildImage {
   name = "nix-static-ca-bundle-etc-passwd-etc-group-tmp";

@@ -29,17 +29,17 @@ let
 
 in
 pkgs.dockerTools.buildImage {
-    name = "nix-unpriviliged";
-    tag = "0.0.1";
+  name = "nix-unpriviliged";
+  tag = "0.0.1";
 
-    contents = [
-      caBundle
-      nix
-      pkgs.busybox
-      #pkgs.toybox
-      tmp
-      (nonRootShadowSetup { user = "nixuser"; uid = 12345;  group = "nixgroup"; gid = 6789; })
-    ];
+  contents = [
+    caBundle
+    nix
+    pkgs.busybox
+    #pkgs.toybox
+    tmp
+    (nonRootShadowSetup { user = "nixuser"; uid = 12345; group = "nixgroup"; gid = 6789; })
+  ];
 
   config = {
     Cmd = [ "/bin" ];
