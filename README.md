@@ -20,9 +20,17 @@ nix-oci-dockertools:0.0.1 bash
 
 ##
 
-nix develop github:ES-Nix/nix-oci-image/nix-static-unpriviliged
+```
+nix \
+build \
+github:ES-Nix/nix-oci-image/nix-static-unpriviliged#oci.nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp
+```
+
 ```bash
-nix build github:ES-Nix/nix-oci-image/nix-static-unpriviliged#oci.nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp
+
+nix \
+develop \
+github:ES-Nix/nix-oci-image/nix-static-unpriviliged
 
 podman load < result
 
@@ -66,18 +74,6 @@ chmod +x $out/home/${user_name}/flake_requirements.sh
         ${pkgs.dockerTools.shadowSetup}        
           mkdir --parent $out/nix/var/nix/gcroots
           chown pedroregispoar:pedroregispoargroup
-
-#docker run \
-#--interactive \
-#--rm \
-#lnl7/nix:2.3.7 bash -c 'nix-env --install --attr nixpkgs.curl && curl -fsSL https://raw.githubusercontent.com/ES-Nix/get-nix/e47ab707cfd099a6669e7a2e47aeebd36e1c101d/install-lnl7-oci.sh | sh && . ~/.bashrc && flake'
-
-
-#sudo --preserve-env nix-env --file "<nixpkgs>" --install --attr \
-#commonsCompress \
-#gnutar \
-#lzma.bin \
-#git
 
 
 #stat --format "uid=%u uname=%U gid=%g gname=%G %a %A" /tmp \
