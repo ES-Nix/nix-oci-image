@@ -55,6 +55,25 @@ nix build nixpkgs#hello
 nix build nixpkgs#qemu
 
 
+
+
+podman \
+run \
+--env='DISPLAY=:0.0' \
+--env='USER=nixuser' \
+--env='HOME=/home/nixuser' \
+--interactive=false \
+--tty=false \
+--rm=true \
+--user='nixuser' \
+--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+localhost/nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp-unpriviliged:0.0.1 \
+<< COMMANDS
+toybox id
+nix shell nixpkgs#xorg.xclock --command toybox timeout 2 xclock
+exit 0
+COMMANDS
+
 About the docker commit: https://docs.docker.com/engine/reference/commandline/commit/
 
 TODO: create another repo?

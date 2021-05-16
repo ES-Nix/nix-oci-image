@@ -515,14 +515,13 @@
         '';
 
         oci-nix-toybox-test = pkgsAllowUnfree.writeShellScriptBin "oci-nix-toybox-test" ''
-          xhost +
-          nix build .#nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp
+                    xhost +
+                    nix build .#oci.nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp
 
-          podman load < result
+                    podman load < result
 
           podman \
           run \
-          --cap-add ALL \
           --device=/dev/kvm \
           --env="DISPLAY=:0.0" \
           --interactive=true \
@@ -532,12 +531,14 @@
           --volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
           localhost/nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
           << COMMAND
-          /home/nixuser/bin/toybox id
+          toybox id
           COMMAND
 
           podman \
           run \
-          --env="DISPLAY=:0.0" \
+          --env='DISPLAY=:0.0' \
+          --env='USER=root' \
+          --env='HOME=/root' \
           --interactive=true \
           --tty=false \
           --rm=true \
@@ -545,24 +546,9 @@
           --volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
           localhost/nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
           << COMMAND
-            /home/nixuser/bin/toybox id
-            /home/nixuser/bin/toybox stat /proc
-            /bin/nix --experimental-features 'nix-command ca-references flakes' shell nixpkgs#xorg.xclock --command /home/nixuser/bin/toybox timeout 2 xclock
-          COMMAND
-
-          podman \
-          run \
-          --env="DISPLAY=:0.0" \
-          --interactive=true \
-          --tty=false \
-          --rm=true \
-          --user='nixuser' \
-          --volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
-          localhost/nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
-          << COMMAND
-            /home/nixuser/bin/toybox id
-            /home/nixuser/bin/toybox stat /proc
-            /bin/nix --experimental-features 'nix-command ca-references flakes' shell nixpkgs#xorg.xclock --command /home/nixuser/bin/toybox timeout 2 xclock
+          toybox id
+          toybox stat /proc
+          nix shell nixpkgs#xorg.xclock --command toybox timeout 2 xclock
           COMMAND
         '';
 
@@ -574,7 +560,6 @@
 
           podman \
           run \
-          --cap-add ALL \
           --device=/dev/kvm \
           --env="DISPLAY=:0.0" \
           --interactive=true \
@@ -594,7 +579,7 @@
 
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
-            podman-rootless.defaultPackage.${system}
+            # podman-rootless.defaultPackage.${system}
             bashInteractive
             coreutils
             file
