@@ -52,10 +52,6 @@ rec {
     pkgs = pkgs;
   };
 
-  tests = import ./tests.nix {
-    pkgs = pkgs;
-  };
-
   tests_nix-static-bash-interactive-coreutils = import ./tests_nix-static-bash-interactive-coreutils.nix {
     pkgs = pkgs;
   };

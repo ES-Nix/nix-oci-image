@@ -1,19 +1,59 @@
 # nix-oci-image
 
 
-
+```bash
 git clone https://github.com/ES-Nix/nix-oci-image.git
 cd nix-oci-image
 git checkout nix-oci-image-dockerTools
+```
+
+```bash
+nix build .#tests.tests \
+&& result/build_load-nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp \
+&& result/test_xclock-nix-static-coreutils-bash-unpriviliged
+```
+
+```bash
+nix build .#tests.tests \
+&& result/runOCI
+```
 
 
-docker run \
---interactive \
---rm \
---tty=true \
---workdir /code \
---volume="$(pwd)":/code \
-nix-oci-dockertools:0.0.1 bash
+nix \
+shell \
+nixpkgs#python3Minimal \
+--command \
+python \
+-c \
+'import unittest'
+
+
+nix store gc
+nix store optimise
+nix build nixpkgs#blender
+nix build nixpkgs#debianutils
+nix shell nixpkgs#toybox --command toybox
+nix path-info --derivation nixpkgs#hello
+
+nix \
+path-info \
+--human-readable \
+--closure-size \
+nixpkgs#hello
+
+nix \
+path-info \
+--human-readable \
+--closure-size \
+github:NixOS/nix#nix-static
+
+nix \
+--experimental-features \
+'nix-command ca-references flakes' \
+path-info \
+--human-readable \
+--closure-size \
+nixpkgs#python3Minimal
 
 
 
@@ -53,46 +93,15 @@ COMMANDS
 
 nix build nixpkgs#hello
 nix build nixpkgs#qemu
+nix build nixpkgs#qgis
+nix build nixpkgs#blender
 
-
-
-
-podman \
-run \
---env='DISPLAY=:0.0' \
---env='USER=nixuser' \
---env='HOME=/home/nixuser' \
---interactive=false \
---tty=false \
---rm=true \
---user='nixuser' \
---volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
-localhost/nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp-unpriviliged:0.0.1 \
-<< COMMANDS
-toybox id
-nix shell nixpkgs#xorg.xclock --command toybox timeout 2 xclock
-exit 0
-COMMANDS
 
 About the docker commit: https://docs.docker.com/engine/reference/commandline/commit/
 
 TODO: create another repo?
 About the action https://github.com/cachix/install-nix-action/pull/62
 
-
-```
-cat '${./flake_requirements.sh}' > $out/home/${user_name}/flake_requirements.sh
-chmod +x $out/home/${user_name}/flake_requirements.sh
-#cat ${./default.nix} > $out/home/${user_name}/default.nix
-#echo '${correctPermissions}' > $out/home/${user_name}/correct_permissions.sh
-#cat '${./flake_requirements.sh}' > $out/home/${user_name}/flake_requirements.sh
-#chmod +x $out/home/${user_name}/flake_requirements.sh
-```
-
-        #!${pkgs.stdenv.shell}
-        ${pkgs.dockerTools.shadowSetup}        
-          mkdir --parent $out/nix/var/nix/gcroots
-          chown pedroregispoar:pedroregispoargroup
 
 
 #stat --format "uid=%u uname=%U gid=%g gname=%G %a %A" /tmp \
@@ -146,16 +155,9 @@ COMMAND
 
 nix-env --install --attr nixpkgs.commonsCompress nixpkgs.gnutar nixpkgs.lzma.bin nixpkgs.git
 
-
-
 du --human-readable --max-depth=1 /nix/
-
-
-
 nix build github:NixOS/nix#nix-static
 cp --no-dereference --recursive --verbose $(nix-store --query --requisites result) output
-
-
 
 nixpkgs/nix-flakes
 
@@ -503,37 +505,6 @@ sudo mv nix /usr/bin/nix
 sha256sum /usr/bin/nix
 
 
-nix \
---experimental-features 'nix-command ca-references flakes' \
-shell nixpkgs#python3Minimal \
---command \
-python \
--c \
-'import unittest'
-
-nix \
---experimental-features \
-'nix-command ca-references flakes' \
-build \
-nixpkgs#qemu
-
-
-
-
-nix \
---experimental-features \
-'nix-command ca-references flakes' \
-develop \
-github:ES-Nix/podman-rootless/74fc79fc29d1b4ef5c9e13033bf48a188d1f024a
-
-nix \
---experimental-features 'nix-command ca-references flakes' \
-develop \
-github:ES-Nix/nix-flakes-shellHook-writeShellScriptBin-defaultPackage/65e9e5a64e3cc9096c78c452b51cc234aa36c24f
-
-
-nix --experimental-features 'nix-command ca-references flakes' store gc
-
 ### 
 
 
@@ -659,26 +630,6 @@ path-info \
 nixpkgs#qgis
 
 nix \
---experimental-features 'nix-command ca-references flakes' \
-shell \
-nixpkgs#python3Minimal \
---command \
-python \
--c \
-'import unittest'
-
-
-nix \
---experimental-features \
-'nix-command ca-references flakes' \
-path-info \
---human-readable \
---closure-size \
-nixpkgs#python3Minimal 
-
-
-
-nix \
 --experimental-features \
 'nix-command ca-references flakes' \
 shell \
@@ -710,7 +661,6 @@ path-info \
 nixpkgs#qgis
 
 
-nix path-info --derivation nixpkgs#hello
 
 
 nix \
@@ -766,32 +716,6 @@ nix \
 shell \
 nixpkgs#{bashInteractive,coreutils} --command bash
 COMMANDS
-
-
-### :rocket:
-
-"$DOCKER_OR_PODMAN" \
-run \
---interactive=true \
---name="$CONTAINER" \
---tty=true \
---rm=true \
---user=nix_user \
---volume=volume_ca_certificate:/etc/ssl/certs:ro \
-"$NIX_BASE_IMAGE" \
-bash
-
-
-podman \
-run \
---interactive=true \
---tty=true \
---rm=true \
---volume=volume_nix_static:/home/adauser/bin:ro \
---volume=volume_etc:/etc \
---user='0' \
-docker.io/library/alpine:3.13.0 \
-sh -c 'ls -al /etc/ && sh'
 
 
 
@@ -852,8 +776,9 @@ gc
 rm -f nix_container_diff.txt
 podman diff "$CONTAINER" > nix_container_diff.txt
 
-
-nix build nixpkgs#debianutils --no-link
+nix store gc
+nix build nixpkgs#blender
+nix build nixpkgs#debianutils
 
 
 python -m unittest
@@ -1292,75 +1217,15 @@ run \
 --rm=true \
 --user='0' \
 --volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
-docker.io/nixpkgs/nix-flakes
- \
+docker.io/nixpkgs/nix-flakes \
 << COMMANDS
 echo 'Building VM'
 nix --experimental-features 'nix-command ca-references flakes' build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
 echo 'Build finished!'
 echo 'Trying to run the VM!'
-
 timeout 50 result/runVM
-
 echo 'It seens to have worked!'
 COMMANDS
-
-
-
-
-
-podman \
-run \
---cap-add ALL \
---device=/dev/kvm \
---env="DISPLAY=${DISPLAY:-:0}" \
---interactive=true \
---tty=false \
---rm=true \
---user='0' \
---workdir=/home/nixuser \
---volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
-nix-static-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
-bash \
-<< COMMANDS
-echo 'Building VM'
-nix build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
-echo 'Build finished!'
-echo 'Trying to run the VM!'
-
-timeout 50 result/runVM
-
-echo 'It seens to have worked!'
-COMMANDS
-
-
-
-podman \
-run \
---cap-add ALL \
---device=/dev/kvm \
---env="DISPLAY=${DISPLAY:-:0}" \
---interactive=true \
---tty=false \
---rm=true \
---user='nixuser' \
---workdir=/home/nixuser \
---volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
-localhost/nix-static-toybox-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 \
-<< COMMANDS
-echo 'Building VM'
-
-timeout 1 sleep 1000
-
-nix build github:ES-Nix/nix-qemu-kvm/51c7b855f579d806969bef8d93b3ff96830ff294#qemu.prepare
-
-echo 'Build finished!'
-echo 'Trying to run the VM!'
-nix shell nixpkgs#coreutils --command timeout 50 result/runVM
-
-echo 'It seens to have worked!'
-COMMANDS
-
 
 
 podman \
