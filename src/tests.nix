@@ -1,12 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
-pkgs.runCommand "build-with-dependency"
-{ buildInputs = [ pkgs.python3Minimal ]; }
-  ''
-    mkdir $out
+rec {
 
-    python --version > $out/python
-    cp -r ${./tests} $out/tests
-    cd $out/tests
-    python -m unittest
-
-  ''
+  tests = import ./tests/tests.nix {
+    pkgs = pkgs;
+  };
+}

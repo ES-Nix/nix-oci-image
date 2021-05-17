@@ -577,6 +577,10 @@
           podman-rootless = podman-rootless.defaultPackage.${system};
         };
 
+        packages.tests = import ./src/tests.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
             # podman-rootless.defaultPackage.${system}
