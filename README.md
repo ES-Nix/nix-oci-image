@@ -18,6 +18,20 @@ nix build .#tests.tests \
 && result/runOCI
 ```
 
+```bash
+nix \
+build \
+github:ES-Nix/nix-oci-image/nix-static-unpriviliged#tests.tests
+```
+
+```bash
+nix \
+build \
+github:ES-Nix/nix-oci-image/nix-static-unpriviliged#oci.nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp \
+--out-link \
+oci.tar.gz
+```
+
 
 nix \
 shell \

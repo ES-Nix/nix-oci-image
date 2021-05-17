@@ -583,7 +583,7 @@
 
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
-            # podman-rootless.defaultPackage.${system}
+            podman-rootless.defaultPackage.${system}
             bashInteractive
             coreutils
             file
