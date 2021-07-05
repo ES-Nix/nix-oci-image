@@ -93,7 +93,7 @@ let
   base = { commands, image, user ? "0" }: ''
 
         if set | grep '^DISPLAY=' >/dev/null;then
-            echo "The DISPLAY has value" $DISPLAY
+            echo "The DISPLAY has value" "\$DISPLAY"
         else
           DISPLAY='0.0'
         fi
@@ -134,7 +134,7 @@ let
 
 in
 pkgs.runCommand "oci-nix-toybox-test"
-    { buildInputs = with pkgs; [ ]; }
+    { buildInputs = with pkgs; [ podman ]; }
     ''
 
       mkdir $out
@@ -274,6 +274,12 @@ pkgs.runCommand "oci-nix-toybox-test"
       #  echo "The DISPLAY has value" \$DISPLAY
       # else
         DISPLAY='0.0'
+      fi
+
+      IMAGE='nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp-unpriviliged:0.0.1'
+      if ! podman image exists "\$IMAGE"; then
+        echo 'FFFFFF'
+        $out/build_load-nix-static-coreutils-bash-interactive-ca-bundle-etc-passwd-etc-group-tmp
       fi
 
       podman \

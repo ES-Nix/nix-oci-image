@@ -1,5 +1,5 @@
 {
-  description = "Flake do income-back";
+  description = "Flake ";
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
