@@ -49,9 +49,9 @@ let
     toybox timeout 90 $(toybox readlink -f result/runVM)
   '';
 
-  build_and_load = { attr }: ''
+  build_and_load = { attr,  branch ? "main"}: ''
     rm -rf oci.tar.gz
-    nix build .#${attr} --out-link oci.tar.gz
+    nix build .#${attr} --out-link oci.tar.gz || nix build github:ES-Nix/nix-oci-image/nix-static-unpriviliged#tests.tests
     podman load < oci.tar.gz
     rm -rf oci.tar.gz
   '';
