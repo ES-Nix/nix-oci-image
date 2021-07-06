@@ -52,9 +52,11 @@ let
   build_and_load = { attr }: ''
     rm -rf oci.tar.gz
 
-    if ! nix flake show; then
+    # https://unix.stackexchange.com/a/267537
+    if ! nix flake show > /dev/null 2>&1; then
       nix build github:ES-Nix/nix-oci-image/nix-static-unpriviliged#${attr} --out-link oci.tar.gz
     else
+      echo 'Using local build'
       nix build .#${attr} --out-link oci.tar.gz
     fi
 

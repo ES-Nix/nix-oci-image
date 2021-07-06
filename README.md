@@ -20,8 +20,13 @@ nix build .#tests.tests \
 
 ```bash
 nix \
+profile \
+install \
+github:ES-Nix/podman-rootless/from-nixpkgs \
+&& nix \
 build \
-github:ES-Nix/nix-oci-image/nix-static-unpriviliged#tests.tests
+github:ES-Nix/nix-oci-image/nix-static-unpriviliged#tests.tests \
+&& result/runOCI
 ```
 
 ```bash
