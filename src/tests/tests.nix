@@ -53,6 +53,7 @@ let
     rm -rf oci.tar.gz
 
     # https://unix.stackexchange.com/a/267537
+    # https://unix.stackexchange.com/a/22728
     if ! nix flake show > /dev/null 2>&1; then
       nix build github:ES-Nix/nix-oci-image/nix-static-unpriviliged#${attr} --out-link oci.tar.gz
     else
