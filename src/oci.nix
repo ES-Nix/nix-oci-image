@@ -64,6 +64,10 @@ rec {
     pkgs = pkgs;
   };
 
+  nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp.nix {
+    pkgs = pkgs;
+  };
+
   tests_podman-rootles = import ./tests_podman-rootles.nix {
     pkgs = pkgs;
     podman-rootless = podman-rootless;

@@ -164,7 +164,7 @@ pkgs.runCommand "oci-nix-toybox-test"
             commited_image_name="nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp-unpriviliged:0.0.1";
             attr="oci.nix-static-toybox-static-ca-bundle-etc-passwd-etc-group-tmp";
             commands=t;
-            }
+          }
         )
       }
       WRAP
