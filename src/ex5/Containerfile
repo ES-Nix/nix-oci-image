@@ -1,0 +1,172 @@
+FROM localhost/nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 AS build
+
+
+FROM localhost/busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp:0.0.1 AS nix
+
+# COPY --from=build --chown=nixuser:nixgroup /bin/nix /home/nixuser/bin/nix
+COPY --from=build /bin/nix /bin/nix
+
+WORKDIR /home/nixuser
+
+# https://github.com/moby/moby/issues/35783#issuecomment-355981140
+RUN toybox chmod -Rv 0700 /nix /home/nixuser \
+ && toybox chown -Rv nixuser:nixgroup /nix /home/nixuser
+
+USER nixuser
+
+
+FROM localhost/nix:latest AS test-nix
+
+RUN nix flake --version
+# RUN ls -al /home/nixuser/
+# RUN ls -al /nix
+# RUN stat /nix
+# RUN stat /home/nixuser
+# RUN ls -al /nix/store
+# RUN stat /nix/store
+# RUN stat /nix/var
+#RUN nix shell nixpkgs#bashInteractive nixpkgs#coreutils nixpkgs#hello --command hello
+
+# RUN nix \
+#   profile \
+#   install \
+#   nixpkgs#hello \
+#  && hello
+
+RUN nix \
+  profile \
+  install \
+  nixpkgs#bashInteractive \
+  nixpkgs#shadow \
+ && nix store gc
+
+USER 0
+
+COPY ./policy.json "/root"/.config/containers/policy.json
+COPY ./registries.conf "/root"/.config/containers/registries.conf
+
+RUN echo 'nixuser:166536:75535' >> /etc/subuid \
+ && echo 'nixgroup:166536:75535' >> /etc/subgid
+
+RUN toybox rm /etc/shadow \
+ && toybox cp /etc/passwd /etc/shadow
+
+RUN usermod --add-subuids 200000-201000 --add-subgids 200000-201000 nixuser
+
+# RUN \
+#  toybox chown 0:0 -R $(nix eval --raw nixpkgs#sudo) \
+#  && toybox chmod 4755 $(nix eval --raw nixpkgs#sudo)/bin/sudo
+
+# RUN nix \
+#   profile \
+#   install \
+#   nixpkgs#podman \
+#  && nix store gc
+
+USER nixuser
+
+COPY ./policy.json "$HOME"/.config/containers/policy.json
+COPY ./registries.conf "$HOME"/.config/containers/registries.conf
+
+# RUN nix shell nixpkgs#bashInteractive nixpkgs#coreutils nixpkgs#podman --command podman info --debug
+# RUN podman --version \
+#  && podman info --debug || echo error
+
+# RUN podman pull alpine
+
+# RUN nix \
+#   profile \
+#   install \
+#   github:ES-Nix/podman-rootless/from-nixpkgs \
+#  && podman info
+
+ENTRYPOINT [ "bash" ]
+
+
+# podman \
+# run \
+# --device=/dev/kvm \
+# --env="DISPLAY=${DISPLAY:-:0.0}" \
+# --interactive=true \
+# --log-level=error \
+# --network=host \
+# --mount=type=tmpfs,destination=/var/lib/containers \
+# --privileged=true \
+# --tty=true \
+# --rm=true \
+# --uidmap=0:1:65536 \
+# --user=nixuser \
+# --volume=/etc/localtime:/etc/localtime:ro \
+# --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
+# --volume=/dev/shm:/dev/shm:rw \
+# --volume=/dev/snd:/dev/snd:ro \
+# --volume="$(pwd)":/home/nixuser/code:rw \
+# localhost/test-nix:latest
+
+
+# podman \
+# run \
+# --device=/dev/kvm \
+# --env="DISPLAY=${DISPLAY:-:0.0}" \
+# --interactive=true \
+# --log-level=error \
+# --network=host \
+# --mount=type=tmpfs,destination=/var/lib/containers \
+# --privileged=true \
+# --tty=true \
+# --rm=true \
+# --userns=keep-id \
+# --user=0 \
+# --volume=/etc/localtime:/etc/localtime:ro \
+# --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
+# --volume=/dev/shm:/dev/shm:rw \
+# --volume=/dev/snd:/dev/snd:ro \
+# --volume="$(pwd)":/home/nixuser/code:rw \
+# localhost/test-nix:latest
+#
+# podman \
+# --storage-driver="overlay" \
+# --storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+# pull \
+# alpine
+#
+# podman \
+# --storage-driver="overlay" \
+# --storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+# images
+#
+# podman \
+# --storage-driver="overlay" \
+# --storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+# network \
+# ls
+#
+# podman \
+# --storage-driver="overlay" \
+# --storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+# network \
+# create \
+# test-network
+#
+# podman \
+# --storage-driver="overlay" \
+# --storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+# network \
+# ls
+#
+# podman \
+# --storage-driver="overlay" \
+# --storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+# run \
+# --interactive=true \
+# --network=host \
+# --tty=true \
+# busybox
+#
+# podman \
+# --storage-driver="overlay" \
+# --storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+# info \
+# --debug
+
+

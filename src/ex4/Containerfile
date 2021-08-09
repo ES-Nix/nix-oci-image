@@ -1,0 +1,152 @@
+FROM alpine:3.14.0 AS cache
+
+
+RUN \
+ echo \
+ && echo 'nixbld1:x:122:30000:Nix build user 1:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld2:x:121:30000:Nix build user 2:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld3:x:120:30000:Nix build user 3:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld4:x:119:30000:Nix build user 4:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld5:x:118:30000:Nix build user 5:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld6:x:117:30000:Nix build user 6:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld7:x:116:30000:Nix build user 7:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld8:x:115:30000:Nix build user 8:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld9:x:114:30000:Nix build user 9:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld10:x:113:30000:Nix build user 10:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld11:x:112:30000:Nix build user 11:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld12:x:111:30000:Nix build user 12:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld13:x:110:30000:Nix build user 13:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld14:x:109:30000:Nix build user 14:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld15:x:108:30000:Nix build user 15:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld16:x:107:30000:Nix build user 16:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld17:x:106:30000:Nix build user 17:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld18:x:105:30000:Nix build user 18:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld19:x:104:30000:Nix build user 19:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld20:x:103:30000:Nix build user 20:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld21:x:102:30000:Nix build user 21:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld22:x:101:30000:Nix build user 22:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld23:x:999:30000:Nix build user 23:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld24:x:998:30000:Nix build user 24:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld25:x:997:30000:Nix build user 25:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld26:x:996:30000:Nix build user 26:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld27:x:995:30000:Nix build user 27:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld28:x:994:30000:Nix build user 28:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld29:x:993:30000:Nix build user 29:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld30:x:992:30000:Nix build user 30:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld31:x:991:30000:Nix build user 31:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld32:x:990:30000:Nix build user 32:/var/empty:/sbin/nologin' >> /etc_passwd_with_only_nixblders \
+ && echo 'nixbld:x:30000:nixbld1,nixbld2,nixbld3,nixbld4,nixbld5,nixbld6,nixbld7,nixbld8,nixbld9,nixbld10,nixbld11,nixbld12,nixbld13,nixbld14,nixbld15,nixbld16,nixbld17,nixbld18,nixbld19,nixbld20,nixbld21,nixbld22,nixbld23,nixbld24,nixbld25,nixbld26,nixbld27,nixbld28,nixbld29,nixbld30,nixbld31,nixbld32' >> /etc_group_with_only_nixblders
+
+RUN \
+ echo \
+ && echo 'root:x:0:0:root:/root:/bin/sh' >> /etc_passwd \
+ && echo 'nixuser:x:12345:6789:Nixuser:/home/nixuser:/bin/sh' >> /etc_passwd \
+ && cat /etc_passwd_with_only_nixblders >> /etc_passwd \
+ && echo 'nobody:x:65534:65534:nobody:/proc/self:/dev/null' >> /etc_passwd \
+ && echo \
+ && echo 'root:x:0:' >> /etc_group \
+ && echo 'nixgroup:x:6789:nixuser' >> /etc_group \
+ && cat /etc_group_with_only_nixblders >> /etc_group \
+ && echo 'nobody:x:65534:' >> /etc_group
+
+RUN \
+ echo \
+ && mkdir --parent --mode=0755 /root/.config/nix \
+ && echo 'system-features = kvm nixos-test' >> /root/.config/nix/nix.conf \
+ && echo 'experimental-features = nix-command flakes ca-references ca-derivations' >> ~/.config/nix/nix.conf \
+ && echo 'show-trace = true' >> /root/.config/nix/nix.conf \
+ && mkdir --parent --mode=0755 /root/.config/nixpkgs \
+ && echo '{ allowUnfree = true; }' >> /root/.config/nixpkgs/config.nix
+
+
+
+FROM localhost/busybox-sandbox-shell-nix-flakes:0.0.1 AS busybox-sandbox-shell-nix-flake-patch
+
+
+COPY --from=cache /etc_passwd /etc/passwd
+COPY --from=cache /etc_group /etc/group
+
+COPY --from=cache /root/.config/nix/nix.conf /root/.config/nix/nix.conf
+COPY --from=cache /root/.config/nix /root/.config/nix
+COPY --from=cache /tmp /tmp
+
+COPY --from=cache --chown=nixuser:nixgroup /root/.config/nix/nix.conf /home/nixuser/.config/nix/nix.conf
+COPY --from=cache --chown=nixuser:nixgroup /root/.config/nix /home/nixuser/.config/nix
+COPY --from=cache --chown=nixuser:nixgroup /tmp /home/nixuser/tmp
+
+RUN \
+ echo \
+ && nix \
+    shell \
+    nixpkgs#bash \
+    nixpkgs#coreutils \
+    --command \
+    chown \
+    nixuser:nixgroup \
+    -R \
+    /nix
+
+ENV USER=nixuser
+ENV HOME=/home/nixuser
+ENV TMPDIR=/home/nixuser/tmp
+
+
+
+FROM localhost/busybox-sandbox-shell-nix-flake-patch:latest AS base
+
+# github:NixOS/nix/9feca5cdf64b82bfb06dfda07d19d007a2dfa1c1#nix-static
+RUN \
+ echo \
+ && nix \
+    profile \
+    install \
+    nixpkgs#busybox-sandbox-shell \
+    github:NixOS/nix/9feca5cdf64b82bfb06dfda07d19d007a2dfa1c1#nix-static \
+    nixpkgs#cacert \
+    --profile /root/.nix-profile \
+ && nix store gc \
+ && mkdir --parent --mode=0755 /output/store \
+ && cp \
+    --no-dereference \
+    --recursive \
+    --verbose \
+    $(nix-store --query --requisites /root/.nix-profile) \
+    /output/store
+
+RUN \
+ echo \
+ && echo 'export GIT_SSL_CAINFO='"$(nix eval --raw nixpkgs#cacert)/etc/ssl/certs/ca-bundle.crt" >> /root/.fix-env \
+ && echo 'export NIX_SSL_CERT_FILE='"$(nix eval --raw nixpkgs#cacert)/etc/ssl/certs/ca-bundle.crt" >> /root/.fix-env \
+ && echo 'export SSL_CERT_FILE='"$(nix eval --raw nixpkgs#cacert)/etc/ssl/certs/ca-bundle.crt" >> /root/.fix-env \
+ && echo 'export NIX_PATH=nixpkgs='"$(nix eval --raw nixpkgs#nixFlakes)" >> /root/.fix-env \
+ && echo 'export PATH=/home/nixuser/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:'"$(nix eval --raw nixpkgs#nixFlakes)"':'"$PATH" >> /root/.fix-env \
+ && echo
+
+
+
+FROM localhost/empty:0.0.1 AS nix-static
+
+
+COPY --from=cache /etc_passwd /etc/passwd
+COPY --from=cache /etc_group /etc/group
+
+COPY --from=base --chown=nixuser:nixgroup /root/.nix-profile /usr/local
+
+COPY --from=base --chown=nixuser:nixgroup /root/.nix-profile /home/nixuser/.nix-profile
+COPY --from=base --chown=nixuser:nixgroup /output/store /nix/store
+
+COPY --from=cache /root/.config/nix/nix.conf /root/.config/nix/nix.conf
+COPY --from=cache /root/.config/nixpkgs/config.nix /root/.config/nixpkgs/config.nix
+
+COPY --from=cache --chown=nixuser:nixgroup /root/.config/nix/nix.conf /home/nixuser/.config/nix/nix.conf
+COPY --from=cache --chown=nixuser:nixgroup /root/.config/nixpkgs/config.nix /home/nixuser/.config/nixpkgs/config.nix
+COPY --from=cache --chown=nixuser:nixgroup /tmp /home/nixuser/tmp
+
+COPY --from=base --chown=nixuser:nixgroup /root/.fix-env /home/nixuser/.fix-env
+
+USER nixuser
+
+ENV USER=nixuser
+ENV TMPDIR=/home/nixuser/tmp
+
+CMD [ 'sh' ]

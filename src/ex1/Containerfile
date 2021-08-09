@@ -1,0 +1,2 @@
+FROM localhost/oci-toybox-static:0.0.1 AS cache
+

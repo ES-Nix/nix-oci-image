@@ -1,27 +1,15 @@
 #!/usr/bin/env sh
 
 # See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
-#set -euxo pipefail
+set -euxo pipefail
 
+# TODO use rp  (ripgrep)  to be able to use "$IMAGE_VERSION"
+SEARCH_NAME=sizes
+IMAGE='gnu-nix-es/'"$SEARCH_NAME"
+VERSION=0.0.1
 
+IMAGE_VERSION="$IMAGE":"$VERSION"
 
-nix build .#empty
+docker build --tag "$IMAGE_VERSION" .
 
-podman load < result
-
-podman images
-
-
-# docker shows wrong size 0B
-#docker load < result
-#docker images
-
-
-nix build .#slim
-podman load < result
-
-nix build .#nix_runAsRoot
-podman load < result
-
-
-./src/tests/tests.sh
+docker images | grep "$SEARCH_NAME"
