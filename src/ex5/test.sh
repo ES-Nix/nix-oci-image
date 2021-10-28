@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
-set -euxo pipefail
+#set -euxo pipefail
 
 
 nix build .#oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp \
@@ -153,11 +153,7 @@ run \
 --volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
 localhost/test-nix:latest \
 <<COMMANDS
-nix \
-profile \
-install \
-nixpkgs#podman \
-&& podman \
+podman \
 run \
 --storage-driver="vfs" \
 --cgroups=disabled \
@@ -165,14 +161,252 @@ run \
 --interactive=true \
 --network=host \
 --tty=true \
-alpine \
+docker.io/library/alpine:3.14.0 \
 sh \
 -c 'apk add --no-cache curl && echo PinP'
 COMMANDS
 
+podman \
+run \
+--device=/dev/kvm \
+--device=/dev/fuse \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive=true \
+--log-level=error \
+--network=host \
+--mount=type=tmpfs,destination=/var/lib/containers \
+--privileged=true \
+--tty=false \
+--rm=true \
+--userns=host \
+--user=0 \
+--volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
+localhost/test-nix:latest \
+<<COMMANDS
+podman \
+--log-level=error \
+--storage-driver="vfs" \
+images
 
-#nix profile install nixpkgs#podman
+podman \
+--log-level=error \
+--storage-driver="vfs" \
+images
+COMMANDS
 
+
+podman \
+run \
+--device=/dev/kvm \
+--device=/dev/fuse \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive=true \
+--log-level=error \
+--network=host \
+--mount=type=tmpfs,destination=/var/lib/containers \
+--privileged=true \
+--tty=false \
+--rm=true \
+--userns=host \
+--user=0 \
+--volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
+localhost/test-nix:latest \
+<<COMMANDS
+podman \
+run \
+--cgroups=disabled \
+--env=PATH=/root/.nix-profile/bin:/usr/bin:/bin \
+--events-backend=file \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive=true \
+--log-level=error \
+--network=host \
+--privileged=true \
+--tty=false \
+--rm=true \
+--storage-driver="vfs" \
+--user=0 \
+--volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
+docker.nix-community.org/nixpkgs/nix-flakes \
+<<COMMANDSNESTED
+mkdir --parent --mode=0755 ~/.config/nix
+echo 'experimental-features = nix-command flakes ca-references ca-derivations' >> ~/.config/nix/nix.conf
+nix \
+profile \
+install \
+github:ES-Nix/podman-rootless/from-nixpkgs \
+&& mkdir --parent --mode=0755 /var/tmp \
+&& podman \
+run \
+--events-backend=file \
+--storage-driver="vfs" \
+--cgroups=disabled \
+--log-level=error \
+--interactive=true \
+--network=host \
+--tty=true \
+docker.io/library/alpine:3.14.0 \
+sh \
+-c 'apk add --no-cache curl && echo PinPinP'
+COMMANDSNESTED
+COMMANDS
+
+
+podman \
+run \
+--device=/dev/kvm \
+--device=/dev/fuse \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive=true \
+--log-level=error \
+--network=host \
+--mount=type=tmpfs,destination=/var/lib/containers \
+--privileged=true \
+--tty=false \
+--rm=true \
+--userns=host \
+--user=0 \
+--volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
+localhost/test-nix:latest \
+<<COMMANDS
+podman \
+run \
+--events-backend=file \
+--storage-driver="vfs" \
+--cgroups=disabled \
+--log-level=error \
+--interactive=true \
+--network=host \
+--tty=true \
+--user=0 \
+--userns=host \
+docker.io/library/alpine:3.14.0 \
+sh \
+-c \
+'echo Hello!'
+COMMANDS
+
+podman \
+run \
+--device=/dev/kvm \
+--device=/dev/fuse \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive=true \
+--log-level=error \
+--network=host \
+--mount=type=tmpfs,destination=/var/lib/containers \
+--privileged=true \
+--tty=false \
+--rm=true \
+--userns=keep-id \
+--user=0 \
+--volume=/etc/localtime:/etc/localtime:ro \
+--volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
+--volume=/dev/shm:/dev/shm:rw \
+--volume=/dev/snd:/dev/snd:ro \
+--volume="$(pwd)":/home/nixuser/code:rw \
+localhost/test-nix:latest \
+<<COMMANDS
+podman \
+pull \
+--log-level=error \
+--storage-driver="overlay" \
+--storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+docker.io/library/alpine:3.14.0
+toybox echo '=============='
+podman \
+--storage-driver="overlay" \
+--storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+images
+COMMANDS
+
+
+podman \
+run \
+--device=/dev/kvm \
+--device=/dev/fuse \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive=true \
+--log-level=error \
+--network=host \
+--mount=type=tmpfs,destination=/var/lib/containers \
+--privileged=true \
+--tty=false \
+--rm=true \
+--userns=keep-id \
+--user=0 \
+--volume=/etc/localtime:/etc/localtime:ro \
+--volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
+--volume=/dev/shm:/dev/shm:rw \
+--volume=/dev/snd:/dev/snd:ro \
+--volume="$(pwd)":/home/nixuser/code:rw \
+localhost/test-nix:latest \
+<<COMMANDS
+toybox stat /dev/fuse
+podman \
+run \
+--device=/dev/fuse \
+--events-backend=file \
+--log-level=error \
+--interactive=true \
+--network=host \
+--privileged=true \
+--storage-driver="overlay" \
+--storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+--tty=true \
+--user=0 \
+--userns=host \
+docker.io/library/alpine:3.14.0 \
+sh \
+-c \
+'echo Hello!'
+toybox echo '=============='
+podman \
+--storage-driver="overlay" \
+--storage-opt="overlay.mount_program=$(nix eval --raw nixpkgs#fuse-overlayfs)/bin/fuse-overlayfs" \
+images
+COMMANDS
+
+
+podman \
+run \
+--device=/dev/kvm \
+--device=/dev/fuse \
+--env="DISPLAY=${DISPLAY:-:0.0}" \
+--interactive=true \
+--log-level=error \
+--network=host \
+--mount=type=tmpfs,destination=/var/lib/containers \
+--privileged=true \
+--tty=false \
+--rm=true \
+--userns=keep-id \
+--user=0 \
+--volume=/etc/localtime:/etc/localtime:ro \
+--volume=/sys/fs/cgroup:/sys/fs/cgroup:rw \
+--volume=/dev/shm:/dev/shm:rw \
+--volume=/dev/snd:/dev/snd:ro \
+--volume="$(pwd)":/home/nixuser/code:rw \
+localhost/test-nix:latest \
+<<COMMANDS
+podman \
+run \
+--cgroups=disabled \
+--device=/dev/fuse \
+--events-backend=file \
+--log-level=error \
+--interactive=true \
+--network=host \
+--privileged=true \
+--storage-driver="vfs" \
+--tty=true \
+--user=0 \
+--userns=host \
+docker.io/library/alpine:3.14.0 \
+sh \
+-c \
+'echo Hello!'
+COMMANDS
 
 #podman \
 #run \

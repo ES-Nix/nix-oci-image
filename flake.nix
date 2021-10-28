@@ -3,7 +3,7 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    podman-rootless.url = "github:ES-Nix/podman-rootless";
+    podman-rootless.url = "github:ES-Nix/podman-rootless/from-nixpkgs";
   };
 
   outputs = { self, nixpkgs, flake-utils, podman-rootless }:
@@ -36,7 +36,18 @@
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
+        packages.oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
         packages.oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.oci-nix-static-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-nix-static-ca-bundle-etc-passwd-etc-group-tmp.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
@@ -53,6 +64,13 @@
             # TODO:
             export TMPDIR=/tmp
             echo "Entering the nix devShell"
+
+            nix \
+            develop \
+            github:ES-Nix/podman-rootless/from-nixpkgs \
+            --command \
+            podman \
+            --version
           '';
         };
       });

@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 
 # See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
-set -euxo pipefail
+#set -euxo pipefail
 
 podman \
 build \
---file=Containerfile \
+--file=src/ex2/Containerfile \
 --tag=toybox-nix \
 --target=toybox-nix
 

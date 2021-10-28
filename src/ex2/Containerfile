@@ -53,7 +53,7 @@ RUN \
  echo \
  && mkdir --parent --mode=0755 /root/.config/nix \
  && echo 'system-features = kvm nixos-test' >> /root/.config/nix/nix.conf \
- && echo 'experimental-features = nix-command flakes ca-references ca-derivations' >> ~/.config/nix/nix.conf \
+ && echo 'experimental-features = nix-command flakes ca-references ca-derivations' >> /root/.config/nix/nix.conf \
  && echo 'show-trace = true' >> /root/.config/nix/nix.conf \
  && mkdir --parent --mode=0755 /root/.config/nixpkgs \
  && echo '{ allowUnfree = true; }' >> /root/.config/nixpkgs/config.nix
@@ -61,7 +61,6 @@ RUN \
 
 
 FROM docker.nix-community.org/nixpkgs/nix-flakes AS base
-
 
 
 COPY --from=cache /root/.config/nix/nix.conf /root/.config/nix/nix.conf

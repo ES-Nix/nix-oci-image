@@ -269,7 +269,7 @@ build \
 ### Ex 5
 
 
-./ex5/test.sh
+./src/ex5/test.sh
 
 podman \
 run \
@@ -293,6 +293,11 @@ nix build nixpkgs#hello && result/bin/hello
 
 nix profile install nixpkgs#bashInteractive nixpkgs#coreutils
 
+
+
+nix \
+build \
+github:ES-Nix/nix-qemu-kvm/dev#qemu.vm
 
 nix \
 profile \
