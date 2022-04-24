@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
 let
-  ca-bundle-etc-passwd-etc-group-sudo-su = import ./ca-bundle-etc-passwd-etc-group-sudo-su.nix { inherit pkgs; };
-  tmp = import ./create-tmp.nix { inherit pkgs; };
+  ca-bundle-etc-passwd-etc-group-sudo-su = import ../../../ca-bundle-etc-passwd-etc-group-sudo-su.nix { inherit pkgs; };
+  tmp = import ../../../create-tmp.nix { inherit pkgs; };
 in
 pkgs.dockerTools.buildImage {
   name = "nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";

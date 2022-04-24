@@ -9,12 +9,13 @@ pkgs.stdenv.mkDerivation rec {
   unpackPhase = ":";
 
   nativeBuildInputs = with pkgs; [ makeWrapper ];
-  propagatedNativeBuildInputs = with pkgs.pkgsStatic; [
-    hello
+  propagatedNativeBuildInputs = with pkgs; [
+    coreutils
+    # shadow # chpasswd comes from here
     # su
     # sudo
-    (shadow.override { pam = null; }).su
-    (sudo.override { pam = null; })
+     (shadow.override { pam = null; }).su
+     (sudo.override { pam = null; })
     ];
   installPhase = ''
     mkdir -p $out/bin
