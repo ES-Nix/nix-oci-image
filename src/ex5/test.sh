@@ -7,6 +7,9 @@
 nix build .#oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp \
 && podman load < result
 
+nix build .#oci-busybox-sandbox-shell-ca-bundle-tmp \
+&& podman load < result
+
 
 nix build .#oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp \
 && podman load < result
@@ -55,16 +58,16 @@ build \
 --tag=test-nix \
 --target=test-nix
 
-#podman \
-#run \
-#--interactive=true \
-#--tty=true \
-#--rm=true \
-#--user=nixuser \
-#--privileged=false \
-#--network=host \
-#localhost/nix:latest \
-#-c 'nix shell nixpkgs#bashInteractive nixpkgs#coreutils nixpkgs#hello --command hello'
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+--user=nixuser \
+--privileged=false \
+--network=host \
+localhost/nix:latest \
+-c 'nix shell nixpkgs#bashInteractive nixpkgs#coreutils nixpkgs#hello --command hello'
 
 #nix profile install nixpkgs#hello
 #nix profile install nixpkgs#python3Minimal

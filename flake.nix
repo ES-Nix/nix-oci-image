@@ -16,7 +16,12 @@
         };
       in
       {
-        packages.empty = import ./empty-oci.nix {
+        # du -hs $(readlink -f result)
+        packages.oci-empty-image = import ./oci-empty-image.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.nix-static = import ./nix.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
 
@@ -39,6 +44,19 @@
         packages.oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
+
+        packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.oci-busybox-sandbox-shell-ca-bundle-tmp = import ./oci-busybox-sandbox-shell-ca-bundle-tmp.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
+        packages.ca-bundle-etc-passwd-etc-group-sudo-su = import ./ca-bundle-etc-passwd-etc-group-sudo-su.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+        };
+
         packages.oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp.nix {
           pkgs = nixpkgs.legacyPackages.${system};
         };
@@ -57,7 +75,7 @@
 
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
-            podman-rootless.defaultPackage.${system}
+            podman-rootless.packages.${system}.podman
           ];
 
           shellHook = ''
@@ -65,12 +83,6 @@
             export TMPDIR=/tmp
             echo "Entering the nix devShell"
 
-            nix \
-            develop \
-            github:ES-Nix/podman-rootless/from-nixpkgs \
-            --command \
-            podman \
-            --version
           '';
         };
       });

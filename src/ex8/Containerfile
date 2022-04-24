@@ -9,12 +9,10 @@ COPY --from=build --chown=nixuser:nixgroup /bin/nix /home/nixuser/bin/nix
 
 WORKDIR /home/nixuser
 
-
-# RUN toybox which sudo
 # # https://github.com/moby/moby/issues/35783#issuecomment-355981140
 RUN toybox chmod -Rv 0700 /nix /home/nixuser \
  && toybox chown -Rv nixuser:nixgroup /nix /home/nixuser \
- && toybox chown -Rv 0:0 /bin/sudo /nix/store/*-sudo-1.9.10/libexec/sudo/sudoers.so
+ && toybox chown -Rv 0:0 /bin/sudo /nix/store/ryzggcyzq6cq98qrc967y25dng61gkgp-sudo-1.9.7/libexec/sudo/sudoers.so
 
 USER nixuser
 

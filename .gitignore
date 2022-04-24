@@ -1,3 +1,6 @@
 result
 .idea
 src/tests/__pycache__/
+
+.direnv/
+result

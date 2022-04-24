@@ -28,19 +28,13 @@ FROM localhost/nix:latest AS test-nix
 # RUN stat /nix/var
 # RUN nix shell nixpkgs#bashInteractive nixpkgs#coreutils nixpkgs#hello --command hello
 
-RUN \
- nix flake --version \
- && nix \
-  profile \
-  install \
-  nixpkgs#podman \
- && nix store gc
+RUN nix profile install nixpkgs#podman
 
 USER 0
 
-COPY ./policy.json "/root"/.config/containers/policy.json
+COPY ./policy.json /root/.config/containers/policy.json
 COPY ./policy.json /etc/containers/policy.json
-COPY ./registries.conf "/root"/.config/containers/registries.conf
+COPY ./registries.conf /root/.config/containers/registries.conf
 
 RUN echo 'nixuser:100000:65536' >> /etc/subuid \
  && echo 'nixgroup:100000:65536' >> /etc/subgid

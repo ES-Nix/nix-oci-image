@@ -4,8 +4,9 @@
 #set -euxo pipefail
 
 
-nix build .#empty
+nix build .#oci-empty-image.nix
 
 podman load < result
 
 
+podman images

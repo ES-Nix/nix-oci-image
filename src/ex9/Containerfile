@@ -1,0 +1,22 @@
+FROM nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:0.0.1 AS test-nix
+
+
+WORKDIR /home/nixuser
+
+# https://github.com/moby/moby/issues/35783#issuecomment-355981140
+RUN echo \
+ && chmod -R 0700 /nix \
+ && chmod -Rv 0700 /home/nixuser \
+ && chown -R nixuser:nixgroup /nix \
+ && chown -Rv nixuser:nixgroup /home/nixuser \
+ && chown -v 0:0 /bin/sudo /nix/store/*-sudo-1.9.10/libexec/sudo/sudoers.so \
+ && chmod -v 4555 /sbin/sudo \
+ && echo 'Yes, the sudo password is hardcoded! It is an sandbox/playground OCI.' \
+ && echo 'nixuser:123' | chpasswd \
+ && echo 'nixuser ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/nixuser
+
+USER nixuser
+
+# RUN nix flake --version
+
+

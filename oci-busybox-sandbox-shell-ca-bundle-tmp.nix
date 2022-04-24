@@ -23,19 +23,17 @@ pkgs.dockerTools.buildImage {
   contents = [
     ca-bundle-etc-passwd-etc-group
     tmp
-    # toybox-static
+    toybox-static
   ]
   ++
   (with pkgs; [
-    # busybox-sandbox-shell
-    bashInteractive
-    coreutils
+    busybox-sandbox-shell
+#    coreutils
   ]);
 
   config = {
     #Cmd = [ "/bin" ];
-    # Entrypoint = [ "${pkgs.busybox-sandbox-shell}/bin/sh" ];
-    Entrypoint = [ "${pkgs.bash}/bin/bash" ];
+    Entrypoint = [ "${pkgs.busybox-sandbox-shell}/bin/sh" ];
     Env = [
       "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
       #"GIT_SSL_CAINFO=/etc/ssl/certs/ca-bundle.crt"

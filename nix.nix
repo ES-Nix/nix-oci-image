@@ -2,14 +2,16 @@
 let
 
   # It will brake the sha256
-  # nixLatest = pkgs.fetchurl {
-  #  url = "https://hydra.nixos.org/job/nix/master/buildStatic.x86_64-linux/latest/download-by-type/file/binary-dist";
-  #  hash = "sha256-PbeMzxYQ5+YeKaAm0nMB4E0b7qHBpdf2DKHGFSI1Rms=";
-  # };
+#   nix = pkgs.fetchurl {
+#    url = "https://hydra.nixos.org/job/nix/master/buildStatic.x86_64-linux/latest/download-by-type/file/binary-dist";
+#    hash = "sha256-0000000000000000000000000000000000000000000=";
+#   };
 
+
+# Got to find the id https://hydra.nixos.org/job/nix/master/buildStatic.x86_64-linux
   nix = pkgs.fetchurl {
-    url = "https://hydra.nixos.org/build/144116239/download/2/nix";
-    hash = "sha256-5ivieDwrj1tgrqvOtQ8NdVfoyfw3Ytv11+CQ44NuKqw=";
+    url = "https://hydra.nixos.org/build/172820610/download/2/nix";
+    hash = "sha256-dO9LLY/1BX4pRvg1vj8gxdKPyxyyM05QoRmEiv+GWFs=";
   };
 
 in
