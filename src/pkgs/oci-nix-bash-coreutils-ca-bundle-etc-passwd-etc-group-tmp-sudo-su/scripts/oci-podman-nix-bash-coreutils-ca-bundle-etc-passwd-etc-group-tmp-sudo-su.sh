@@ -7,7 +7,7 @@ if [ nix flake metadata .# 1> /dev/null 2> /dev/null ]; then
   nix build --refresh .#oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su
   podman load < result
 else
-  nix build --refresh github:ES-Nix/nix-oci-image/dev#oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su
+  nix build --refresh github:ES-Nix/nix-oci-image/nix-static-minimal#oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su
   podman load < result
 fi
 
