@@ -4,7 +4,7 @@
 #set -euxo pipefail
 
 
-nix build --refresh .#oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su \
+nix build --refresh .# \
 && podman load < result
 
 

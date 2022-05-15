@@ -624,8 +624,18 @@ COMMANDS
 ### The "empty" OCI image
 
 ```bash
-nix build .#oci-empty-image.nix
+nix build .#oci-empty-image
 podman load < result
-echo $(nix eval --raw .#empty)
+echo $(nix eval --raw .#oci-empty-image)
 podman inspect localhost/empty:0.0.1
+```
+
+
+```bash
+nix build .#
+podman load < result
+
+podman images
+
+./src/ex9/test.sh
 ```

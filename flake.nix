@@ -69,22 +69,32 @@
 #          pkgs = nixpkgs.legacyPackages.${system};
 #        };
 
-         packages = (import ./src/pkgs { pkgs = pkgsAllowUnfree; });
+         packages = (import ./src/pkgs { pkgs = pkgsAllowUnfree; podman-rootless = podman-rootless.packages.${system}.podman; });
 #        packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
 #          pkgs = nixpkgs.legacyPackages.${system};
 #        };
 
         #
 
-        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
-          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
-          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
-        };
-
-        apps.test-oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
-          name = "test-oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
-          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
-        };
+#        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
+#          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+#          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
+#        };
+#
+#        apps.test-oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
+#          name = "test-oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+#          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
+#        };
+#
+#        apps.oci-image-podman-nix-sudo-su = flake-utils.lib.mkApp {
+#          name = "oci-image-podman-nix-sudo-su";
+#          drv = packages.test_nix-sudo-su;
+#        };
+#
+#        apps.test_nix-sudo-su = flake-utils.lib.mkApp {
+#          name = "test_nix-sudo-su";
+#          drv = packages.test_nix-sudo-su;
+#        };
 
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [

@@ -1,4 +1,4 @@
-FROM alpine:3.14.0 AS cache
+FROM docker.io/library/alpine:3.14.0 AS cache
 
 
 RUN \
