@@ -14,6 +14,8 @@
           system = "x86_64-linux";
           config = { allowUnfree = true; };
         };
+
+        packages = (import ./src/pkgs { pkgs = pkgsAllowUnfree; podman-rootless = podman-rootless.packages.${system}.podman; });
       in
       rec {
         # du -hs $(readlink -f result)
@@ -69,12 +71,23 @@
 #          pkgs = nixpkgs.legacyPackages.${system};
 #        };
 
-         packages = (import ./src/pkgs { pkgs = pkgsAllowUnfree; podman-rootless = podman-rootless.packages.${system}.podman; });
+
 #        packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
 #          pkgs = nixpkgs.legacyPackages.${system};
 #        };
 
         #
+        inherit packages;
+
+        apps.default = flake-utils.lib.mkApp {
+          name = "oci-podman-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+          drv = packages.default;
+        };
+
+        apps.oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = flake-utils.lib.mkApp {
+          name = "oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp";
+          drv = packages.oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp;
+        };
 
 #        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
 #          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";

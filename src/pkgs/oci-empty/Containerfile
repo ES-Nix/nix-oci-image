@@ -1,0 +1,17 @@
+FROM lnl7/nix:2.3.6
+
+
+RUN mkdir --parents /output/store
+RUN nix-env --profile /output/profile --install --attr nixpkgs.busybox-sandbox-shell
+
+RUN cp --no-dereference --recursive --verbose $(nix-store --query --requisites /output/profile) /output/store
+
+
+
+# FROM scratch
+FROM localhost/empty:bwsg99ramdkwvzs2gwqy5y7rqmjz1gwa AS busybox-sandbox-shell
+
+COPY --from=0 /output/store /nix/store
+COPY --from=0 /nix/var/nix/profiles/per-user/root/profile/ /usr/local/
+
+

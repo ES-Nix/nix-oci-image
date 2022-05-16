@@ -1,5 +1,6 @@
 { pkgs ? import <nixpkgs> { } }:
 let
+
   ca-bundle-etc-passwd-etc-group-sudo-su = import ../../../ca-bundle-etc-passwd-etc-group-sudo-su.nix { inherit pkgs; };
   create-tmp = import ../utils/create-tmp.nix { inherit pkgs; };
 
@@ -14,21 +15,18 @@ let
     ];
 in
 pkgs.dockerTools.buildImage {
-  name = "nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+  name = "nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp";
   tag = "0.0.1";
 
   contents = [
-    ca-bundle-etc-passwd-etc-group-sudo-su
     create-tmp
   ]
   ++
   (with pkgs; [
-    # pkgsStatic.busybox-sandbox-shell
     bashInteractive
-    # coreutils
+    # pkgsStatic.busybox-sandbox-shell
     pkgsStatic.nix
-   (pkgsStatic.sudo.override { pam = null; })
-   (pkgsStatic.shadow.override { pam = null; }).su
+    coreutils
   ]
   # ++ troubleshoot-packages
   );

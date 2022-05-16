@@ -1,14 +1,13 @@
-{ pkgs ? import <nixpkgs> { }, podman-rootless  }:
+{ pkgs ? import <nixpkgs> { }, podman-rootless }:
 pkgs.stdenv.mkDerivation rec {
-  name = "oci-podman-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+  name = "test_oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
   buildInputs = with pkgs; [ stdenv ];
   nativeBuildInputs = with pkgs; [ makeWrapper ];
   propagatedNativeBuildInputs = with pkgs; [
     bash
     coreutils
 
-    # findutils
-
+    findutils
     podman-rootless
   ];
 
@@ -24,7 +23,7 @@ pkgs.stdenv.mkDerivation rec {
 
     install \
     -m0755 \
-    $out/scripts/${name}.sh \
+    $out/tests/${name}.sh \
     -D \
     $out/bin/${name}
 

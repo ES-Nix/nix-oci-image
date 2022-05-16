@@ -6,6 +6,20 @@ It looks like it is possible to the same "trick" [Jérôme Petazzoni](put some u
 i mean, install some thing to a profile using [`flake`](add link here) and use the `COPY` thing from 
 "Docker mult stage build".
 
+```bash
+nix \
+run \
+--refresh \
+github:ES-Nix/nix-oci-image/nix-static-minimal#default
+```
+
+```bash
+nix \
+run \
+--refresh \
+.#default
+```
+
 ```
 podman \
 build \
