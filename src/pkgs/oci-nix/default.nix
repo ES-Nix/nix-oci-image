@@ -25,7 +25,7 @@ pkgs.dockerTools.buildImage {
   (with pkgs; [
     # pkgsStatic.busybox-sandbox-shell
     bashInteractive
-    # coreutils
+    coreutils
     pkgsStatic.nix
    (pkgsStatic.sudo.override { pam = null; })
    (pkgsStatic.shadow.override { pam = null; }).su

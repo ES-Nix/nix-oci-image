@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { }, podman-rootless  }:
 pkgs.stdenv.mkDerivation rec {
-  name = "oci-podman-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+  name = "oci-podman-nix";
   buildInputs = with pkgs; [ stdenv ];
   nativeBuildInputs = with pkgs; [ makeWrapper ];
   propagatedNativeBuildInputs = with pkgs; [

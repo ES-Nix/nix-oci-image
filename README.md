@@ -208,7 +208,7 @@ run \
 localhost/toybox-with-nix-flakes:0.0.1
 
 
-### Runing with docker and with --privileged=true
+### Running with docker and with --privileged=true
 
 
 

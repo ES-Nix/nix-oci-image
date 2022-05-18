@@ -79,9 +79,9 @@
         #
         inherit packages;
 
-        apps.default = flake-utils.lib.mkApp {
-          name = "oci-podman-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
-          drv = packages.default;
+        apps.oci-podman-nix = flake-utils.lib.mkApp {
+          name = "oci-podman-nix";
+          drv = packages.oci-podman-nix;
         };
 
         apps.oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = flake-utils.lib.mkApp {
