@@ -8,7 +8,7 @@ is_local=$?
 
 echo ${is_local}
 
-if [ ${is_local} ]; then
+if nix flake metadata .# 1> /dev/null 2> /dev/null; then
   echo 'A'
   nix build --refresh .#oci-nix
   podman load < result
