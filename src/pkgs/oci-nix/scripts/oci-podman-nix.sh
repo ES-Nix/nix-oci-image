@@ -5,6 +5,9 @@
 # TODO: repeat this if every where is bad, not dry
 $(nix flake metadata .# 1> /dev/null 2> /dev/null)
 is_local=$?
+
+echo ${is_local}
+
 if [[ ${is_local} ]]; then
   echo 'A'
   nix build --refresh .#oci-nix
