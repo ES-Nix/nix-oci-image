@@ -10,7 +10,11 @@ pkgs.stdenv.mkDerivation rec {
     # findutils
 
     podman-rootless
+
+    # Testing
     xorg.xhost
+    xorg.xset
+    xorg.xclock
   ];
 
   src = builtins.path { path = ./.; inherit name; };
