@@ -26,9 +26,16 @@ pkgs.dockerTools.buildImage {
     # pkgsStatic.busybox-sandbox-shell
     bashInteractive
     coreutils
+
     pkgsStatic.nix
+
    (pkgsStatic.sudo.override { pam = null; })
    (pkgsStatic.shadow.override { pam = null; }).su
+
+    git
+    openssh
+    xorg.xset
+    xorg.xclock
   ]
   # ++ troubleshoot-packages
   );
