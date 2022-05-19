@@ -8,7 +8,7 @@ is_local=$?
 
 echo ${is_local}
 
-if [[ ${is_local} ]]; then
+if [ ${is_local} ]; then
   echo 'A'
   nix build --refresh .#oci-nix
   podman load < result
