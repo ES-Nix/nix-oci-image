@@ -10,14 +10,14 @@ i mean, install some thing to a profile using [`flake`](add link here) and use t
 nix \
 run \
 --refresh \
-github:ES-Nix/nix-oci-image/nix-static-minimal#default
+github:ES-Nix/nix-oci-image/nix-static-minimal#oci-podman-nix
 ```
 
 ```bash
 nix \
 run \
 --refresh \
-.#default
+.#oci-podman-nix
 ```
 
 ```

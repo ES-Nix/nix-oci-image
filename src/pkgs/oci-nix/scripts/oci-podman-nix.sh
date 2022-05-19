@@ -6,9 +6,11 @@
 $(nix flake metadata .# 1> /dev/null 2> /dev/null)
 is_local=$?
 if [[ ${is_local} ]]; then
+  echo 'A'
   nix build --refresh .#oci-nix
   podman load < result
 else
+    echo 'B'
   nix build --refresh github:ES-Nix/nix-oci-image/nix-static-minimal#oci-nix
   podman load < result
 fi
@@ -40,7 +42,11 @@ run \
 --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
 --volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
 --volume=/etc/localtime:/etc/localtime:ro \
+--volume=/dev/shm:/dev/shm:ro \
+--volume=/dev/snd:/dev/snd:ro \
+--volume="$(pwd)":/home/nixuser/code:rw \
+--workdir=/home/nixuser \
 localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:latest
 
-# --volume="${HOME}"/.ssh/id_rsa:/home/nixuser/.ssh/id_rsa:ro \ 
+# --volume="${HOME}"/.ssh/id_rsa:/home/nixuser/.ssh/id_rsa:ro \
 xhost -
