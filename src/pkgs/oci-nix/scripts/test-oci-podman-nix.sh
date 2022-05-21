@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 
 
+# Is it a bad thing? I think in small cases it would be useful.
+build-oci-podman-nix
 
 podman \
 run \
@@ -26,8 +28,10 @@ localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:latest \
 <<COMMANDS
 
 sudo id
-nix profile install -vvvvvvv nixpkgs#hello
 
-hello
+nix build -vvvvvvv --expr '{}' --no-link
+
+# nix profile install -vvvvvvv nixpkgs#hello
+# hello
 
 COMMANDS
