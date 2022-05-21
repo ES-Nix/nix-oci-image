@@ -3,7 +3,7 @@
 
 
 # Is it a bad thing? I think in small cases it would be useful.
-build-oci-podman-nix
+build-and-load-oci-podman-nix 'github:ES-Nix/nix-oci-image/nix-static-minimal' 'oci-nix' 'nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su'
 
 
 xhost +

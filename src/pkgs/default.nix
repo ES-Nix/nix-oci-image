@@ -4,7 +4,8 @@
   oci-nix = pkgs.callPackage ./oci-nix { };
   oci-podman-nix = pkgs.callPackage ./oci-nix/oci-podman-nix.nix { podman-rootless = podman-rootless; };
   test-oci-podman-nix = pkgs.callPackage ./oci-nix/test-oci-podman-nix.nix { podman-rootless = podman-rootless; };
-  build-oci-podman-nix = pkgs.callPackage ./oci-nix/build-oci-podman-nix.nix { podman-rootless = podman-rootless; };
+  build-and-load-oci-podman-nix = pkgs.callPackage ./oci-nix/build-and-load-oci-podman-nix.nix { podman-rootless = podman-rootless; };
+  build-local-or-remote = pkgs.callPackage ./oci-nix/build-local-or-remote.nix { };
 
 
   oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = pkgs.callPackage ./oci-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp/oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp.nix { podman-rootless = podman-rootless; };

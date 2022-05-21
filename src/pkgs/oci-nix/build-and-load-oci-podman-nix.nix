@@ -1,12 +1,14 @@
 { pkgs ? import <nixpkgs> { }, podman-rootless  }:
 pkgs.stdenv.mkDerivation rec {
-  name = "build-oci-podman-nix";
+  name = "build-and-load-oci-podman-nix";
   buildInputs = with pkgs; [ stdenv ];
   nativeBuildInputs = with pkgs; [ makeWrapper ];
   propagatedNativeBuildInputs = with pkgs; [
     bash
     coreutils
     podman-rootless
+
+    (import ./build-local-or-remote.nix { inherit pkgs; })
   ];
 
   src = builtins.path { path = ./.; inherit name; };

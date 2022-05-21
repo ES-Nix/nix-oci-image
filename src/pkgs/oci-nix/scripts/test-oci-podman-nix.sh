@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 
+IMAGE_NAME='nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su'
 
 # Is it a bad thing? I think in small cases it would be useful.
-build-oci-podman-nix
+build-and-load-oci-podman-nix 'github:ES-Nix/nix-oci-image/nix-static-minimal' 'oci-nix' "${IMAGE_NAME}"
 
 podman \
 run \
@@ -24,7 +25,7 @@ run \
 --volume=/dev/snd:/dev/snd:ro \
 --volume="$(pwd)":/home/nixuser/code:rw \
 --workdir=/home/nixuser \
-localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:latest \
+localhost/"${IMAGE_NAME}":latest \
 <<COMMANDS
 
 sudo id

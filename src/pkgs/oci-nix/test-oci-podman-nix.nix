@@ -9,7 +9,7 @@ pkgs.stdenv.mkDerivation rec {
 
     podman-rootless
 
-    (import ./build-oci-podman-nix.nix { inherit pkgs podman-rootless; })
+    (import ./build-and-load-oci-podman-nix.nix { inherit pkgs podman-rootless; })
   ];
 
   src = builtins.path { path = ./.; inherit name; };

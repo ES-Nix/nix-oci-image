@@ -89,9 +89,9 @@
           drv = packages.test-oci-podman-nix;
         };
 
-        apps.build-oci-podman-nix = flake-utils.lib.mkApp {
-          name = "build-oci-podman-nix";
-          drv = packages.build-oci-podman-nix;
+        apps.build-and-load-oci-podman-nix = flake-utils.lib.mkApp {
+          name = "build-and-load-oci-podman-nix";
+          drv = packages.build-and-load-oci-podman-nix;
         };
 
         apps.oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = flake-utils.lib.mkApp {
