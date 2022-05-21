@@ -36,7 +36,7 @@ run \
 --interactive=true \
 --mount=type=tmpfs,destination=/var/lib/containers \
 --privileged=true \
---publish=22000:22 \
+--publish=12345:22 \
 --tty=true \
 --rm=true \
 --user=nixuser \
@@ -45,27 +45,21 @@ run \
 --volume=/etc/localtime:/etc/localtime:ro \
 --volume=/dev/shm:/dev/shm:ro \
 --volume=/dev/snd:/dev/snd:ro \
---volume="$(pwd)":/home/nixuser/code:rw \
---workdir=/home/nixuser \
+--volume="${HOME}/.ssh":"${HOME}/.ssh" \
+--volume="$(pwd)":"${HOME}"/code:rw \
+--workdir="${HOME}" \
 localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:latest
-
 #podman \
 #run \
-#--group-add=keep-groups \
-#--device=/dev/kvm \
-#--hostname=ubuntu-container \
-#--privileged=true \
-#--userns=keep-id \
-#--tty=true \
-#--interactive=true \
-#--rm=true \
-#--volume="$(pwd)":"${HOME}/code" \
-#--volume="${HOME}/.ssh":"${HOME}/.ssh" \
-#--workdir="${HOME}" \
-#docker.io/library/ubuntu:20.04 \
-# bash \
-#-c \
-#'ls -la "${HOME}"/code'
+#--device /deve/kvm \
+#--privileged \
+#--userns keep-id \
+#-it \
+#--rm \
+#-v "$(pwd)":"${HOME}/code" \
+#-v "${HOME}/.ssh":"${HOME}/.ssh" \
+#-w "${HOME}" \
+#ubuntu:20.04
 
 #sudo /bin/sshd -D -e -ddd
 
@@ -73,8 +67,6 @@ localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:latest
 # --network=host \
 # --userns=host \
 # --volume="${HOME}"/.ssh/id_rsa:/home/nixuser/.ssh/id_rsa:ro \
-
-
 xhost -
 
 # sudo mkdir /var/empty

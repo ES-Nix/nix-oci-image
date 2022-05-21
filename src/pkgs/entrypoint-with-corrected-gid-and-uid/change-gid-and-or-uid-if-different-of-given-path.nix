@@ -1,18 +1,15 @@
-{ pkgs ? import <nixpkgs> { }, podman-rootless  }:
+{ pkgs ? import <nixpkgs> { } }:
 pkgs.stdenv.mkDerivation rec {
-  name = "oci-podman-nix";
+  name = "change-gid-and-or-uid-if-different-of-given-path";
   buildInputs = with pkgs; [ stdenv ];
   nativeBuildInputs = with pkgs; [ makeWrapper ];
   propagatedNativeBuildInputs = with pkgs; [
     bash
     coreutils
 
-    # findutils
-
-    podman-rootless
-
-    # Testing
-    xorg.xhost
+    glibc.bin
+    findutils
+    shadow
   ];
 
   src = builtins.path { path = ./.; inherit name; };
@@ -23,22 +20,19 @@ pkgs.stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/bin
 
-    cp -r "${src}"/* $out
+    cp -r "${src}/scripts/${name}.sh" $out
 
     install \
     -m0755 \
-    $out/scripts/${name}.sh \
+    $out/${name}.sh \
     -D \
     $out/bin/${name}
 
     patchShebangs $out/bin/${name}
 
-    substituteInPlace \
-      $out/bin/${name} \
-      --replace Containerfile $out/Containerfile
-
     wrapProgram $out/bin/${name} \
       --prefix PATH : "${pkgs.lib.makeBinPath propagatedNativeBuildInputs }"
+
   '';
 
 }

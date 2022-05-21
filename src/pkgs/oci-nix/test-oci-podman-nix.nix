@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { }, podman-rootless  }:
 pkgs.stdenv.mkDerivation rec {
-  name = "oci-podman-nix";
+  name = "test-oci-podman-nix";
   buildInputs = with pkgs; [ stdenv ];
   nativeBuildInputs = with pkgs; [ makeWrapper ];
   propagatedNativeBuildInputs = with pkgs; [
@@ -32,10 +32,6 @@ pkgs.stdenv.mkDerivation rec {
     $out/bin/${name}
 
     patchShebangs $out/bin/${name}
-
-    substituteInPlace \
-      $out/bin/${name} \
-      --replace Containerfile $out/Containerfile
 
     wrapProgram $out/bin/${name} \
       --prefix PATH : "${pkgs.lib.makeBinPath propagatedNativeBuildInputs }"

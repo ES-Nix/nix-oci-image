@@ -18,7 +18,7 @@ let
        wget
        which
     ];
-
+  entrypoint = import ../entrypoint-with-corrected-gid-and-uid { inherit pkgs; };
 in
 pkgs.dockerTools.buildImage {
   name = "nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
@@ -33,24 +33,27 @@ pkgs.dockerTools.buildImage {
     # pkgsStatic.busybox-sandbox-shell
     bashInteractive
     coreutils
+    nix
 
-    pkgsStatic.nix
+#    pkgsStatic.nix
+#
+#   (pkgsStatic.sudo.override { pam = null; })
+#   (pkgsStatic.shadow.override { pam = null; }).su
 
-   (pkgsStatic.sudo.override { pam = null; })
-   (pkgsStatic.shadow.override { pam = null; }).su
+    entrypoint
 
-    # git
-    # openssh
-    # xorg.xset # use xset q for dig into DISPLAY and xhost stuff
-    # xorg.xclock
-    # pkgsStatic.xorg.xclock
+#    git
+#    openssh
+#    xorg.xset
+#    pkgsStatic.xorg.xclock
   ]
   # ++ troubleshoot-packages
   );
 
   config = {
     #Cmd = [ "/bin" ];
-    Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
+    # Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
+    Entrypoint = [ "${entrypoint}/bin/entrypoint-with-corrected-gid-and-uid" ];
     Env = [
       "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       # "GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"

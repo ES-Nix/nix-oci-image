@@ -3,7 +3,11 @@ FROM localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:0.0
 
 WORKDIR /home/nixuser
 
+EXPOSE 22
+
 # https://github.com/moby/moby/issues/35783#issuecomment-355981140
+#  && test -d /var/empty || mkdir -pv /var/empty \
+# && ssh-keygen -A \
 RUN echo \
  && chmod 1777 /tmp \
  && chmod -R 0700 /nix \
@@ -21,7 +25,9 @@ RUN echo \
 
 # && echo 'nixuser:123' | chpasswd \
 
-USER nixuser
+
+# CMD ["/bin/sshd", "-D"]
+# USER nixuser
 
 # RUN echo \
 #  && nix flake --version \

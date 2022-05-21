@@ -34,16 +34,10 @@ pkgs.dockerTools.buildImage {
     bashInteractive
     coreutils
 
-    pkgsStatic.nix
+    nix
 
    (pkgsStatic.sudo.override { pam = null; })
    (pkgsStatic.shadow.override { pam = null; }).su
-
-    # git
-    # openssh
-    # xorg.xset # use xset q for dig into DISPLAY and xhost stuff
-    # xorg.xclock
-    # pkgsStatic.xorg.xclock
   ]
   # ++ troubleshoot-packages
   );
