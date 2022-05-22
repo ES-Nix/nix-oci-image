@@ -1,0 +1,6 @@
+FROM localhost/busybox-sandbox-shell:0.0.1 AS test-busybox-sandbox-shell
+
+
+# WORKDIR /home/nixuser
+
+

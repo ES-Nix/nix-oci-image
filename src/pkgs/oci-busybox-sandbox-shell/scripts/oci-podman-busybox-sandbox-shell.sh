@@ -1,25 +1,22 @@
 #!/usr/bin/env bash
 
-echo '@@@@'
 
-# TODO: repeat this if every where is bad, not dry
-$(nix flake metadata .# 1> /dev/null 2> /dev/null)
-is_local=$?
-if [[ ${is_local} ]]; then
+
+if nix flake metadata .# 1> /dev/null 2> /dev/null; then
   echo 'Locally building'
-  nix build --refresh .#oci-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp \
+  nix build --refresh .#oci-busybox-sandbox-shell \
   && podman load < result
 else
   echo 'Remote building'
-  nix build --refresh github:ES-Nix/nix-oci-image/nix-static-minimal#oci-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp \
+  nix build --refresh github:ES-Nix/nix-oci-image/nix-static-minimal#oci-busybox-sandbox-shell \
   && podman load < result
 fi
 
 podman \
 build \
 --file Containerfile \
---tag nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp \
---target test-nix \
+--tag busybox-sandbox-shell \
+--target test-busybox-sandbox-shell \
 .
 
 podman \
@@ -34,7 +31,8 @@ run \
 --privileged=true \
 --tty=true \
 --rm=true \
---userns=host \
---user=0 \
+--user=1000 \
 --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
-localhost/nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp:latest
+localhost/busybox-sandbox-shell:latest
+
+# --userns=host \

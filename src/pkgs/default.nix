@@ -19,7 +19,10 @@
   oci-nix-entrypoint = pkgs.callPackage ./oci-nix-entrypoint { };
   oci-podman-nix-entrypoint = pkgs.callPackage ./oci-nix-entrypoint/oci-podman-nix-entrypoint.nix { podman-rootless = podman-rootless; };
 
-  # oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = pkgs.callPackage ./oci-nix-bash-coreutiloci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmps-ca-bundle-etc-passwd-etc-group-tmp-sudo-su/oci-podman-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix { };
+
+  oci-podman-busybox-sandbox-shell = pkgs.callPackage ./oci-busybox-sandbox-shell/oci-podman-busybox-sandbox-shell.nix { podman-rootless = podman-rootless; };
+  oci-busybox-sandbox-shell = pkgs.callPackage ./oci-busybox-sandbox-shell { };
+
 
 #  oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = pkgs.callPackage ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su { };
 #  test_oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = pkgs.callPackage ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su/test_oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix { podman-rootless = podman-rootless; };
