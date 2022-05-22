@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { }, podman-rootless  }:
 pkgs.stdenv.mkDerivation rec {
-  name = "oci-podman-nix";
+  name = "oci-podman-nix-entrypoint";
   buildInputs = with pkgs; [ stdenv ];
   nativeBuildInputs = with pkgs; [ makeWrapper ];
   propagatedNativeBuildInputs = with pkgs; [

@@ -1,42 +1,49 @@
-#!/bin/sh
+#!/bin/bash
 
-opt_h=0
+
+#echo "${GID_FOR_CONTAINER}"
+#echo "${UID_FOR_CONTAINER}"
+#
+#opt_h=0
+#opt_r=0
+#
+#while getopts 'g:hru:' option; do
+#  case $option in
+#    g) opt_g="$OPTARG";;
+#    h) opt_h=1;;
+#    r) opt_r=1;;
+#    u) opt_u="$OPTARG";;
+#  esac
+#done
+#shift $(expr $OPTIND - 1)
+#
+#if [ $# -lt 1 -o "$opt_h" = "1" -o \( -z "$opt_g" -a -z "$opt_u" \) ]; then
+#  echo "Usage: $(basename $0) [opts] path"
+#  echo " -g group_name: group name to adjust gid"
+#  echo " -h: this help message"
+#  echo " -r: recursively update uid/gid on root filesystem"
+#  echo " -u user_name: user name to adjust uid"
+#  echo "Either -u or -g must be provided in addition to a path. The uid and"
+#  echo "gid of the path will be used to modify the uid/gid inside the"
+#  echo "container. e.g.: "
+#  echo "  $0 -g app_group -u app_user -r /path/to/vol/data"
+#  [ "$opt_h" = "1" ] && exit 0 || exit 1
+#fi
+
+
 opt_r=0
-
-while getopts 'g:hru:' option; do
-  case $option in
-    g) opt_g="$OPTARG";;
-    h) opt_h=1;;
-    r) opt_r=1;;
-    u) opt_u="$OPTARG";;
-  esac
-done
-shift $(expr $OPTIND - 1)
-
-if [ $# -lt 1 -o "$opt_h" = "1" -o \( -z "$opt_g" -a -z "$opt_u" \) ]; then
-  echo "Usage: $(basename $0) [opts] path"
-  echo " -g group_name: group name to adjust gid"
-  echo " -h: this help message"
-  echo " -r: recursively update uid/gid on root filesystem"
-  echo " -u user_name: user name to adjust uid"
-  echo "Either -u or -g must be provided in addition to a path. The uid and"
-  echo "gid of the path will be used to modify the uid/gid inside the"
-  echo "container. e.g.: "
-  echo "  $0 -g app_group -u app_user -r /path/to/vol/data"
-  [ "$opt_h" = "1" ] && exit 0 || exit 1
-fi
-
-
+opt_g=nixgroup
+opt_u=nixuser
 
 if [ "$(id -u)" != "0" ]; then
   echo "Root required for $(basename $0)"
   exit 1
 fi
 
-if [ ! -e "$1" ]; then
-  echo "File or directory does not exist, skipping fix-perms: $1"
-  exit 0
-fi
+#if [ ! -e "$1" ]; then
+#  echo "File or directory does not exist, skipping fix-perms: $1"
+#  exit 0
+#fi
 
 if ! type usermod >/dev/null 2>&1 || ! type groupmod >/dev/null 2>&1; then
   echo "Commands usermod and groupmod are required."
@@ -50,7 +57,7 @@ set -e
 # update the uid
 if [ -n "$opt_u" ]; then
   OLD_UID=$(getent passwd "${opt_u}" | cut -f3 -d:)
-  NEW_UID=$(stat -c "%u" "$1")
+  NEW_UID="${UID_FOR_CONTAINER}"
   if [ "$OLD_UID" != "$NEW_UID" ]; then
     echo "Changing UID of $opt_u from $OLD_UID to $NEW_UID"
     usermod -u "$NEW_UID" -o "$opt_u"
@@ -63,7 +70,7 @@ fi
 # update the gid
 if [ -n "$opt_g" ]; then
   OLD_GID=$(getent group "${opt_g}" | cut -f3 -d:)
-  NEW_GID=$(stat -c "%g" "$1")
+  NEW_GID="${GID_FOR_CONTAINER}"
   if [ "$OLD_GID" != "$NEW_GID" ]; then
     echo "Changing GID of $opt_g from $OLD_GID to $NEW_GID"
     groupmod -g "$NEW_GID" -o "$opt_g"
@@ -73,3 +80,5 @@ if [ -n "$opt_g" ]; then
   fi
 fi
 
+
+# chown "${UID_FOR_CONTAINER}":"${GID_FOR_CONTAINER}" -R /home/"${opt_u}"/code

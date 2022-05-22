@@ -21,7 +21,7 @@ let
   entrypoint = import ../entrypoint-with-corrected-gid-and-uid { inherit pkgs; };
 in
 pkgs.dockerTools.buildImage {
-  name = "nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+  name = "oci-nix-entrypoint";
   tag = "0.0.1";
 
   contents = [
@@ -33,19 +33,20 @@ pkgs.dockerTools.buildImage {
     # pkgsStatic.busybox-sandbox-shell
     bashInteractive
     coreutils
-    nix
+    # nix
 
-#    pkgsStatic.nix
-#
-#   (pkgsStatic.sudo.override { pam = null; })
-#   (pkgsStatic.shadow.override { pam = null; }).su
+    pkgsStatic.nix
+
+   (pkgsStatic.sudo.override { pam = null; })
+   (pkgsStatic.shadow.override { pam = null; }).su
 
     entrypoint
 
-#    git
-#    openssh
-#    xorg.xset
-#    pkgsStatic.xorg.xclock
+    git
+    openssh
+    xorg.xset
+    # vlc
+    xorg.xclock
   ]
   # ++ troubleshoot-packages
   );

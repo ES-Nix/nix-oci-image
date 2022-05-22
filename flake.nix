@@ -98,6 +98,10 @@
           name = "oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp";
           drv = packages.oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp;
         };
+        apps.oci-podman-nix-entrypoint = flake-utils.lib.mkApp {
+          name = "oci-podman-nix-entrypoint";
+          drv = packages.oci-podman-nix-entrypoint;
+        };
 
 #        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
 #          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";

@@ -2,27 +2,22 @@
 
 
 
-# TODO: repeat this if every where is bad, not dry
-$(nix flake metadata .# 1> /dev/null 2> /dev/null)
-is_local=$?
-
-echo ${is_local}
-
 if nix flake metadata .# 1> /dev/null 2> /dev/null; then
   echo 'A'
-  nix build --refresh .#oci-nix
-  podman load < result
+  nix build --refresh .#oci-nix-entrypoint
 else
     echo 'B'
-  nix build --refresh github:ES-Nix/nix-oci-image/nix-static-minimal#oci-nix
-  podman load < result
+  nix build --refresh github:ES-Nix/nix-oci-image/nix-static-minimal#oci-nix-entrypoint
 fi
+
+podman load < result
+
 
 podman \
 build \
 --file Containerfile \
---tag nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su \
---target test-nix \
+--tag test-nix-entrypoint \
+--target test-nix-entrypoint \
 .
 
 
@@ -33,6 +28,8 @@ run \
 --device=/dev/kvm \
 --device=/dev/fuse \
 --env="DISPLAY=${DISPLAY:-:0.0}" \
+--env="UID_FOR_CONTAINER=$(id -u)" \
+--env="GID_FOR_CONTAINER=$(id -g)" \
 --env=PATH=/root/.nix-profile/bin:/home/nixuser/.nix-profile/bin:/etc/profiles/per-user/nixuser/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
 --interactive=true \
 --mount=type=tmpfs,destination=/var/lib/containers \
@@ -48,11 +45,13 @@ run \
 --volume=/dev/snd:/dev/snd:ro \
 --volume="$(pwd)":/home/nixuser/code:rw \
 --workdir=/home/nixuser \
-localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:latest \
-bash
+localhost/test-nix-entrypoint:latest
 
 #sudo /bin/sshd -D -e -ddd
 
+
+# --storage-driver="vfs" \
+# --cgroups=disabled \
 # --network=host \
 # --userns=host \
 # --volume="${HOME}"/.ssh/id_rsa:/home/nixuser/.ssh/id_rsa:ro \

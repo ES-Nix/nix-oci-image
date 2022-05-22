@@ -4,7 +4,7 @@ pkgs.stdenv.mkDerivation rec {
   buildInputs = with pkgs; [ stdenv ];
   nativeBuildInputs = with pkgs; [ makeWrapper ];
   propagatedNativeBuildInputs = with pkgs; [
-    bash
+    bashInteractive
     coreutils
 
     gosu

@@ -16,6 +16,8 @@
 
   entrypoint-with-corrected-gid-and-uid = pkgs.callPackage ./entrypoint-with-corrected-gid-and-uid { };
   change-gid-and-or-uid-if-different-of-given-path = pkgs.callPackage ./entrypoint-with-corrected-gid-and-uid/change-gid-and-or-uid-if-different-of-given-path.nix { };
+  oci-nix-entrypoint = pkgs.callPackage ./oci-nix-entrypoint { };
+  oci-podman-nix-entrypoint = pkgs.callPackage ./oci-nix-entrypoint/oci-podman-nix-entrypoint.nix { podman-rootless = podman-rootless; };
 
   # oci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = pkgs.callPackage ./oci-nix-bash-coreutiloci-podman-nix-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmps-ca-bundle-etc-passwd-etc-group-tmp-sudo-su/oci-podman-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix { };
 
