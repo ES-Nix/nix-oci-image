@@ -42,6 +42,9 @@ pkgs.dockerTools.buildImage {
 
     entrypoint
 
+    shadow
+    which
+
     git
     openssh
     xorg.xset

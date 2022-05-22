@@ -40,4 +40,32 @@ EXPOSE 22
 # RUN ./nix-build-minimal-iso.sh \
 #      && nix store gc -v
 
+
+
+FROM localhost/test-nix-entrypoint AS with-iso
+
+# groupadd --system nixbld \
+# RUN groupadd --system nixbld \
+#  && for n in $(seq 1 30); do \
+#     useradd \
+#     --comment "Nix build user $n" \
+#     --gid nixbld \
+#     --groups nixbld \
+#     --home-dir /var/empty \
+#     --no-create-home \
+#     --no-user-group \
+#     --shell "$(which nologin)" \
+#     --system \
+#     nixbld$n; done
+
+# RUN nix --option sandbox false profile install --refresh nixpkgs#hello \
+# && hello
+
+# USER 0
+#
+# RUN nix --option sandbox false profile install --refresh github:ES-Nix/nix-qemu-kvm/dev \
+#  && nix store gc -v
+#
+# USER nixuser
+#
 # ENTRYPOINT entrypoint

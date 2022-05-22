@@ -21,6 +21,13 @@ build \
 .
 
 
+podman \
+build \
+--file Containerfile \
+--tag test-nix-entrypoint-with-iso \
+--target with-iso \
+.
+
 xhost +
 
 podman \

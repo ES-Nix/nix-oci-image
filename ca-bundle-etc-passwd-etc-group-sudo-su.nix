@@ -52,10 +52,10 @@ pkgs.stdenv.mkDerivation rec {
     echo 'experimental-features = nix-command flakes' > $out/root/.config/nix/nix.conf
 
     cat << 'EOF' >> $out/etc/group
-    nixbld:x:30000:nixbld1,nixbld2,nixbld3,nixbld4,nixbld5,nixbld6,nixbld7,nixbld8,nixbld9,nixbld10,nixbld11,nixbld12,nixbld13,nixbld14,nixbld15,nixbld16,nixbld17,nixbld18,nixbld19,nixbld20,nixbld21,nixbld22,nixbld23,nixbld24,nixbld25,nixbld26,nixbld27,nixbld28,nixbld29,nixbld30,nixbld31,nixbld32
-    sudo:x:3:nixuser,kvm
-    wheel:x:1:nixuser,kvm
-    kvm:x:2:kvm
+nixbld:x:30000:nixbld1,nixbld2,nixbld3,nixbld4,nixbld5,nixbld6,nixbld7,nixbld8,nixbld9,nixbld10,nixbld11,nixbld12,nixbld13,nixbld14,nixbld15,nixbld16,nixbld17,nixbld18,nixbld19,nixbld20,nixbld21,nixbld22,nixbld23,nixbld24,nixbld25,nixbld26,nixbld27,nixbld28,nixbld29,nixbld30,nixbld31,nixbld32
+sudo:x:3:nixuser,kvm
+wheel:x:1:nixuser,kvm
+kvm:x:2:kvm
 EOF
 
     cat << 'EOF' >> $out/etc/passwd
