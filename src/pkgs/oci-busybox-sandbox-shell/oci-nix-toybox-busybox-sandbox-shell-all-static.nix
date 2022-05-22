@@ -11,14 +11,13 @@ let
     ];
 in
 pkgs.dockerTools.buildImage {
-  name = "busybox-sandbox-shell";
+  name = "nix-toybox-busybox-sandbox-shell-all-static";
   tag = "0.0.1";
 
   contents = with pkgs.pkgsStatic; [
     busybox-sandbox-shell
-    # bash
-    # coreutils
-    # nix
+    nix
+    toybox
   ]
   # ++ troubleshoot-packages
   ++
@@ -34,13 +33,14 @@ pkgs.dockerTools.buildImage {
     # Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
 
     Env = [
-      # "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
+      "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       # "GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       # "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       # "NIX_PAGER=cat"
       # A user is required by nix
       # https://github.com/NixOS/nix/blob/9348f9291e5d9e4ba3c4347ea1b235640f54fd79/src/libutil/util.cc#L478
-      # "USER=nixuser"
+      #"USER=nixuser"
+      "USER=root"
       # "HOME=/home/nixuser"
       # "PATH=/bin:/home/nixuser/bin"
       # "NIX_PATH=/nix/var/nix/profiles/per-user/root/channels"

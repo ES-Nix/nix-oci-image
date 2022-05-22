@@ -109,6 +109,11 @@
           drv = packages.oci-podman-busybox-sandbox-shell;
         };
 
+        apps.oci-podman-nix-toybox-busybox-sandbox-shell-all-static = flake-utils.lib.mkApp {
+          name = "oci-podman-nix-toybox-busybox-sandbox-shell-all-static";
+          drv = packages.oci-podman-nix-toybox-busybox-sandbox-shell-all-static;
+        };
+
 #        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
 #          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
 #          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
