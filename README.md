@@ -20,7 +20,22 @@ run \
 .#oci-podman-nix
 ```
 
+
+```bash
+nix \
+run \
+--refresh \
+github:ES-Nix/nix-oci-image/nix-static-minimal#oci-podman-nix-entrypoint
 ```
+
+```bash
+nix \
+run \
+--refresh \
+.#oci-podman-nix-entrypoint
+```
+
+```bash
 podman \
 build \
 --file=Containerfile \
@@ -98,8 +113,13 @@ COMMANDS
 echo $?
 ```
 
+To test a somewhat difficult build:
+```bash
 nix build github:cole-h/nixos-config/6779f0c3ee6147e5dcadfbaff13ad57b1fb00dc7#iso
+```
 
+
+```bash
 podman \
 run \
 --interactive=true \
@@ -123,7 +143,7 @@ du -hs /nix
 COMMANDS
 
 echo $?
-
+```
 
 stat /proc
 
