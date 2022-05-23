@@ -36,6 +36,14 @@ run \
 ```
 
 ```bash
+nix \
+run \
+--refresh \
+github:ES-Nix/nix-oci-image/nix-static-minimal#oci-podman-openssh-server
+```
+
+
+```bash
 podman \
 build \
 --file=Containerfile \
