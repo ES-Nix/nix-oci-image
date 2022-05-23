@@ -7,7 +7,7 @@ build \
 .
 
 
-xhost +
+# xhost +
 
 podman \
 run \
@@ -76,4 +76,4 @@ while ! nc -t -w 1 -z localhost 22000; do echo $(date +'%d/%m/%Y %H:%M:%S:%3N');
 #    --storage-driver=vfs \
 #    docker.io/library/ubuntu:16.04
 
-xhost -
+# xhost -
