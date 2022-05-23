@@ -114,6 +114,11 @@
           drv = packages.oci-podman-nix-toybox-busybox-sandbox-shell-all-static;
         };
 
+        apps.oci-podman-openssh-server = flake-utils.lib.mkApp {
+          name = "oci-podman-openssh-server";
+          drv = packages.oci-podman-openssh-server;
+        };
+
 #        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
 #          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
 #          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;

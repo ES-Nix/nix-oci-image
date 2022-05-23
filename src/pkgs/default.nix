@@ -25,6 +25,7 @@
   oci-busybox-sandbox-shell = pkgs.callPackage ./oci-busybox-sandbox-shell { };
 
 
+  oci-podman-openssh-server = pkgs.callPackage ./oci-openssh-server/oci-podman-openssh-server.nix { podman-rootless = podman-rootless; };
 #  oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = pkgs.callPackage ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su { };
 #  test_oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = pkgs.callPackage ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su/test_oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix { podman-rootless = podman-rootless; };
 
