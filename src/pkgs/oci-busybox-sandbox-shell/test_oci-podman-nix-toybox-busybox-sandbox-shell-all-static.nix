@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { }, podman-rootless  }:
+{ pkgs ? import <nixpkgs> { }, podman-rootless }:
 pkgs.stdenv.mkDerivation rec {
   name = "test_oci-podman-nix-toybox-busybox-sandbox-shell-all-static";
   buildInputs = with pkgs; [ stdenv ];

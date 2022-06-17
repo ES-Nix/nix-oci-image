@@ -17,19 +17,19 @@ pkgs.dockerTools.buildImage {
     bashInteractive
     coreutils
     pkgsStatic.nix
-   (sudo.override { pam = null; })
-   (shadow.override { pam = null; }).su
+    (sudo.override { pam = null; })
+    (shadow.override { pam = null; }).su
   ]
-  #  ++
-  #  [
-  #     hello
-  #     file
-  #     findutils
-  #     ripgrep
-  #     nano
-  #     which
-  #     strace
-  #  ]
+    #  ++
+    #  [
+    #     hello
+    #     file
+    #     findutils
+    #     ripgrep
+    #     nano
+    #     which
+    #     strace
+    #  ]
 
   );
 

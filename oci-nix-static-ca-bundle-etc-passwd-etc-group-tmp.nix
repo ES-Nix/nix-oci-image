@@ -8,17 +8,17 @@ pkgs.dockerTools.buildImage {
   name = "nix-static-ca-bundle-etc-passwd-etc-group-tmp";
   tag = "0.0.1";
 
-#    runAsRoot = ''
-#      #!${pkgs.stdenv}
-#      ${pkgs.dockerTools.shadowSetup}
-#      chown -R nixuser:nixgroup /nix
-#    '';
+  #    runAsRoot = ''
+  #      #!${pkgs.stdenv}
+  #      ${pkgs.dockerTools.shadowSetup}
+  #      chown -R nixuser:nixgroup /nix
+  #    '';
 
-#  extraCommands = ''
-#      #!${pkgs.stdenv}
-#      ${pkgs.dockerTools.shadowSetup}
-#      chown -R nixuser:nixgroup /nix
-#    '';
+  #  extraCommands = ''
+  #      #!${pkgs.stdenv}
+  #      ${pkgs.dockerTools.shadowSetup}
+  #      chown -R nixuser:nixgroup /nix
+  #    '';
 
   contents = [
     ca-bundle-etc-passwd-etc-group
@@ -27,8 +27,8 @@ pkgs.dockerTools.buildImage {
   ]
   ++
   (with pkgs; [
-#    busybox-sandbox-shell
-#    coreutils
+    #    busybox-sandbox-shell
+    #    coreutils
   ]);
 
   config = {

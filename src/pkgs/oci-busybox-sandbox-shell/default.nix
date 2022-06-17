@@ -1,14 +1,14 @@
 { pkgs ? import <nixpkgs> { } }:
 let
   troubleshoot-packages = with pkgs; [
-       hello
-       file
-       findutils
-       ripgrep
-       nano
-       which
-       strace
-    ];
+    hello
+    file
+    findutils
+    ripgrep
+    nano
+    which
+    strace
+  ];
 in
 pkgs.dockerTools.buildImage {
   name = "busybox-sandbox-shell";
@@ -25,7 +25,7 @@ pkgs.dockerTools.buildImage {
   (with pkgs; [
     # bashInteractive
     # coreutils
-    ]
+  ]
   );
 
   config = {

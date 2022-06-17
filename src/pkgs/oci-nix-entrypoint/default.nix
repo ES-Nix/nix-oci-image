@@ -4,20 +4,20 @@ let
   create-tmp = import ../utils/create-tmp.nix { inherit pkgs; };
 
   troubleshoot-packages = with pkgs; [
-       file
-       findutils
-       # gzip
-       hello
-       htop
-       iproute
-       nano
-       netcat
-       ripgrep
-       strace
-       # gnutar
-       wget
-       which
-    ];
+    file
+    findutils
+    # gzip
+    hello
+    htop
+    iproute
+    nano
+    netcat
+    ripgrep
+    strace
+    # gnutar
+    wget
+    which
+  ];
   entrypoint = import ../entrypoint-with-corrected-gid-and-uid { inherit pkgs; };
 in
 pkgs.dockerTools.buildImage {
@@ -37,8 +37,8 @@ pkgs.dockerTools.buildImage {
 
     pkgsStatic.nix
 
-   (pkgsStatic.sudo.override { pam = null; })
-   (pkgsStatic.shadow.override { pam = null; }).su
+    (pkgsStatic.sudo.override { pam = null; })
+    (pkgsStatic.shadow.override { pam = null; }).su
 
     entrypoint
 
@@ -51,7 +51,7 @@ pkgs.dockerTools.buildImage {
     # vlc
     xorg.xclock
   ]
-  # ++ troubleshoot-packages
+    # ++ troubleshoot-packages
   );
 
   config = {

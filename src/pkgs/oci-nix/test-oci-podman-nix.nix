@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { }, podman-rootless  }:
+{ pkgs ? import <nixpkgs> { }, podman-rootless }:
 pkgs.stdenv.mkDerivation rec {
   name = "test-oci-podman-nix";
   buildInputs = with pkgs; [ stdenv ];

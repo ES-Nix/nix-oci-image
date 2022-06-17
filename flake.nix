@@ -19,62 +19,62 @@
       in
       rec {
         # du -hs $(readlink -f result)
-#        packages.oci-empty-image = import ./oci-empty-image.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.nix-static = import ./nix.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.busybox-sandbox-shell = import ./busybox-sandbox-shell-oci.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.toybox-static = import ./src/nix/core/toybox-static.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.oci-toybox-static = import ./src/nix/core/oci-toybox-static.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.oci-busybox-sandbox-shell-ca-bundle-tmp = import ./oci-busybox-sandbox-shell-ca-bundle-tmp.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.ca-bundle-etc-passwd-etc-group-sudo-su = import ./ca-bundle-etc-passwd-etc-group-sudo-su.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.oci-nix-static-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-nix-static-ca-bundle-etc-passwd-etc-group-tmp.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
-#
-#        packages.busybox-sandbox-shell-nix-flakes = import ./busybox-sandbox-shell-nix-flakes-oci.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
+        #        packages.oci-empty-image = import ./oci-empty-image.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.nix-static = import ./nix.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.busybox-sandbox-shell = import ./busybox-sandbox-shell-oci.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.toybox-static = import ./src/nix/core/toybox-static.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.oci-toybox-static = import ./src/nix/core/oci-toybox-static.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-static-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.oci-busybox-sandbox-shell-ca-bundle-tmp = import ./oci-busybox-sandbox-shell-ca-bundle-tmp.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.ca-bundle-etc-passwd-etc-group-sudo-su = import ./ca-bundle-etc-passwd-etc-group-sudo-su.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.oci-nix-static-ca-bundle-etc-passwd-etc-group-tmp = import ./oci-nix-static-ca-bundle-etc-passwd-etc-group-tmp.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
+        #
+        #        packages.busybox-sandbox-shell-nix-flakes = import ./busybox-sandbox-shell-nix-flakes-oci.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
 
 
-#        packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
-#          pkgs = nixpkgs.legacyPackages.${system};
-#        };
+        #        packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = import ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix {
+        #          pkgs = nixpkgs.legacyPackages.${system};
+        #        };
 
         #
         inherit packages;
@@ -135,25 +135,25 @@
         };
 
 
-#        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
-#          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
-#          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
-#        };
-#
-#        apps.test-oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
-#          name = "test-oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
-#          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
-#        };
-#
-#        apps.oci-image-podman-nix-sudo-su = flake-utils.lib.mkApp {
-#          name = "oci-image-podman-nix-sudo-su";
-#          drv = packages.test_nix-sudo-su;
-#        };
-#
-#        apps.test_nix-sudo-su = flake-utils.lib.mkApp {
-#          name = "test_nix-sudo-su";
-#          drv = packages.test_nix-sudo-su;
-#        };
+        #        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
+        #          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+        #          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
+        #        };
+        #
+        #        apps.test-oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
+        #          name = "test-oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
+        #          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
+        #        };
+        #
+        #        apps.oci-image-podman-nix-sudo-su = flake-utils.lib.mkApp {
+        #          name = "oci-image-podman-nix-sudo-su";
+        #          drv = packages.test_nix-sudo-su;
+        #        };
+        #
+        #        apps.test_nix-sudo-su = flake-utils.lib.mkApp {
+        #          name = "test_nix-sudo-su";
+        #          drv = packages.test_nix-sudo-su;
+        #        };
 
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [

@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
 let
   toybox-etc-passwd-etc-group = import ./toybox-etc-passwd-etc-group.nix { inherit pkgs; };
-#  tmp = import ./create-tmp.nix { inherit pkgs; };
+  #  tmp = import ./create-tmp.nix { inherit pkgs; };
   toybox-static = import ./toybox-static.nix { inherit pkgs; };
 in
 pkgs.dockerTools.buildImage {
@@ -10,13 +10,13 @@ pkgs.dockerTools.buildImage {
 
   contents = [
     toybox-etc-passwd-etc-group
-#    tmp
+    #    tmp
     toybox-static
   ]
   ++
   (with pkgs; [
-#    busybox-sandbox-shell
-#    coreutils
+    #    busybox-sandbox-shell
+    #    coreutils
   ]);
 
   config = {

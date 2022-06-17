@@ -8,17 +8,17 @@ pkgs.dockerTools.buildImage {
   name = "busybox-sandbox-shell-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
   tag = "0.0.1";
 
-#    runAsRoot = ''
-#      #!${pkgs.stdenv}
-#      ${pkgs.dockerTools.shadowSetup}
-#      chown -R nixuser:nixgroup /nix
-#    '';
+  #    runAsRoot = ''
+  #      #!${pkgs.stdenv}
+  #      ${pkgs.dockerTools.shadowSetup}
+  #      chown -R nixuser:nixgroup /nix
+  #    '';
 
-#  extraCommands = ''
-#      #!${pkgs.stdenv}
-#      ${pkgs.dockerTools.shadowSetup}
-#      chown -R nixuser:nixgroup /nix
-#    '';
+  #  extraCommands = ''
+  #      #!${pkgs.stdenv}
+  #      ${pkgs.dockerTools.shadowSetup}
+  #      chown -R nixuser:nixgroup /nix
+  #    '';
 
   contents = [
     ca-bundle-etc-passwd-etc-group
