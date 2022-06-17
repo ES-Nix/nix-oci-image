@@ -29,4 +29,8 @@
 #  oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = pkgs.callPackage ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su { };
 #  test_oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = pkgs.callPackage ./oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su/test_oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su.nix { podman-rootless = podman-rootless; };
 
+
+    fmt-nix-check = pkgs.callPackage ./fmt-nix-fix-and-check/fmt-nix-check.nix { };
+    fmt-nix-fix = pkgs.callPackage ./fmt-nix-fix-and-check/fmt-nix-fix.nix { };
+    fmt-nix-fix-and-check = pkgs.callPackage ./fmt-nix-fix-and-check { };
 }

@@ -119,6 +119,22 @@
           drv = packages.oci-podman-openssh-server;
         };
 
+        apps.fmt-nix-check = flake-utils.lib.mkApp {
+          name = "fmt-nix-check";
+          drv = packages.fmt-nix-check;
+        };
+
+        apps.fmt-nix-fix = flake-utils.lib.mkApp {
+          name = "fmt-nix-fix";
+          drv = packages.fmt-nix-fixk;
+        };
+
+        apps.fmt-nix-fix-and-check = flake-utils.lib.mkApp {
+          name = "fmt-nix-fix-and-check";
+          drv = packages.fmt-nix-fix-and-check;
+        };
+
+
 #        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
 #          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
 #          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;
