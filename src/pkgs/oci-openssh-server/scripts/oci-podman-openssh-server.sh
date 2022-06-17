@@ -9,6 +9,9 @@ build \
 
 # xhost +
 
+test -d "${HOME}"/.ssh || mkdir -pv "${HOME}"/.ssh
+test -f "${HOME}"/.ssh/known_hosts || touch "${HOME}"/.ssh/known_hosts
+
 podman \
 run \
 --detach=true \
