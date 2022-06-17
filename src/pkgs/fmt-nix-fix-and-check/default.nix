@@ -7,7 +7,7 @@ pkgs.stdenv.mkDerivation rec {
     bashInteractive
     coreutils
 
-    (import ../fmt-nix-check.nix { inherit pkgs; })
+    (import ./fmt-nix-check.nix { inherit pkgs; })
     (import ./fmt-nix-fix.nix { inherit pkgs; })
   ];
 
@@ -19,6 +19,8 @@ pkgs.stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/bin
 
+    cp -r "${src}/scripts/fmt-nix-check.sh" $out
+    cp -r "${src}/scripts/fmt-nix-fix.sh" $out
     cp -r "${src}/scripts/${name}.sh" $out
 
     install \
@@ -28,6 +30,11 @@ pkgs.stdenv.mkDerivation rec {
     $out/bin/${name}
 
     patchShebangs $out/bin/${name}
+
+    substituteInPlace \
+      $out/bin/${name} \
+      --replace ./fmt-nix-fix.sh $out/fmt-nix-fix.sh \
+      --replace ./fmt-nix-check.sh $out/fmt-nix-check.sh \
 
     wrapProgram $out/bin/${name} \
       --prefix PATH : "${pkgs.lib.makeBinPath propagatedNativeBuildInputs }"
