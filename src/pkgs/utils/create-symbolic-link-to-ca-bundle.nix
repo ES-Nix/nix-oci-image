@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> { } }:
 pkgs.stdenv.mkDerivation {
-  name = "tmp";
+  name = "create-symbolic-link-to-ca-bundle";
   phases = [ "installPhase" "fixupPhase" ];
 
   installPhase = ''

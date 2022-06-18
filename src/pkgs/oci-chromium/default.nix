@@ -24,16 +24,23 @@ pkgs.dockerTools.buildImage {
     contents = with pkgs; [
       bashInteractive
       coreutils
-      chromium
+      #chromium
       hello
-      (import ../utils/create-symbolic-link-to-ca-bundle.nix { inherit pkgs; })
     ];
     Env = [
       "FONTCONFIG_FILE=${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
       "FONTCONFIG_PATH=${pkgs.fontconfig.out}/etc/fonts/"
       "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
-      "PATH=${pkgs.coreutils}/bin:${pkgs.hello}/bin:${pkgs.chromium}/bin"
+      # :${pkgs.chromium}/bin
+      "PATH=${pkgs.coreutils}/bin:${pkgs.hello}/bin"
     ];
+
+    extraCommands = ''
+      # echo 'Some message from extraCommands echo.'
+      echo "$(pwd)"
+      mkdir -pv ./etc/pki/tls/certs
+      ln -sv ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt ./etc/pki/tls/certs/ca-bundle.crt
+    '';
 
     Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
   };
