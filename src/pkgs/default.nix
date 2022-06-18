@@ -33,4 +33,8 @@
   fmt-nix-check = pkgs.callPackage ./fmt-nix-fix-and-check/fmt-nix-check.nix { };
   fmt-nix-fix = pkgs.callPackage ./fmt-nix-fix-and-check/fmt-nix-fix.nix { };
   fmt-nix-fix-and-check = pkgs.callPackage ./fmt-nix-fix-and-check { };
+
+
+  oci-chromium = pkgs.callPackage ./oci-chromium { };
+  oci-podman-chromium = pkgs.callPackage ./oci-chromium/oci-podman-chromium.nix { podman-rootless = podman-rootless; };
 }

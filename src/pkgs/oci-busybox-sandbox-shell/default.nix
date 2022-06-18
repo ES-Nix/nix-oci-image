@@ -45,6 +45,9 @@ pkgs.dockerTools.buildImage {
       # "PATH=/bin:/home/nixuser/bin"
       # "NIX_PATH=/nix/var/nix/profiles/per-user/root/channels"
       # "TMPDIR=/home/nixuser/tmp"
+      #  "FONTCONFIG_FILE=${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
+      #  "FONTCONFIG_PATH=${pkgs.fontconfig.out}/etc/fonts/"
+      #  "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
     ];
   };
 }

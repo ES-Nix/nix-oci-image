@@ -12,9 +12,9 @@ pkgs.stdenv.mkDerivation rec {
     podman-rootless
 
     # Testing
-    xorg.xhost
+    # xorg.xhost
 
-    (import ./build-and-load-oci-podman-nix.nix { inherit pkgs podman-rootless; })
+    podman-rootless
   ];
 
   src = builtins.path { path = ./.; inherit name; };

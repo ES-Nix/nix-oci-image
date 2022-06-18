@@ -134,6 +134,10 @@
           drv = packages.fmt-nix-fix-and-check;
         };
 
+        apps.oci-podman-chromium = flake-utils.lib.mkApp {
+          name = "oci-podman-chromium";
+          drv = packages.oci-podman-chromium;
+        };
 
         #        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
         #          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
