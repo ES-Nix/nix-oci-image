@@ -32,7 +32,7 @@ run \
 --env="DISPLAY=${DISPLAY:-:0.0}" \
 --interactive=true \
 --mount=type=tmpfs,destination=/var/lib/containers \
---privileged=false \
+--privileged=true \
 --tty=true \
 --rm=true \
 --volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
