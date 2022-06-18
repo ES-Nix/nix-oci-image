@@ -24,12 +24,10 @@ pkgs.dockerTools.buildImage {
     contents = with pkgs; [
       bashInteractive
       coreutils
-      dbus
       chromium
       hello
-    ]
-    ++
-    troubleshootPackages;
+      (import ../utils/create-symbolic-link-to-ca-bundle.nix { inherit pkgs; })
+    ];
     Env = [
       "FONTCONFIG_FILE=${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
       "FONTCONFIG_PATH=${pkgs.fontconfig.out}/etc/fonts/"
