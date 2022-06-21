@@ -18,6 +18,7 @@ let
   ];
 in
 pkgs.dockerTools.buildImage {
+  # https://github.com/NixOS/nixpkgs/issues/176081
   name = "oci-podman-chromium";
   tag = "latest";
   config = {
@@ -51,9 +52,7 @@ pkgs.dockerTools.buildImage {
     #'';
 
     extraCommands = ''
-       ${pkgs.coreutils}/bin/mkdir -pv ./etc/pki/tls/certs
-       ${pkgs.coreutils}/bin/ln -sv ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt ./etc/pki/tls/certs
-       # ${pkgs.hello}/bin/hello > ./out-hello.txt
+      ${pkgs.coreutils}/bin/mkdir -pv ./etc/pki/tls/certs
+      ${pkgs.coreutils}/bin/ln -sv ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt ./etc/pki/tls/certs
     '';
 }
-
