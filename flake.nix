@@ -84,6 +84,11 @@
           drv = packages.oci-podman-nix;
         };
 
+        apps.oci-podman-nix-sudo-su = flake-utils.lib.mkApp {
+          name = "oci-podman-nix-sudo-su";
+          drv = packages.oci-podman-nix-sudo-su;
+        };
+
         apps.test-oci-podman-nix = flake-utils.lib.mkApp {
           name = "test-oci-podman-nix";
           drv = packages.test-oci-podman-nix;

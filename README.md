@@ -35,11 +35,27 @@ run \
 .#oci-podman-nix-entrypoint
 ```
 
+
+It is an OCI image with Ubuntu 16.04 with openssh-server
 ```bash
 nix \
 run \
 --refresh \
 github:ES-Nix/nix-oci-image/nix-static-minimal#oci-podman-openssh-server
+```
+
+```bash
+nix \
+run \
+--refresh \
+github:ES-Nix/nix-oci-image/nix-static-minimal#oci-podman-nix-toybox-busybox-sandbox-shell-all-static
+```
+
+```bash
+nix \
+run \
+--refresh \
+.#oci-podman-nix-toybox-busybox-sandbox-shell-all-static
 ```
 
 
