@@ -23,6 +23,7 @@ run \
 --hostname=oci-ubuntu-16-04-container \
 --interactive=true \
 --log-level=error \
+--mount=type=tmpfs,destination=/var/lib/containers \
 --name=ubuntu-16-04-container \
 --privileged=true \
 --publish=22000:22 \
