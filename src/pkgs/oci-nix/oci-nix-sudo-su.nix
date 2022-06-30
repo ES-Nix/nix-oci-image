@@ -53,7 +53,7 @@ pkgs.dockerTools.buildImage {
   );
 
   config = {
-    # Cmd = [ "/bin" ];
+    Cmd = [ "nix" ];
     # Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
     Entrypoint = [ "es" ];
     # Entrypoint = [ "${pkgs.busybox-sandbox-shell}/bin/sh" ];

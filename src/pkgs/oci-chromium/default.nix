@@ -57,6 +57,7 @@ pkgs.dockerTools.buildImage {
 #        useradd --no-log-init --uid 12345 --gid nixgroup nixuser
 #    '';
 
+    # https://discourse.nixos.org/t/certificate-validation-broken-in-all-electron-chromium-apps-and-browsers/15962/7
     extraCommands = ''
       ${pkgs.coreutils}/bin/mkdir -pv ./etc/pki/tls/certs
       ${pkgs.coreutils}/bin/ln -sv ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt ./etc/pki/tls/certs

@@ -25,6 +25,16 @@ run \
 nix \
 run \
 --refresh \
+github:ES-Nix/nix-oci-image/nix-static-minimal#oci-podman-nix-sudo-su \
+-- \
+bash
+```
+
+
+```bash
+nix \
+run \
+--refresh \
 github:ES-Nix/nix-oci-image/nix-static-minimal#oci-podman-nix-entrypoint
 ```
 

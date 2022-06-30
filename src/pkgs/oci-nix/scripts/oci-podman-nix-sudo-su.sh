@@ -30,6 +30,7 @@ command -v xhost 1> /dev/null 2> /dev/null && xhost +
 test -d /tmp || ( echo 'The system does not have /tmp' && exit 123 )
 test -f /tmp/.X11-unix || touch /tmp/.X11-unix
 
+# --volume="${HOME}/.ssh":"${HOME}/.ssh":ro \
 podman \
 run \
 --device=/dev/kvm \
@@ -48,9 +49,8 @@ run \
 --volume=/etc/localtime:/etc/localtime:ro \
 --volume=/dev/shm:/dev/shm:ro \
 --volume=/dev/snd:/dev/snd:ro \
---volume="${HOME}/.ssh":"${HOME}/.ssh":ro \
---volume="$(pwd)":"${HOME}"/code:rw \
---workdir="${HOME}" \
+--volume="$(pwd)":/home/nixuser/code:rw \
+--workdir=/home/nixuser \
 localhost/nix-sudo-su:0.0.1 \
 "$@"
 
