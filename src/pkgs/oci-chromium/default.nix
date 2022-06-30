@@ -23,9 +23,9 @@ pkgs.dockerTools.buildImage {
   tag = "latest";
   config = {
     contents = with pkgs; [
-      busybox-sandbox-shell
-      # bashInteractive
-      # coreutils
+      # busybox-sandbox-shell
+      bashInteractive
+      coreutils
 
       # TODO: Why it is not working, I mean, not adding it to $PATH?
       # chromium
@@ -50,6 +50,12 @@ pkgs.dockerTools.buildImage {
     #  mkdir ./abcde
     #  id > ./abcde/my-id-output.txt
     #'';
+#    runAsRoot = ''
+#        #!${pkgs.stdenv}
+#        ${pkgs.dockerTools.shadowSetup}
+#        groupadd --gid 56789 nixgroup
+#        useradd --no-log-init --uid 12345 --gid nixgroup nixuser
+#    '';
 
     extraCommands = ''
       ${pkgs.coreutils}/bin/mkdir -pv ./etc/pki/tls/certs

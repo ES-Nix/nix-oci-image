@@ -144,6 +144,16 @@
           drv = packages.oci-podman-chromium;
         };
 
+        apps.oci-podman-xorg-pkgsstatic-xclock = flake-utils.lib.mkApp {
+          name = "oci-podman-xorg-pkgsstatic-xclock";
+          drv = packages.oci-podman-xorg-pkgsstatic-xclock;
+        };
+
+        apps.oci-podman-geogebra = flake-utils.lib.mkApp {
+          name = "oci-podman-geogebra";
+          drv = packages.oci-podman-geogebra;
+        };
+
         #        apps.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su = flake-utils.lib.mkApp {
         #          name = "oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su";
         #          drv = packages.oci-nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su;

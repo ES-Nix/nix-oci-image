@@ -9,23 +9,26 @@ echo ${is_local}
 
 if nix flake metadata .# 1> /dev/null 2> /dev/null; then
   echo 'A'
-  nix build --refresh .#oci-nix
+  nix build --refresh .#oci-nix-sudo-su
   podman load < result
 else
     echo 'B'
-  nix build --refresh github:ES-Nix/nix-oci-image/nix-static-minimal#oci-nix
+  nix build --refresh github:ES-Nix/nix-oci-image/nix-static-minimal#oci-nix-sudo-su
   podman load < result
 fi
 
-podman \
-build \
---file Containerfile \
---tag nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su \
---target test-nix \
-.
+#podman \
+#build \
+#--file Containerfile \
+#--tag nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su \
+#--target test-nix \
+#.
 
 
-xhost +
+command -v xhost 1> /dev/null 2> /dev/null && xhost +
+
+test -d /tmp || ( echo 'The system does not have /tmp' && exit 123 )
+test -f /tmp/.X11-unix || touch /tmp/.X11-unix
 
 podman \
 run \
@@ -39,16 +42,18 @@ run \
 --publish=12345:22 \
 --tty=true \
 --rm=true \
---user=nixuser \
+--user=0 \
 --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
 --volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
 --volume=/etc/localtime:/etc/localtime:ro \
 --volume=/dev/shm:/dev/shm:ro \
 --volume=/dev/snd:/dev/snd:ro \
---volume="${HOME}/.ssh":"${HOME}/.ssh" \
+--volume="${HOME}/.ssh":"${HOME}/.ssh":ro \
 --volume="$(pwd)":"${HOME}"/code:rw \
 --workdir="${HOME}" \
-localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:latest
+localhost/nix-sudo-su:0.0.1 \
+"$@"
+
 #podman \
 #run \
 #--device /deve/kvm \
@@ -67,7 +72,7 @@ localhost/nix-bash-coreutils-ca-bundle-etc-passwd-etc-group-tmp-sudo-su:latest
 # --network=host \
 # --userns=host \
 # --volume="${HOME}"/.ssh/id_rsa:/home/nixuser/.ssh/id_rsa:ro \
-xhost -
+command -v xhost 1> /dev/null 2> /dev/null && xhost -
 
 # sudo mkdir /var/empty
 # sudo ssh-keygen -A

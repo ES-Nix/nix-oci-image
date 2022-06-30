@@ -3,7 +3,8 @@
 
   oci-nix = pkgs.callPackage ./oci-nix { };
   oci-podman-nix = pkgs.callPackage ./oci-nix/oci-podman-nix.nix { podman-rootless = podman-rootless; };
-  oci-podman-nix-sudo-su = pkgs.callPackage ./oci-nix/oci-nix-sudo-su.nix { podman-rootless = podman-rootless; };
+  oci-nix-sudo-su = pkgs.callPackage ./oci-nix/oci-nix-sudo-su.nix { };
+  oci-podman-nix-sudo-su = pkgs.callPackage ./oci-nix/oci-podman-nix-sudo-su.nix { podman-rootless = podman-rootless; };
   test-oci-podman-nix = pkgs.callPackage ./oci-nix/test-oci-podman-nix.nix { podman-rootless = podman-rootless; };
   build-and-load-oci-podman-nix = pkgs.callPackage ./oci-nix/build-and-load-oci-podman-nix.nix { podman-rootless = podman-rootless; };
   build-local-or-remote = pkgs.callPackage ./oci-nix/build-local-or-remote.nix { };
@@ -38,4 +39,12 @@
 
   oci-chromium = pkgs.callPackage ./oci-chromium { };
   oci-podman-chromium = pkgs.callPackage ./oci-chromium/oci-podman-chromium.nix { podman-rootless = podman-rootless; };
+
+  oci-xorg-pkgsstatic-xclock = pkgs.callPackage ./oci-xorg-pkgsStatic-xclock { };
+  oci-podman-xorg-pkgsstatic-xclock = pkgs.callPackage ./oci-xorg-pkgsStatic-xclock/oci-podman-xorg-pkgsstatic-xclock.nix { podman-rootless = podman-rootless; };
+
+  oci-geogebra = pkgs.callPackage ./oci-geogebra { };
+  oci-podman-geogebra = pkgs.callPackage ./oci-geogebra/oci-podman-geogebra.nix { podman-rootless = podman-rootless; };
+
+  entrypoint-fixes = pkgs.callPackage ./entrypoint-fixes { };
 }
