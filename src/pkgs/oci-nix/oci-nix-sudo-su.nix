@@ -59,8 +59,14 @@ pkgs.dockerTools.buildImage {
     # Entrypoint = [ "${pkgs.busybox-sandbox-shell}/bin/sh" ];
     # Entrypoint = [ "${pkgs.coreutils}/bin/stat" ];
     Env = [
-      # "FONTCONFIG_FILE=${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
-      # "FONTCONFIG_PATH=${pkgs.fontconfig.out}/etc/fonts/"
+      "FONTCONFIG_FILE=${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
+      "FONTCONFIG_PATH=${pkgs.fontconfig.out}/etc/fonts/"
+      # TODO
+      # https://access.redhat.com/solutions/409033
+      # https://github.com/nix-community/home-manager/issues/703#issuecomment-489470035
+      # https://bbs.archlinux.org/viewtopic.php?pid=1805678#p1805678
+      "LC_ALL=C"
+      # 
       "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       # "GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       "NIX_SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
@@ -118,6 +124,10 @@ pkgs.dockerTools.buildImage {
 
     test -d ./home/nixuser/tmp || mkdir -pv ./home/nixuser/tmp
     chmod 1777 ./home/nixuser/tmp
+
+    # https://www.reddit.com/r/ManjaroLinux/comments/sdkrb1/comment/hue3gnp/?utm_source=reddit&utm_medium=web2x&context=3
+    mkdir -pv ./home/nixuser/.local/share/fonts
+    chown nixuser:nixgroup -R ./home/nixuser/.local/share/fonts
 
     test -d ./home/nixuser/.cache || mkdir -pv ./home/nixuser/.cache
     chown nixuser:nixgroup -R ./home/nixuser/.cache
