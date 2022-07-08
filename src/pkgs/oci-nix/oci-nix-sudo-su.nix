@@ -66,6 +66,14 @@ pkgs.dockerTools.buildImage {
       # https://github.com/nix-community/home-manager/issues/703#issuecomment-489470035
       # https://bbs.archlinux.org/viewtopic.php?pid=1805678#p1805678
       "LC_ALL=C"
+      #
+      #
+      # https://gist.github.com/eoli3n/93111f23dbb1233f2f00f460663f99e2#file-rootless-podman-wayland-sh-L25
+      "LD_LIBRARY_PATH=${pkgs.libcanberra-gtk3}/lib/gtk-3.0/modules"
+      # 
+      # TODO: document it
+      # https://unix.stackexchange.com/a/230442
+      "NO_AT_BRIDGE=1"
       # 
       "SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
       # "GIT_SSL_CAINFO=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"
