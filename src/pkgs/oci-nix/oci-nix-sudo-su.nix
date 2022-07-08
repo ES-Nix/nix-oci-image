@@ -143,6 +143,9 @@ pkgs.dockerTools.buildImage {
     test -d ./root/.config/nix || mkdir -pv ./root/.config/nix
     echo 'experimental-features = nix-command flakes' > /root/.config/nix/nix.conf
 
+    test -d ./root/.config/nix || mkdir -pv ./root/.config/nixpkgs/
+    echo '{ nixpkgs.config.allowUnfree = true; }' > ./root/.config/config.nix
+
     # mkdir -pv ./nix/store/.links
     # chown 1234:6789 ./nix
     # chown 1234:6789 ./nix/store
@@ -154,6 +157,9 @@ pkgs.dockerTools.buildImage {
 
     test -d ./home/nixuser/.config/nix || mkdir -pv ./home/nixuser/.config/nix
     echo 'experimental-features = nix-command flakes' > ./home/nixuser/.config/nix/nix.conf
+    
+    test -d ./home/nixuser/.config/nix || mkdir -pv ./home/nixuser/.config/nixpkgs/
+    echo '{ nixpkgs.config.allowUnfree = true; }' > ./home/nixuser/.config/config.nix
   '';
 
 }
