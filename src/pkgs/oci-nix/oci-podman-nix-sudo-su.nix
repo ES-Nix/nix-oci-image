@@ -9,7 +9,7 @@ pkgs.stdenv.mkDerivation rec {
 
     # findutils
 
-    podman-rootless
+    # podman-rootless
 
     # Testing
     xorg.xhost

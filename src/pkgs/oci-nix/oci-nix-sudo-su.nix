@@ -22,6 +22,18 @@ let
     which
   ];
 
+   customLocales = pkgs.glibcLocales.override {
+        allLocales = false;
+        locales = [
+                           "en_GB.UTF-8/UTF-8"
+                           "ru_RU.UTF-8/UTF-8"
+                           "en_US.UTF-8/UTF-8"
+                           "pt_BR.UTF-8/UTF-8"
+                           "ja_JP.UTF-8/UTF-8"
+                           "en_IE.UTF-8/UTF-8"
+                     ];
+      };
+
   customSudo = (pkgs.pkgsStatic.sudo.override { pam = null; });
   customSu = (pkgs.pkgsStatic.shadow.override { pam = null; }).su;
 
@@ -32,7 +44,7 @@ pkgs.dockerTools.buildImage {
   name = "nix-sudo-su";
   tag = "0.0.1";
 
-  contents = [
+  copyToRoot = [
     # ca-bundle-etc-passwd-etc-group-sudo-su
     # create-tmp
   ]
@@ -43,7 +55,8 @@ pkgs.dockerTools.buildImage {
     coreutils
     # busybox
 
-    pkgsStatic.nix
+    # pkgsStatic.nix
+    nix
 
     customSu
     customSudo
@@ -66,6 +79,8 @@ pkgs.dockerTools.buildImage {
       # https://github.com/nix-community/home-manager/issues/703#issuecomment-489470035
       # https://bbs.archlinux.org/viewtopic.php?pid=1805678#p1805678
       "LC_ALL=C"
+      "LOCALE_ARCHIVE=${customLocales}/lib/locale/locale-archive"
+
       #
       #
       # https://gist.github.com/eoli3n/93111f23dbb1233f2f00f460663f99e2#file-rootless-podman-wayland-sh-L25

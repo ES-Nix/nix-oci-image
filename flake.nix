@@ -79,6 +79,16 @@
         #
         inherit packages;
 
+        apps.oci-hello = flake-utils.lib.mkApp {
+          name = "oci-hello";
+          drv = packages.oci-hello;
+        };
+
+        apps.oci-hello-output = flake-utils.lib.mkApp {
+          name = "oci-hello-output";
+          drv = packages.oci-hello-output;
+        };
+
         apps.oci-podman-nix = flake-utils.lib.mkApp {
           name = "oci-podman-nix";
           drv = packages.oci-podman-nix;
@@ -176,7 +186,7 @@
 
         devShell = pkgsAllowUnfree.mkShell {
           buildInputs = with pkgsAllowUnfree; [
-            podman-rootless.packages.${system}.podman
+            # podman-rootless.packages.${system}.podman
           ];
 
           shellHook = ''

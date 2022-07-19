@@ -1,6 +1,8 @@
 # When you add custom packages, list them here
 { pkgs, podman-rootless }: {
 
+  oci-hello = pkgs.callPackage ./oci-hello { };
+
   oci-nix = pkgs.callPackage ./oci-nix { };
   oci-podman-nix = pkgs.callPackage ./oci-nix/oci-podman-nix.nix { podman-rootless = podman-rootless; };
   oci-nix-sudo-su = pkgs.callPackage ./oci-nix/oci-nix-sudo-su.nix { };

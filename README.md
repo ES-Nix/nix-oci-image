@@ -6,6 +6,10 @@ It looks like it is possible to the same "trick" [Jérôme Petazzoni](put some u
 i mean, install some thing to a profile using [`flake`](add link here) and use the `COPY` thing from 
 "Docker multi stage build".
 
+[NYLUG Presents: Sneaking in Nix - Building Production Containers with Nix](https://www.youtube.com/watch?v=pfIDYQ36X0k&t=865s)
+
+[https://www.youtube.com/watch?v=WP_oAmV6C2U](https://www.youtube.com/watch?v=WP_oAmV6C2U)
+
 ```bash
 nix \
 run \
