@@ -7,8 +7,9 @@ let
     # gnutar
     # gzip
     hello
-    htop
+    bpytop
     iproute
+    ldd
     nano
     netcat
     ripgrep

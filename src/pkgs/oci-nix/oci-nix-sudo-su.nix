@@ -11,12 +11,17 @@ let
     findutils
     # gzip
     hello
-    htop
+    bpytop
     iproute
+    nettools # why the story name is with an -?
     nano
     netcat
     ripgrep
+    patchelf
+    binutils
+    # bpftrace
     strace
+    uftrace
     # gnutar
     wget
     which
@@ -62,7 +67,7 @@ pkgs.dockerTools.buildImage {
     customSudo
     entrypoint
   ]
-    # ++ troubleshoot-packages
+    ++ troubleshoot-packages
   );
 
   config = {
@@ -80,6 +85,12 @@ pkgs.dockerTools.buildImage {
       # https://bbs.archlinux.org/viewtopic.php?pid=1805678#p1805678
       "LC_ALL=C"
       "LOCALE_ARCHIVE=${customLocales}/lib/locale/locale-archive"
+
+      # TODO: study all this
+      # - have really great oneliners that fail and that, of course, works.
+      # http://bugs.python.org/issue19846
+      # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
+      # ENV LANG C.UTF-8
 
       #
       #

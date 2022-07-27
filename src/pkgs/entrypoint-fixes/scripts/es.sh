@@ -7,7 +7,7 @@ set -e
 if [ "$(id -u)" = "0" ]; then
   # echo 'Entered'
   chmod 0755 -R /nix /home/nixuser
-  chown 1234:6789 -R /nix
+  chown 1234:6789 -R /nix /home/nixuser
 
   exec gosu 1234 "$@"
 fi
