@@ -43,6 +43,7 @@ run \
 --privileged=true \
 --tty=true \
 --rm=true \
+--security-opt="label=disable" \
 --user=0 \
 --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro \
 --volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \

@@ -7,6 +7,10 @@ let
   entrypoint = import ../entrypoint-fixes { inherit pkgs; };
 
   troubleshoot-packages = with pkgs; [
+    # https://askubuntu.com/questions/16700/how-can-i-change-my-own-user-id#comment749398_167400
+    # https://unix.stackexchange.com/a/693915
+    acl
+
     file
     findutils
     # gzip
@@ -19,6 +23,7 @@ let
     ripgrep
     patchelf
     binutils
+    mount
     # bpftrace
     strace
     uftrace
@@ -60,6 +65,11 @@ pkgs.dockerTools.buildImage {
     coreutils
     # busybox
 
+    # It might be missing the /etc stuff
+    # systemd
+
+
+    # TODO: test it with new versions
     # pkgsStatic.nix
     nix
 
@@ -72,8 +82,11 @@ pkgs.dockerTools.buildImage {
 
   config = {
     Cmd = [ "nix" ];
-    # Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
+
+    # Entrypoint = [ "${pkgs.systemd}/bin/init" ];
     Entrypoint = [ "es" ];
+
+    # Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
     # Entrypoint = [ "${pkgs.busybox-sandbox-shell}/bin/sh" ];
     # Entrypoint = [ "${pkgs.coreutils}/bin/stat" ];
     Env = [
@@ -152,6 +165,9 @@ pkgs.dockerTools.buildImage {
     test -d ./etc/sudoers.d || mkdir -pv ./etc/sudoers.d
     echo 'nixuser ALL=(ALL) NOPASSWD: ALL' > ./etc/sudoers.d/nixuser
 
+    # TODO
+    # https://unix.stackexchange.com/a/55776
+    #
     # Is it ugly or beautiful?
     test -d ./tmp || mkdir -pv ./tmp
     chmod 1777 ./tmp
