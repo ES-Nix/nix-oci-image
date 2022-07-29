@@ -77,13 +77,13 @@ pkgs.dockerTools.buildImage {
     customSudo
     entrypoint
   ]
-    ++ troubleshoot-packages
+    # ++ troubleshoot-packages
   );
 
   config = {
     Cmd = [ "nix" ];
 
-    # Entrypoint = [ "${pkgs.systemd}/bin/init" ];
+    # Entrypoint = [ "${pkgs.systemd}/lib/systemd/systemd" ];
     Entrypoint = [ "es" ];
 
     # Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
@@ -180,7 +180,7 @@ pkgs.dockerTools.buildImage {
     chown nixuser:nixgroup -R ./home/nixuser/.local/share/fonts
 
     test -d ./home/nixuser/.cache || mkdir -pv ./home/nixuser/.cache
-    chown nixuser:nixgroup -R ./home/nixuser/.cache
+    chown nixuser:nixgroup -R ./home/nixuser/
 
     test -d ./root/.config/nix || mkdir -pv ./root/.config/nix
     echo 'experimental-features = nix-command flakes' > /root/.config/nix/nix.conf
@@ -189,9 +189,18 @@ pkgs.dockerTools.buildImage {
     echo '{ nixpkgs.config.allowUnfree = true; }' > ./root/.config/config.nix
 
     # mkdir -pv ./nix/store/.links
-    # chown 1234:6789 ./nix
+    chown 1234:6789 ./nix
     # chown 1234:6789 ./nix/store
     # chown 1234:6789 ./nix/store/.links
+
+
+    # mkdir -pv ./usr/share
+    # cp -R "''${pkgs.systemd}"/bin ./bin
+    # cp -R "''${pkgs.systemd}"/etc ./etc
+    # cp -R "''${pkgs.systemd}"/lib ./lib
+    # cp -R "''${pkgs.systemd}"/share ./usr/share
+
+    # cp -R "''${pkgs.systemd}"/example/systemd/user/default.target ./lib/systemd
   '';
 
   extraCommands = ''
