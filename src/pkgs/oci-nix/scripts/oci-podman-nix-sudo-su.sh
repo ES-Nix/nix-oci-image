@@ -30,7 +30,15 @@ command -v xhost 1> /dev/null 2> /dev/null && xhost +
 test -d /tmp || ( echo 'The system does not have /tmp' && exit 123 )
 test -f /tmp/.X11-unix || touch /tmp/.X11-unix
 
-podman unshare chown 1234:6789 "$(pwd)"
+# podman unshare chown 1234:6789 "$(pwd)"
+
+subuidSize=$(( $(podman info --format "{{ range .Host.IDMappings.UIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+subgidSize=$(( $(podman info --format "{{ range .Host.IDMappings.GIDMap }}+{{.Size }}{{end }}" ) - 1 ))
+
+# NixOS has this variables as readonly!
+[ -n "$UID" ] && echo "The UID is not empty, its value is: UID=$UID" || UID="$(id -u)"
+[ -n "$GID" ] && echo "The GID is not empty, its value is: GID=$GID" || GID="$(id -g)"
+
 
 # --volume="${HOME}/.ssh":"${HOME}/.ssh":ro \
 # --publish=12345:22 \
@@ -51,7 +59,13 @@ run \
 --tty=true \
 --rm=true \
 --security-opt "label=disable" \
---user=0 \
+--user "${UID}":"${GID}" \
+--uidmap "${UID}":0:1 \
+--uidmap 0:1:"${UID}" \
+--uidmap $(("${UID}"+1)):$(("${UID}"+1)):$(($subuidSize-"${UID}")) \
+--gidmap "${GID}":0:1 \
+--gidmap 0:1:"${GID}" \
+--gidmap $(("${GID}"+1)):$(("${GID}"+1)):$(($subgidSize-"${GID}")) \
 --volume="$(pwd)":/home/nixuser/code:rw \
 --workdir=/home/nixuser \
 localhost/nix-sudo-su:0.0.1 \
