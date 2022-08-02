@@ -34,6 +34,7 @@ github:ES-Nix/nix-oci-image/nix-static-minimal#oci-podman-nix-sudo-su \
 bash
 ```
 
+nix run .#oci-podman-nix-sudo-su -- bash -c 'nix run nixpkgs#hello && nix profile install nixpkgs#hello'
 
 ```bash
 nix \

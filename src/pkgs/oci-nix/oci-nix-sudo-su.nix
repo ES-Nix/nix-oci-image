@@ -152,10 +152,16 @@ pkgs.dockerTools.buildImage {
 
     echo 'Some message from runAsRoot echo.'
 
+    # TODO:
+    # https://discourse.nixos.org/t/how-to-run-chown-for-docker-image-built-with-streamlayeredimage-or-buildlayeredimage/11977/3
+    # useradd --no-log-init --uid 1234 --gid nixgroup ''${userName}
     groupadd --gid 6789 nixgroup
-    useradd --no-log-init --uid 1234 --gid nixgroup ${userName}
+    # -l = --no-log-init
+    # -m = --create-home
+    # -k = --skel
+    useradd -k ./etc/skel -l -m  --uid 1234 --gid nixgroup ${userName}
 
-
+    # This 302 is from what we have in Ubuntu usually
     groupadd --gid 302 kvm
     usermod --append --groups kvm ${userName}
 
