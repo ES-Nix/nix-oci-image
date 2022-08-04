@@ -47,6 +47,7 @@ subgidSize=$(( $(podman info --format "{{ range .Host.IDMappings.GIDMap }}+{{.Si
 #--volume=/etc/localtime:/etc/localtime:ro \
 #--volume=/dev/shm:/dev/shm:ro \
 #--volume=/dev/snd:/dev/snd:ro \
+# --volume="$(pwd)":/home/nixuser/code:rw \
 podman \
 run \
 --device=/dev/kvm \
@@ -66,7 +67,6 @@ run \
 --gidmap "${GID}":0:1 \
 --gidmap 0:1:"${GID}" \
 --gidmap $(("${GID}"+1)):$(("${GID}"+1)):$(($subgidSize-"${GID}")) \
---volume="$(pwd)":/home/nixuser/code:rw \
 --workdir=/home/nixuser \
 localhost/nix-sudo-su:0.0.1 \
 "$@"

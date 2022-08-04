@@ -28,6 +28,7 @@ pkgs.dockerTools.buildImage {
       # bashInteractive
       # coreutils
 
+      # TODO: test this xskat
       xorg.xclock
       # https://unix.stackexchange.com/questions/545750/fontconfig-issues
       # fontconfig

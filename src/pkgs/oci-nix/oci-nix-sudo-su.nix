@@ -219,7 +219,7 @@ pkgs.dockerTools.buildImage {
     echo '{ nixpkgs.config.allowUnfree = true; }' > ./home/nixuser/.config/config.nix
     id > ./home/nixuser/log.txt
     chmod 0700 ./home/nixuser
-    chown -R 1234:6789 ./nix ./home/nixuser
+    chown -R 1234:6789 ./home/nixuser
   '';
 
 }
