@@ -7,9 +7,10 @@ set -e
 if [ "$(id -u)" = "0" ]; then
   # echo 'Entered'
   # chmod 0755 -R /nix /home/nixuser
-  chown nixuser:nixgroup -Rv /nix /home/nixuser
+  chown "${INJECTED_UID}":"${INJECTED_GID}" -R /nix
+  chown "${INJECTED_UID}":"${INJECTED_GID}" -Rv /home/nixuser
 
-  exec gosu 1234 "$@"
+  exec gosu "${INJECTED_UID}" "$@"
 fi
 
 

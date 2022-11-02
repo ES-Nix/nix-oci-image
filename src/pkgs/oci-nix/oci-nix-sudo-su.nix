@@ -61,8 +61,9 @@ pkgs.dockerTools.buildImage {
   ++
   (with pkgs; [
     # pkgsStatic.busybox-sandbox-shell
-    bashInteractive
-    coreutils
+    # bashInteractive
+    # coreutils
+    uutils-coreutils
     # busybox
 
     # It might be missing the /etc stuff
@@ -75,18 +76,18 @@ pkgs.dockerTools.buildImage {
 
     customSu
     customSudo
-    entrypoint
+    # entrypoint
   ]
     # ++ troubleshoot-packages
   );
 
   config = {
-    Cmd = [ "nix" ];
+    # Cmd = [ "nix" ];
 
     # Entrypoint = [ "${pkgs.systemd}/lib/systemd/systemd" ];
-    Entrypoint = [ "es" ];
+    # Entrypoint = [ "es" ];
 
-    # Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
+    Entrypoint = [ "${pkgs.bashInteractive}/bin/bash" ];
     # Entrypoint = [ "${pkgs.busybox-sandbox-shell}/bin/sh" ];
     # Entrypoint = [ "${pkgs.coreutils}/bin/stat" ];
     Env = [
@@ -120,11 +121,11 @@ pkgs.dockerTools.buildImage {
       # "NIX_PAGER=cat"
       # A user is required by nix
       # https://github.com/NixOS/nix/blob/9348f9291e5d9e4ba3c4347ea1b235640f54fd79/src/libutil/util.cc#L478
-      "USER=${userName}"
-      "HOME=/home/${userName}"
+      #"USER=${userName}"
+      #"HOME=/home/${userName}"
       # "PATH=/bin:/home/${userName}/bin"
       # "NIX_PATH=/nix/var/nix/profiles/per-user/root/channels"
-      "TMPDIR=/home/${userName}/tmp"
+      #"TMPDIR=/home/${userName}/tmp"
     ];
   };
 
@@ -152,41 +153,42 @@ pkgs.dockerTools.buildImage {
 
     echo 'Some message from runAsRoot echo.'
 
-    # TODO:
-    # https://discourse.nixos.org/t/how-to-run-chown-for-docker-image-built-with-streamlayeredimage-or-buildlayeredimage/11977/3
-    # useradd --no-log-init --uid 1234 --gid nixgroup ''${userName}
-    groupadd --gid 6789 nixgroup
-    # -l = --no-log-init
-    # -m = --create-home
-    # -k = --skel
-    useradd -k ./etc/skel -l -m  --uid 1234 --gid nixgroup ${userName}
+#    # TODO:
+#    # https://discourse.nixos.org/t/how-to-run-chown-for-docker-image-built-with-streamlayeredimage-or-buildlayeredimage/11977/3
+#    # useradd --no-log-init --uid 1234 --gid nixgroup ''${userName}
+#    groupadd --gid 6789 nixgroup
+#    # -l = --no-log-init
+#    # -m = --create-home
+#    # -k = --skel
+#    useradd -k ./etc/skel -l -m  --uid 1234 --gid nixgroup ${userName}
+#
+#    # This 302 is from what we have in Ubuntu usually
+#    groupadd --gid 302 kvm
+#    usermod --append --groups kvm ${userName}
 
-    # This 302 is from what we have in Ubuntu usually
-    groupadd --gid 302 kvm
-    usermod --append --groups kvm ${userName}
+    cp "${customSudo}"/bin/sudo ./bin/sudo
+    chown 0:0 ./bin/sudo
+    chmod 4755 ./bin/sudo
 
-    chown 0:0 ./sbin/sudo
-    chmod 4755 ./sbin/sudo
+    test -d ./etc || mkdir -pv ./etc/sudoers
+    echo 'ALL  ALL=(ALL) NOPASSWD: ALL' >> ./etc/sudoers
 
-    test -d ./etc/sudoers.d || mkdir -pv ./etc/sudoers.d
-    echo 'nixuser ALL=(ALL) NOPASSWD: ALL' > ./etc/sudoers.d/nixuser
+#    # TODO
+#    # https://unix.stackexchange.com/a/55776
+#    #
+#    # Is it ugly or beautiful?
+#    test -d ./tmp || mkdir -pv ./tmp
+#    chmod 1777 ./tmp
+#
+#    test -d ./home/nixuser/tmp || mkdir -pv ./home/nixuser/tmp
+#    chmod 1777 ./home/nixuser/tmp
 
-    # TODO
-    # https://unix.stackexchange.com/a/55776
-    #
-    # Is it ugly or beautiful?
-    test -d ./tmp || mkdir -pv ./tmp
-    chmod 1777 ./tmp
+#    # https://www.reddit.com/r/ManjaroLinux/comments/sdkrb1/comment/hue3gnp/?utm_source=reddit&utm_medium=web2x&context=3
+#    mkdir -pv ./home/nixuser/.local/share/fonts
+#    chown nixuser:nixgroup -R ./home/nixuser/.local/share/fonts
 
-    test -d ./home/nixuser/tmp || mkdir -pv ./home/nixuser/tmp
-    chmod 1777 ./home/nixuser/tmp
-
-    # https://www.reddit.com/r/ManjaroLinux/comments/sdkrb1/comment/hue3gnp/?utm_source=reddit&utm_medium=web2x&context=3
-    mkdir -pv ./home/nixuser/.local/share/fonts
-    chown nixuser:nixgroup -R ./home/nixuser/.local/share/fonts
-
-    test -d ./home/nixuser/.cache || mkdir -pv ./home/nixuser/.cache
-    chown nixuser:nixgroup -R ./home/nixuser/
+#    test -d ./home/nixuser/.cache || mkdir -pv ./home/nixuser/.cache
+#    chown nixuser:nixgroup -R ./home/nixuser/
 
     test -d ./root/.config/nix || mkdir -pv ./root/.config/nix
     echo 'experimental-features = nix-command flakes' > /root/.config/nix/nix.conf
@@ -195,7 +197,7 @@ pkgs.dockerTools.buildImage {
     echo '{ nixpkgs.config.allowUnfree = true; }' > ./root/.config/config.nix
 
     # mkdir -pv ./nix/store/.links
-    chown 1234:6789 ./nix
+    # chown 1234:6789 ./nix
     # chown 1234:6789 ./nix/store
     # chown 1234:6789 ./nix/store/.links
 
@@ -209,17 +211,17 @@ pkgs.dockerTools.buildImage {
     # cp -R "''${pkgs.systemd}"/example/systemd/user/default.target ./lib/systemd
   '';
 
-  extraCommands = ''
-    #!${pkgs.stdenv}
-
-    test -d ./home/nixuser/.config/nix || mkdir -pv ./home/nixuser/.config/nix
-    echo 'experimental-features = nix-command flakes' > ./home/nixuser/.config/nix/nix.conf
-    
-    test -d ./home/nixuser/.config/nix || mkdir -pv ./home/nixuser/.config/nixpkgs/
-    echo '{ nixpkgs.config.allowUnfree = true; }' > ./home/nixuser/.config/config.nix
-    id > ./home/nixuser/log.txt
-    chmod 0700 ./home/nixuser
-    chown -R 1234:6789 ./home/nixuser
-  '';
+#  extraCommands = ''
+#    #!${pkgs.stdenv}
+#
+#    test -d ./home/nixuser/.config/nix || mkdir -pv ./home/nixuser/.config/nix
+#    echo 'experimental-features = nix-command flakes' > ./home/nixuser/.config/nix/nix.conf
+#
+#    test -d ./home/nixuser/.config/nix || mkdir -pv ./home/nixuser/.config/nixpkgs/
+#    echo '{ nixpkgs.config.allowUnfree = true; }' > ./home/nixuser/.config/config.nix
+#    id > ./home/nixuser/log.txt
+#    chmod 0777 ./home/nixuser
+#    chown -R 1234:6789 ./home/nixuser
+#  '';
 
 }
