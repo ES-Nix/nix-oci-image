@@ -721,3 +721,63 @@ podman images
 
 ./src/ex9/test.sh
 ```
+
+
+
+### TODO
+
+```bash
+nix \
+build \
+--impure \
+--expr \
+'
+  (
+    with builtins.getFlake "github:NixOS/nixpkgs/93e0ac196106dce51878469c9a763c6233af5c57";
+    with legacyPackages.${builtins.currentSystem};
+
+    dockerTools.streamLayeredImage {
+      name = "python3manylinux";
+      tag = "0.0.1";
+      config = {
+        copyToRoot = [
+          #
+        ];
+        Cmd = [
+          #
+        ];
+        Entrypoint = [
+          "${bashInteractive}/bin/bash"
+          # "${pkgs.python3Full}/bin/python3" "-c" "from tkinter import Tk; window = Tk(); window.mainloop()"
+        ];
+        Env = [
+          "PATH=${bashInteractive}/bin:${ (symlinkJoin {
+            name = "python3";
+            paths = [ python3Full ];
+            buildInputs = [ makeWrapper ];
+            postBuild = "wrapProgram $out/bin/python3 --set LD_LIBRARY_PATH ${lib.makeLibraryPath (with pythonManylinuxPackages; [ manylinux1Package manylinux2010Package manylinux2014Package ])}";
+          })}/bin"
+          # "FONTCONFIG_FILE=${fontconfig.out}/etc/fonts/fonts.conf"
+          # "FONTCONFIG_PATH=${fontconfig.out}/etc/fonts/"
+          # TODO
+          # https://access.redhat.com/solutions/409033
+          # https://github.com/nix-community/home-manager/issues/703#issuecomment-489470035
+          # https://bbs.archlinux.org/viewtopic.php?pid=1805678#p1805678
+          # "LC_ALL=C"
+          # "LOCALE_ARCHIVE=${glibcLocales}/lib/locale/locale-archive"
+        ];
+      };
+    }
+  )
+'
+
+"$(readlink -f result)" | podman load
+
+podman \
+run \
+--interactive=true \
+--tty=true \
+--rm=true \
+localhost/python3manylinux:0.0.1
+```
+
