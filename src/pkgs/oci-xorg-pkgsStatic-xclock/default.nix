@@ -16,6 +16,11 @@ let
     # wget
     which
   ];
+
+  /*
+   TODO: test nix copy --help
+         nix copy --to /tmp/nix nixpkgs#hello --no-check-sigs
+  */
 in
 pkgs.dockerTools.buildImage {
   # https://github.com/NixOS/nixpkgs/issues/176081
